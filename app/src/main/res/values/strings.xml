@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">WordWorld</string>
+    <string name="background_image">Background Image</string>
+    <string name="level_one">Level One</string>
+    <string name="level_two">Level Two</string>
+    <string name="level_three">Level Three</string>
+    <string name="badges">Badges</string>
+    <string name="profile">Profile</string>
 </resources>
