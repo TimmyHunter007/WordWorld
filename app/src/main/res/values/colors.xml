@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="background_color">#F5F5DC</color> <!-- Beige or off-white -->
+    <color name="primary_text">#5D4037</color> <!-- Dark brown for text -->
+    <color name="button_color_1">#D7CCC8</color> <!-- Soft beige button -->
+    <color name="button_color_2">#B0BEC5</color> <!-- Soft teal button -->
+    <color name="button_color_3">#FFCCBC</color> <!-- Soft blush button -->
+    <color name="button_text">#3E2723</color> <!-- Dark brown for button text -->
 </resources>
