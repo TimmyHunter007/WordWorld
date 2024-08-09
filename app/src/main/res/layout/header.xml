@@ -3,7 +3,7 @@
                 android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:background="@color/button_color_1"
+                android:background="@color/headerBar"
                 android:padding="8dp">
 
     <!-- Back Button -->
