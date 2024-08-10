@@ -13,6 +13,7 @@ public class LevelThreeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_level_three);
 
         // Initialize the back button and set the click listener

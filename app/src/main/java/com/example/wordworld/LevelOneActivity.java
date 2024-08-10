@@ -13,6 +13,7 @@ public class LevelOneActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_level_one);
 
         // Initialize the back button and set the click listener
