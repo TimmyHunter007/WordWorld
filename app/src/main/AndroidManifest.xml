@@ -16,6 +16,9 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
     </activity>
+        <activity android:name=".LevelOneActivity" />
+        <activity android:name=".LevelTwoActivity" />
+        <activity android:name=".LevelThreeActivity" />
 </application>
 
         </manifest>

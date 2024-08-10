@@ -83,6 +83,18 @@
             android:layout_below="@id/level_three"
             android:layout_centerHorizontal="true" />
 
+    <TextView
+            android:id="@+id/coin_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Silver Coins: ---"
+            android:textColor="@color/white"
+            android:textSize="29sp"
+            android:textStyle="bold"
+            android:layout_above="@id/leader_board"
+            android:layout_marginBottom="16dp"
+            android:layout_centerHorizontal="true" />
+
     <!-- Leader Board Button -->
     <Button
             android:id="@+id/leader_board"
