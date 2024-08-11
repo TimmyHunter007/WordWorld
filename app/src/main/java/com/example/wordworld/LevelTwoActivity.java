@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LevelTwoActivity extends AppCompatActivity {
+
+    private Button submitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +24,6 @@ public class LevelTwoActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle back button action
                 onBackPressed();
             }
         });
@@ -33,11 +35,27 @@ public class LevelTwoActivity extends AppCompatActivity {
         final EditText letter4 = findViewById(R.id.letter4);
         final EditText letter5 = findViewById(R.id.letter5);
 
+        // Set focus change listeners to highlight the currently selected box
+        setFocusChangeListener(letter1);
+        setFocusChangeListener(letter2);
+        setFocusChangeListener(letter3);
+        setFocusChangeListener(letter4);
+        setFocusChangeListener(letter5);
+
         // Add TextWatchers to automatically move to the next box
         addTextWatcher(letter1, letter2);
         addTextWatcher(letter2, letter3);
         addTextWatcher(letter3, letter4);
         addTextWatcher(letter4, letter5);
+
+        // Initialize the submit button
+        submitButton = findViewById(R.id.submit_level_two);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Add submit button logic here
+            }
+        });
     }
 
     private void addTextWatcher(final EditText currentEditText, final EditText nextEditText) {
@@ -55,6 +73,19 @@ public class LevelTwoActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+    }
+
+    private void setFocusChangeListener(final EditText editText) {
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    editText.setBackgroundResource(R.drawable.edittext_highlighted_level2);
+                } else {
+                    editText.setBackgroundResource(R.drawable.edittext_normal_level2);
+                }
             }
         });
     }

@@ -26,6 +26,7 @@
 
     <!-- Input Boxes for 6 Letters -->
     <LinearLayout
+            android:id="@+id/game_field_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -37,7 +38,7 @@
                 android:id="@+id/letter1"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@color/level_3"
+                android:background="@drawable/edittext_normal_level3"
                 android:gravity="center"
                 android:textColor="@color/primary_text"
                 android:textSize="32sp"
@@ -45,13 +46,14 @@
                 android:layout_marginRight="1.5dp"
                 android:inputType="textCapCharacters"
                 android:maxLength="1"
-                android:imeOptions="actionNext" />
+                android:imeOptions="actionNext"
+                android:cursorVisible="false" />
 
         <EditText
                 android:id="@+id/letter2"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@color/level_3"
+                android:background="@drawable/edittext_normal_level3"
                 android:gravity="center"
                 android:textColor="@color/primary_text"
                 android:textSize="32sp"
@@ -59,13 +61,14 @@
                 android:layout_marginRight="1.5dp"
                 android:inputType="textCapCharacters"
                 android:maxLength="1"
-                android:imeOptions="actionNext" />
+                android:imeOptions="actionNext"
+                android:cursorVisible="false" />
 
         <EditText
                 android:id="@+id/letter3"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@color/level_3"
+                android:background="@drawable/edittext_normal_level3"
                 android:gravity="center"
                 android:textColor="@color/primary_text"
                 android:textSize="32sp"
@@ -73,13 +76,14 @@
                 android:layout_marginRight="1.5dp"
                 android:inputType="textCapCharacters"
                 android:maxLength="1"
-                android:imeOptions="actionNext" />
+                android:imeOptions="actionNext"
+                android:cursorVisible="false" />
 
         <EditText
                 android:id="@+id/letter4"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@color/level_3"
+                android:background="@drawable/edittext_normal_level3"
                 android:gravity="center"
                 android:textColor="@color/primary_text"
                 android:textSize="32sp"
@@ -87,13 +91,14 @@
                 android:layout_marginRight="1.5dp"
                 android:inputType="textCapCharacters"
                 android:maxLength="1"
-                android:imeOptions="actionNext" />
+                android:imeOptions="actionNext"
+                android:cursorVisible="false" />
 
         <EditText
                 android:id="@+id/letter5"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@color/level_3"
+                android:background="@drawable/edittext_normal_level3"
                 android:gravity="center"
                 android:textColor="@color/primary_text"
                 android:textSize="32sp"
@@ -101,13 +106,14 @@
                 android:layout_marginRight="1.5dp"
                 android:inputType="textCapCharacters"
                 android:maxLength="1"
-                android:imeOptions="actionNext" />
+                android:imeOptions="actionNext"
+                android:cursorVisible="false" />
 
         <EditText
                 android:id="@+id/letter6"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@color/level_3"
+                android:background="@drawable/edittext_normal_level3"
                 android:gravity="center"
                 android:textColor="@color/primary_text"
                 android:textSize="32sp"
@@ -115,6 +121,18 @@
                 android:layout_marginRight="1.5dp"
                 android:inputType="textCapCharacters"
                 android:maxLength="1"
-                android:imeOptions="actionDone" />
+                android:imeOptions="actionDone"
+                android:cursorVisible="false" />
     </LinearLayout>
+    <Button
+            android:id="@+id/submit_level_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/submit"
+            android:textColor="@color/button_text"
+            android:textSize="29sp"
+            android:backgroundTint="@color/level_3"
+            android:layout_below="@id/game_field_3"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true" />
 </RelativeLayout>
