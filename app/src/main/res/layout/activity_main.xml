@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:textSize="50sp"
+            android:textSize="40sp"
             android:layout_below="@id/header"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp" />
