@@ -1,0 +1,123 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/main_bg_transparency"
+                tools:context=".LevelTwoActivity">
+
+    <!-- Header Layout -->
+    <include
+            layout="@layout/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <!-- Level Two Title -->
+    <TextView
+            android:id="@+id/level_two_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/level_two"
+            android:textColor="@color/white"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:layout_below="@id/header"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp" />
+
+    <!-- Input Boxes for 5 Letters -->
+    <LinearLayout
+            android:id="@+id/game_field_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/level_two_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp">
+
+        <EditText
+                android:id="@+id/letter1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/edittext_normal_level2"
+                android:gravity="center"
+                android:textColor="@color/primary_text"
+                android:textSize="32sp"
+                android:layout_marginLeft="1.5dp"
+                android:layout_marginRight="1.5dp"
+                android:inputType="textCapCharacters"
+                android:maxLength="1"
+                android:imeOptions="actionNext"
+                android:cursorVisible="false" />
+
+        <EditText
+                android:id="@+id/letter2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/edittext_normal_level2"
+                android:gravity="center"
+                android:textColor="@color/primary_text"
+                android:textSize="32sp"
+                android:layout_marginLeft="1.5dp"
+                android:layout_marginRight="1.5dp"
+                android:inputType="textCapCharacters"
+                android:maxLength="1"
+                android:imeOptions="actionNext"
+                android:cursorVisible="false" />
+
+        <EditText
+                android:id="@+id/letter3"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/edittext_normal_level2"
+                android:gravity="center"
+                android:textColor="@color/primary_text"
+                android:textSize="32sp"
+                android:layout_marginLeft="1.5dp"
+                android:layout_marginRight="1.5dp"
+                android:inputType="textCapCharacters"
+                android:maxLength="1"
+                android:imeOptions="actionNext"
+                android:cursorVisible="false" />
+
+        <EditText
+                android:id="@+id/letter4"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/edittext_normal_level2"
+                android:gravity="center"
+                android:textColor="@color/primary_text"
+                android:textSize="32sp"
+                android:layout_marginLeft="1.5dp"
+                android:layout_marginRight="1.5dp"
+                android:inputType="textCapCharacters"
+                android:maxLength="1"
+                android:imeOptions="actionNext"
+                android:cursorVisible="false" />
+
+        <EditText
+                android:id="@+id/letter5"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/edittext_normal_level2"
+                android:gravity="center"
+                android:textColor="@color/primary_text"
+                android:textSize="32sp"
+                android:layout_marginLeft="1.5dp"
+                android:layout_marginRight="1.5dp"
+                android:inputType="textCapCharacters"
+                android:maxLength="1"
+                android:imeOptions="actionNext"
+                android:cursorVisible="false" />
+    </LinearLayout>
+    <Button
+            android:id="@+id/submit_level_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/submit"
+            android:textColor="@color/button_text"
+            android:textSize="29sp"
+            android:backgroundTint="@color/level_2"
+            android:layout_below="@id/game_field_2"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true" />
+</RelativeLayout>
