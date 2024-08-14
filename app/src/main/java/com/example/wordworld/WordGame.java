@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class WordGame {
     //word strings per difficulty level
-    public static String[] diffOneWords = {"cats", "dogs"};
+    public static String[] diffOneWords = {"CATS", "DOGS"};
     public static String[] diffTwoWords = {"fruit", "fishy"};
     public static String[] diffThreeWords = {"apples", "grapes"};
 
