@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class LevelOneActivity extends AppCompatActivity {
 
+
     private Button submitButton;
 
     @Override
@@ -50,14 +51,14 @@ public class LevelOneActivity extends AppCompatActivity {
         // Add a special TextWatcher for the last EditText
         addFinalTextWatcher(letter4);
 
-        // Initialize the submit button
+        /*// Initialize the submit button
         submitButton = findViewById(R.id.submit_level_one);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Add submit button logic here
             }
-        });
+        });*/
     }
 
     private void addTextWatcher(final EditText currentEditText, final EditText nextEditText) {
