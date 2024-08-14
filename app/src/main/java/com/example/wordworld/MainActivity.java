@@ -25,5 +25,55 @@ public class MainActivity extends AppCompatActivity {
         TextView dateTextView = findViewById(R.id.date);
         dateTextView.setText(currentDate);
 
+        // Initialize the back button and set the click listener
+        ImageButton backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle back button action
+                onBackPressed();
+            }
+        });
+
+        // Initialize the navigation button and set the click listener
+        ImageButton navButton = findViewById(R.id.nav_button);
+        navButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle navigation button action
+                // Open navigation drawer or other action
+            }
+        });
+
+        // Initialize level one button and set the click listener
+        Button levelOneButton = findViewById(R.id.level_one);
+        levelOneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LevelOneActivity.class);
+                startActivity(intent);
+            }
+
+        });
+
+        // Initialize level two button and set the click listener
+        Button levelTwoButton = findViewById(R.id.level_two);
+        levelTwoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LevelTwoActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Initialize level three button and set the click listener
+        Button levelThreeButton = findViewById(R.id.level_three);
+        levelThreeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LevelThreeActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
