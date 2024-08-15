@@ -12,9 +12,8 @@ public class LevelOneActivity extends AppCompatActivity {
     private EditText letter1, letter2, letter3, letter4;
     private TextView tvFeedBack;
     private TextView tvAttempts;
+    private WordGame wordGame;
 
-    private String chosenWord;
-    private int attempts = 5;
     private Button submitButton;
 
     @Override
@@ -33,8 +32,8 @@ public class LevelOneActivity extends AppCompatActivity {
         submitButton = findViewById(R.id.submit_level_one);
 
         // Set up the game
-        chosenWord = WordGame.getRandomWord(WordGame.diffOneWords);
-        startGame();
+        wordGame = new WordGame(WordGame.diffOneWords);
+        wordGame.startGame();
 
         // Set up the submit button listener
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -55,36 +54,16 @@ public class LevelOneActivity extends AppCompatActivity {
         });
     }
 
-    private void startGame() {
-        attempts = 5;
-        tvFeedBack.setText("");
-        tvAttempts.setText("Attempts Left: " + attempts);
-        clearLetters();
-        enableLetters(true);
-    }
-
     private void handleGuess() {
         String userGuess = getUserInput();
 
-        if (userGuess.length() != chosenWord.length()) {
-            tvFeedBack.setText("Your guess must be " + chosenWord.length() + " letters long.");
-            return;
-        }
-
-        String feedback = WordGame.gamePlay(chosenWord, userGuess);
+        // Get feedback from the WordGame class
+        String feedback = wordGame.handleGuess(userGuess);
         tvFeedBack.setText(feedback);
 
-        if (feedback.equalsIgnoreCase(chosenWord)) {
-            tvFeedBack.setText("Congratulations! You've guessed the word: " + chosenWord);
+        // Check if the game is over and disable inputs if necessary
+        if (feedback.contains("Congratulations") || feedback.contains("Sorry")) {
             enableLetters(false); // Disable further input
-        } else {
-            attempts--;
-            tvAttempts.setText("Attempts left: " + attempts);
-
-            if (attempts <= 0) {
-                tvFeedBack.setText("Sorry, you've run out of attempts. The word was: " + chosenWord);
-                enableLetters(false); // Disable further input
-            }
         }
 
         clearLetters(); // Clear the input fields after each guess
