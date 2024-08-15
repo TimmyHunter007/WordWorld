@@ -1,6 +1,8 @@
 package com.example.wordworld;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +15,6 @@ public class LevelOneActivity extends AppCompatActivity {
     private TextView tvFeedBack;
     private TextView tvAttempts;
     private WordGame wordGame;
-
     private Button submitButton;
 
     @Override
@@ -52,6 +53,12 @@ public class LevelOneActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        // Add TextWatcher to move to the next EditText
+        letter1.addTextChangedListener(new LetterTextWatcher(letter1, letter2));
+        letter2.addTextChangedListener(new LetterTextWatcher(letter2, letter3));
+        letter3.addTextChangedListener(new LetterTextWatcher(letter3, letter4));
+        letter4.addTextChangedListener(new LetterTextWatcher(letter4, null));
     }
 
     private void handleGuess() {
@@ -90,5 +97,37 @@ public class LevelOneActivity extends AppCompatActivity {
         letter2.setEnabled(enabled);
         letter3.setEnabled(enabled);
         letter4.setEnabled(enabled);
+    }
+
+    // TextWatcher class to move focus to the next EditText
+    private class LetterTextWatcher implements TextWatcher {
+        private final EditText currentEditText;
+        private final EditText nextEditText;
+
+        public LetterTextWatcher(EditText currentEditText, EditText nextEditText) {
+            this.currentEditText = currentEditText;
+            this.nextEditText = nextEditText;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // No action needed here
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (s.length() == 1) {
+                if (nextEditText != null) {
+                    nextEditText.requestFocus();
+                } else {
+                    currentEditText.clearFocus(); // Clear focus on the last EditText
+                }
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // No action needed here
+        }
     }
 }
