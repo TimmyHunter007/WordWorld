@@ -28,22 +28,22 @@ public class WordGame {
     }
 
     // Method to handle the user's guess
-    public String handleGuess(String userInput) {
+    public Feedback handleGuess(String userInput) {
         if (userInput.length() != chosenWord.length()) {
-            return "Your guess must be " + chosenWord.length() + " letters long.";
+            return new Feedback("Your guess must be " + chosenWord.length() + " letters long.", attempts);
         }
 
         feedback = gamePlay(chosenWord, userInput);
 
         if (feedback.equalsIgnoreCase(chosenWord)) {
-            return "Congratulations! You've guessed the word: " + chosenWord;
+            return new Feedback("Congratulations! You've guessed the word: " + chosenWord, attempts);
         } else {
             attempts--;
 
             if (attempts <= 0) {
-                return "Sorry, you've run out of attempts. The word was: " + chosenWord;
+                return new Feedback("Sorry, you've run out of attempts. The word was: " + chosenWord, attempts);
             } else {
-                return feedback + "\nAttempts left: " + attempts;
+                return new Feedback(feedback, attempts);
             }
         }
     }
@@ -86,5 +86,15 @@ public class WordGame {
             }
         }
         return new String(feedback);
+    }
+
+    public static class Feedback{
+        public final String message;
+        public final int attemptsLeft;
+
+        public Feedback(String message, int attemptsLeft) {
+            this.message = message;
+            this.attemptsLeft = attemptsLeft;
+        }
     }
 }

@@ -58,11 +58,13 @@ public class LevelOneActivity extends AppCompatActivity {
         String userGuess = getUserInput();
 
         // Get feedback from the WordGame class
-        String feedback = wordGame.handleGuess(userGuess);
-        tvFeedBack.setText(feedback);
+        WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
+        tvFeedBack.setText(feedback.message);
+
+        tvAttempts.setText("Attempts Left: " + feedback.attemptsLeft);
 
         // Check if the game is over and disable inputs if necessary
-        if (feedback.contains("Congratulations") || feedback.contains("Sorry")) {
+        if (feedback.message.contains("Congratulations") || feedback.message.contains("Sorry")) {
             enableLetters(false); // Disable further input
         }
 
