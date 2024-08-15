@@ -3,27 +3,22 @@ package com.example.wordworld;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.wordworld.WordManagement;
 
 public class LevelOneActivity extends AppCompatActivity {
 
     private Button submitButton;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_level_one);
-
-
 
         // Initialize the back button and set the click listener
         ImageButton backButton = findViewById(R.id.back_button);
@@ -61,8 +56,6 @@ public class LevelOneActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Add submit button logic here
-
-
             }
         });
     }
