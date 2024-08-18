@@ -34,6 +34,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp">
 
+        <!-- Text boxes for letters starting with 1 then going to next -->
         <EditText
                 android:id="@+id/letter1"
                 android:layout_width="60dp"
@@ -100,21 +101,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
             android:layout_below="@+id/submit_level_one"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:text="____" />
+
     <TextView
             android:id="@+id/tv_attempts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
             android:layout_below="@+id/tv_feedback"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
             android:text="Attempts Left: 5" />
+
     <Button
             android:id="@+id/submit_level_one"
             android:layout_width="wrap_content"
@@ -126,4 +135,5 @@
             android:layout_below="@id/game_field_1"
             android:layout_marginTop="16dp"
             android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
