@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "679336759191",
+    "project_id": "wordworld-1fe15",
+    "storage_bucket": "wordworld-1fe15.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679336759191:android:0898c62396a8b9bc3b3ed2",
+        "android_client_info": {
+          "package_name": "com.example.wordworld"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8ii0vtNzeHvOijjkWbDSt11G_aL-1wL4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
