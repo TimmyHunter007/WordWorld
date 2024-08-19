@@ -1,29 +1,30 @@
 package com.example.wordworld;
+import java.util.Arrays;
 import java.util.Random;
+import com.example.wordworld.WordManagement;
+
 
 public class WordGame {
 
     private String chosenWord;
     private int attempts;
-    private String[] wordList;
+    private final WordManagement wordManagement; // Injected dependency
     private String feedback;
 
-    public WordGame(String[] wordList) {
-        this.wordList = wordList;
-        this.chosenWord = getRandomWord(wordList);
+    public WordGame(WordManagement wordManagement) {
+        this.wordManagement = wordManagement;
         this.attempts = 5;
         this.feedback = "";
     }
 
-    //word strings per difficulty level
-    public static String[] diffOneWords = {"CATS", "DOGS"};
-    public static String[] diffTwoWords = {"fruit", "fishy"};
-    public static String[] diffThreeWords = {"apples", "grapes"};
 
     //starting game logic
-    public void startGame() {
+    public void startGame(int level) {
+        String[] wordList = wordManagement.getRandomWord(level);
+        Random random = new Random();
+        int randomIndex = random.nextInt(wordList.length);
         this.attempts = 5;
-        this.chosenWord = getRandomWord(wordList);
+        this.chosenWord = wordList[randomIndex];
         this.feedback = "";
     }
 
@@ -48,11 +49,6 @@ public class WordGame {
         }
     }
 
-    //method grabbing random words for selected difficulty
-    public static String getRandomWord(String[] wordList){
-        Random rand = new Random();
-        return wordList[rand.nextInt(wordList.length)];
-    }
 
     //game logic for game play
     public static String gamePlay(String chosenWord, String userInput){
