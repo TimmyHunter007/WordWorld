@@ -38,9 +38,10 @@
                 android:layout_height="wrap_content"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
-                android:background="@drawable/edittext_normal_level1"
+                android:background="@drawable/input_fields_profile"
                 android:textColor="@color/primary_text"
                 android:textSize="18sp"
+                android:padding="15dp"
                 android:layout_marginBottom="16dp" />
 
         <EditText
@@ -49,9 +50,10 @@
                 android:layout_height="wrap_content"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:background="@drawable/edittext_normal_level1"
+                android:background="@drawable/input_fields_profile"
                 android:textColor="@color/primary_text"
                 android:textSize="18sp"
+                android:padding="15dp"
                 android:layout_marginBottom="16dp" />
 
         <Button
