@@ -3,12 +3,14 @@ package com.example.wordworld;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.wordworld.WordManagement;
 
 public class LevelOneActivity extends AppCompatActivity {
     private EditText letter1, letter2, letter3, letter4;
@@ -16,6 +18,9 @@ public class LevelOneActivity extends AppCompatActivity {
     private TextView tvAttempts;
     private WordGame wordGame;
     private Button submitButton;
+    private WordGame wordGames;
+    private WordManagement wordManagement;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +37,14 @@ public class LevelOneActivity extends AppCompatActivity {
         tvAttempts = findViewById(R.id.tv_attempts);
         submitButton = findViewById(R.id.submit_level_one);
 
-        // Set up the game
-        wordGame = new WordGame(WordGame.diffOneWords);
-        wordGame.startGame();
+        wordManagement = new WordManagement(this);
+        wordGame = new WordGame(wordManagement);
+        int level = 1;
+        wordGame.startGame(level);
+
+
+
+
 
         // Set up the submit button listener
         submitButton.setOnClickListener(new View.OnClickListener() {
