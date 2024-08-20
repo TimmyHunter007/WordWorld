@@ -14,12 +14,13 @@ import com.example.wordworld.WordManagement;
 
 public class LevelOneActivity extends AppCompatActivity {
     private EditText letter1, letter2, letter3, letter4;
-    private TextView tvFeedBack;
+    private TextView tvFeedBack, tvFeedBack1, tvFeedBack2, tvFeedBack3, tvFeedBack4;
     private TextView tvAttempts;
     private WordGame wordGame;
     private Button submitButton;
-    private WordGame wordGames;
+    //private WordGame wordGames;
     private WordManagement wordManagement;
+    private int feedbackIndex = 0;
 
 
     @Override
@@ -34,6 +35,10 @@ public class LevelOneActivity extends AppCompatActivity {
         letter3 = findViewById(R.id.letter3);
         letter4 = findViewById(R.id.letter4);
         tvFeedBack = findViewById(R.id.tv_feedback);
+        tvFeedBack1 = findViewById(R.id.tv_feedback1);
+        tvFeedBack2 = findViewById(R.id.tv_feedback2);
+        tvFeedBack3 = findViewById(R.id.tv_feedback3);
+        tvFeedBack4 = findViewById(R.id.tv_feedback4);
         tvAttempts = findViewById(R.id.tv_attempts);
         submitButton = findViewById(R.id.submit_level_one);
 
@@ -41,10 +46,6 @@ public class LevelOneActivity extends AppCompatActivity {
         wordGame = new WordGame(wordManagement);
         int level = 1;
         wordGame.startGame(level);
-
-
-
-
 
         // Set up the submit button listener
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +79,19 @@ public class LevelOneActivity extends AppCompatActivity {
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
         tvFeedBack.setText(feedback.message);
 
+        //display previous user guesses in tvfeedback boxes
+        if (feedbackIndex == 0) {
+            tvFeedBack1.setText(userGuess);
+        }else if(feedbackIndex == 1) {
+            tvFeedBack2.setText(userGuess);
+        }else if(feedbackIndex == 2) {
+            tvFeedBack3.setText(userGuess);
+        }else if(feedbackIndex == 3) {
+            tvFeedBack4.setText(userGuess);
+        }
+        feedbackIndex++;
+
+        //update attempts
         tvAttempts.setText("Attempts Left: " + feedback.attemptsLeft);
 
         // Check if the game is over and disable inputs if necessary
