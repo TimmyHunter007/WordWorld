@@ -59,6 +59,31 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp" />
 
+    <TextView
+            android:id="@+id/badge_count_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Badges: 0"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@id/silver_coins"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp" />
+
+    <TextView
+            android:id="@+id/points_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Points: 0"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@id/badge_count_display"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp" />
+
+    <!--
     <EditText
             android:id="@+id/old_password"
             android:layout_width="match_parent"
@@ -69,7 +94,7 @@
             android:textSize="18sp"
             android:background="@drawable/input_fields_profile"
             android:padding="16dp"
-            android:layout_below="@id/silver_coins"
+            android:layout_below="@id/points_display"
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp" />
@@ -88,7 +113,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp" />
-
+-->
     <Button
             android:id="@+id/update_password_button"
             android:layout_width="wrap_content"
@@ -97,9 +122,9 @@
             android:textColor="@color/button_text"
             android:textSize="20sp"
             android:backgroundTint="@color/profile_leaderBoard_button"
-            android:layout_below="@id/new_password"
+            android:layout_above="@id/sign_out_button"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp" />
+            android:layout_marginBottom="16dp" />
 
     <Button
             android:id="@+id/add_coins_button"
@@ -109,9 +134,9 @@
             android:textColor="@color/button_text"
             android:textSize="20sp"
             android:backgroundTint="@color/profile_leaderBoard_button"
-            android:layout_above="@id/sign_out_button"
+            android:layout_above="@id/update_password_button"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp" />
+            android:layout_marginBottom="16dp" />
 
     <Button
             android:id="@+id/sign_out_button"
@@ -120,7 +145,7 @@
             android:text="Sign Out"
             android:textColor="@color/button_text"
             android:textSize="20sp"
-            android:backgroundTint="@color/profile_leaderBoard_button"
+            android:backgroundTint="@color/level_3"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="16dp" />

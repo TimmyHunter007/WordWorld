@@ -12,8 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -32,30 +30,34 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide(); // Hide the action bar for a full-screen experience
         setContentView(R.layout.activity_main); // Set the layout for this activity
 
-
-
         // Initialize Firebase Auth and get the current user
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-        // Set up the database reference to the current user's data
-        databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        // Check if the user is signed in
+        if (user != null) {
+            // Set up the database reference to the current user's data
+            databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
 
-        // Gets user silver coin count and shows it on main screen
-        databaseReference.child("silverCoins").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                silverCoins = findViewById(R.id.coin_count);
-                Integer coins = dataSnapshot.getValue(Integer.class);
-                silverCoins.setText("Silver Coins " + coins);
-            }
+            // Gets user silver coin count and shows it on main screen
+            databaseReference.child("silverCoins").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    silverCoins = findViewById(R.id.coin_count);
+                    Integer coins = dataSnapshot.getValue(Integer.class);
+                    silverCoins.setText("Silver Coins: " + coins);
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Hand possible error
-                Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle possible error
+                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            // If no user is signed in, handle it accordingly (e.g., show a message or redirect to login)
+            Toast.makeText(this, "No user is signed in.", Toast.LENGTH_SHORT).show();
+        }
 
         // Get the current date formatted as "Month Day, Year"
         String currentDate = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(new Date());

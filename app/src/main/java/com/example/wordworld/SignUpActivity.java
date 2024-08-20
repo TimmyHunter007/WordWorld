@@ -94,7 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
 
                                 // Create a new User object to store in the database
-                                User newUser = new User(fname, lname, email, 0); // Initializing silver coins to 0
+                                User newUser = new User(fname, lname, email, 0, 0, 0, 0, 0); // Initializing silver coins to 0
 
                                 // Save the user details in the database
                                 databaseReference.setValue(newUser)
@@ -132,18 +132,23 @@ public class SignUpActivity extends AppCompatActivity {
         public String fName;
         public String lName;
         public String email;
-        public int silverCoins;
+        public int silverCoins, points;
+        public int hasBadge_FirstWord, hasBadge_SevenDayStreak, hasBadge_LevelThreeGuesser;
 
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
         public User() {
         }
 
         // Constructor to initialize user data
-        public User(String fName, String lName, String email, int silverCoins) {
+        public User(String fName, String lName, String email, int silverCoins, int points, int hasBadge_FirstWord, int hasBadge_SevenDayStreak, int hasBadge_LevelThreeGuesser) {
             this.fName = fName;
             this.lName = lName;
             this.email = email;
             this.silverCoins = silverCoins;
+            this.points = points;
+            this.hasBadge_FirstWord = hasBadge_FirstWord;
+            this.hasBadge_SevenDayStreak = hasBadge_SevenDayStreak;
+            this.hasBadge_LevelThreeGuesser = hasBadge_LevelThreeGuesser;
         }
     }
 }

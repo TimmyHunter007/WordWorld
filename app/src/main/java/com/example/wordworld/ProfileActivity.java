@@ -1,9 +1,11 @@
 package com.example.wordworld;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 import androidx.annotation.NonNull;
@@ -23,8 +25,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth auth; // Firebase Authentication instance
     private FirebaseUser user; // Current authenticated user
     private DatabaseReference databaseReference; // Database reference for user's data
-    private TextView emailDisplay, silverCoinsTextView, nameDisplay; // UI elements
-    private EditText oldPassword, newPassword; // Input fields for password change
+    private TextView emailDisplay, silverCoinsTextView, nameDisplay, badgeCountDisplay, pointsDisplay; // UI elements
     private Button updatePasswordButton, signOutButton, addCoinsButton; // Buttons for various actions
 
     @Override
@@ -42,72 +43,74 @@ public class ProfileActivity extends AppCompatActivity {
         // Initialize UI components
         emailDisplay = findViewById(R.id.email_display);
         silverCoinsTextView = findViewById(R.id.silver_coins);
-        oldPassword = findViewById(R.id.old_password);
-        newPassword = findViewById(R.id.new_password);
-        updatePasswordButton = findViewById(R.id.update_password_button);
+        nameDisplay = findViewById(R.id.name_display);
+        badgeCountDisplay = findViewById(R.id.badge_count_display);
+        pointsDisplay = findViewById(R.id.points_display);
         signOutButton = findViewById(R.id.sign_out_button);
         addCoinsButton = findViewById(R.id.add_coins_button);
-        nameDisplay = findViewById(R.id.name_display);
+        updatePasswordButton = findViewById(R.id.update_password_button);
 
-        // Display the user's UID (as a placeholder for email display or other user info)
+        // Display the user's email
         if (user != null) {
             emailDisplay.setText(user.getEmail());
         }
 
-        // Retrieve and display the user's first name and last name from the database
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        // Retrieve and display the user's points
+        databaseReference.child("points").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Get the fName and lName values from the database
-                    String fName = dataSnapshot.child("fName").getValue(String.class);
-                    String lName = dataSnapshot.child("lName").getValue(String.class);
-
-                    // Combine the first and last name
-                    String fullName = fName + " " + lName;
-
-                    // Log the full name
-                    Log.d("ProfileActivity", "Full Name: " + fullName);
-
-                    // Set the full name to the TextView
-                    nameDisplay.setText(fullName);
+                    Integer points = dataSnapshot.getValue(Integer.class);
+                    pointsDisplay.setText("Points: " + (points != null ? points : 0));
                 } else {
-                    Log.d("ProfileActivity", "User data does not exist");
+                    pointsDisplay.setText("Points: 0");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle possible errors
-                Toast.makeText(ProfileActivity.this, "Failed to load user information.", Toast.LENGTH_SHORT).show();
-                Log.e("ProfileActivity", "Database error: " + databaseError.getMessage());
+                Toast.makeText(ProfileActivity.this, "Failed to load Points.", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Retrieve and display the number of Silver Coins the user has
-        databaseReference.child("silverCoins").addValueEventListener(new ValueEventListener() {
+        // Retrieve and display the user's first name and last name, and calculate badge count
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Get the silverCoins value and display it
-                    Integer silverCoins = dataSnapshot.getValue(Integer.class);
-                    if (silverCoins != null) {
-                        silverCoinsTextView.setText("Silver Coins: " + silverCoins);
-                        Log.d("ProfileActivity", "Silver Coins retrieved: " + silverCoins);
-                    } else {
-                        silverCoinsTextView.setText("Silver Coins: 0");
-                        Log.d("ProfileActivity", "Silver Coins value is null, setting to 0.");
+                    String fName = dataSnapshot.child("fName").getValue(String.class);
+                    String lName = dataSnapshot.child("lName").getValue(String.class);
+                    nameDisplay.setText((fName != null ? fName : "") + " " + (lName != null ? lName : ""));
+
+                    int totalBadges = 0;
+                    for (DataSnapshot badgeSnapshot : dataSnapshot.getChildren()) {
+                        String key = badgeSnapshot.getKey();
+                        if (key != null && key.startsWith("hasBadge_")) {
+                            Integer badgeCount = badgeSnapshot.getValue(Integer.class);
+                            totalBadges += (badgeCount != null && badgeCount > 0) ? badgeCount : 0;
+                        }
                     }
-                } else {
-                    silverCoinsTextView.setText("Silver Coins: 0");
-                    Log.d("ProfileActivity", "DataSnapshot does not exist, setting Silver Coins to 0.");
+                    badgeCountDisplay.setText("Total Badges: " + totalBadges);
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(ProfileActivity.this, "Failed to load user information.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Retrieve and display the user's Silver Coins
+        databaseReference.child("silverCoins").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer silverCoins = dataSnapshot.getValue(Integer.class);
+                silverCoinsTextView.setText("Silver Coins: " + (silverCoins != null ? silverCoins : 0));
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(ProfileActivity.this, "Failed to load Silver Coins.", Toast.LENGTH_SHORT).show();
-                Log.e("ProfileActivity", "Database error: " + databaseError.getMessage());
             }
         });
 
@@ -115,21 +118,18 @@ public class ProfileActivity extends AppCompatActivity {
         addCoinsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Retrieve current Silver Coins value and add 10 coins
                 databaseReference.child("silverCoins").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Integer currentCoins = dataSnapshot.getValue(Integer.class);
                         if (currentCoins != null) {
-                            int newCoinValue = currentCoins + 10; // Add 10 coins
+                            int newCoinValue = currentCoins + 10;
                             databaseReference.child("silverCoins").setValue(newCoinValue)
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(ProfileActivity.this, "10 Coins Added!", Toast.LENGTH_SHORT).show();
-                                            Log.d("ProfileActivity", "10 Coins successfully added.");
                                         } else {
                                             Toast.makeText(ProfileActivity.this, "Failed to add coins.", Toast.LENGTH_SHORT).show();
-                                            Log.e("ProfileActivity", "Failed to add coins: " + task.getException());
                                         }
                                     });
                         }
@@ -138,63 +138,76 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                         Toast.makeText(ProfileActivity.this, "Failed to retrieve current coins.", Toast.LENGTH_SHORT).show();
-                        Log.e("ProfileActivity", "Database error: " + databaseError.getMessage());
                     }
                 });
             }
         });
 
-        // Update password button click listener to change the user's password
-        updatePasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String oldPass = oldPassword.getText().toString().trim();
-                String newPass = newPassword.getText().toString().trim();
-
-                // Validate input fields
-                if (TextUtils.isEmpty(oldPass) || TextUtils.isEmpty(newPass)) {
-                    Toast.makeText(ProfileActivity.this, "Please enter both passwords", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                // Re-authenticate user before updating the password
-                AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPass);
-                user.reauthenticate(credential).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // Update the user's password
-                        user.updatePassword(newPass).addOnCompleteListener(task1 -> {
-                            if (task1.isSuccessful()) {
-                                Toast.makeText(ProfileActivity.this, "Password Updated Successfully", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(ProfileActivity.this, "Password Update Failed: " + task1.getException(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    } else {
-                        Toast.makeText(ProfileActivity.this, "Authentication Failed: " + task.getException(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
+        // Set up the "Update Password" button to show the dialog
+        updatePasswordButton.setOnClickListener(v -> showUpdatePasswordDialog());
 
         // Sign out button click listener to log out the user
-        signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                auth.signOut(); // Sign out the user
-                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-                startActivity(intent); // Redirect to MainActivity
-                finish(); // Close the profile activity
-            }
+        signOutButton.setOnClickListener(v -> {
+            auth.signOut(); // Sign out the user
+            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+            startActivity(intent); // Redirect to MainActivity
+            finish(); // Close the profile activity
         });
 
         // Initialize the back button and set the click listener to navigate back
         ImageButton backButton = findViewById(R.id.back_button);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle back button action
-                onBackPressed(); // Navigate back to the previous activity
+        backButton.setOnClickListener(v -> onBackPressed()); // Navigate back to the previous activity
+    }
+
+    // Method to show the Update Password dialog
+    private void showUpdatePasswordDialog() {
+        // Inflate the dialog layout
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.dialog_update_password, null);
+
+        // Initialize the input fields and button
+        EditText oldPasswordDialog = view.findViewById(R.id.old_password_dialog);
+        EditText newPasswordDialog = view.findViewById(R.id.new_password_dialog);
+        Button updatePasswordButtonDialog = view.findViewById(R.id.update_password_button_dialog);
+
+        // Create an AlertDialog to hold the custom layout
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setView(view)
+                .setTitle("Update Password")
+                .setNegativeButton("Cancel", null)
+                .create();
+
+        // Set the Update button click listener
+        updatePasswordButtonDialog.setOnClickListener(v -> {
+            String oldPass = oldPasswordDialog.getText().toString().trim();
+            String newPass = newPasswordDialog.getText().toString().trim();
+
+            // Validate the input fields
+            if (TextUtils.isEmpty(oldPass) || TextUtils.isEmpty(newPass)) {
+                Toast.makeText(ProfileActivity.this, "Please enter both passwords", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            // Re-authenticate the user before updating the password
+            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPass);
+            user.reauthenticate(credential).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    // Update the user's password
+                    user.updatePassword(newPass).addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            Toast.makeText(ProfileActivity.this, "Password Updated Successfully", Toast.LENGTH_SHORT).show();
+                            alertDialog.dismiss(); // Close the dialog
+                        } else {
+                            Toast.makeText(ProfileActivity.this, "Password Update Failed: " + task1.getException(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Authentication Failed: " + task.getException(), Toast.LENGTH_SHORT).show();
+                }
+            });
         });
+
+        // Show the dialog
+        alertDialog.show();
     }
 }
