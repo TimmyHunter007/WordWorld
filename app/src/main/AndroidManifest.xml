@@ -19,6 +19,9 @@
         <activity android:name=".LevelOneActivity" />
         <activity android:name=".LevelTwoActivity" />
         <activity android:name=".LevelThreeActivity" />
+        <activity android:name=".LoginActivity" android:exported="true"/>
+        <activity android:name=".SignUpActivity" android:exported="true" />
+        <activity android:name=".ProfileActivity" android:exported="true" />
 </application>
 
         </manifest>
