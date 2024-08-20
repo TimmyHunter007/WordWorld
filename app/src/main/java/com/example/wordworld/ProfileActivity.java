@@ -25,7 +25,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth auth; // Firebase Authentication instance
     private FirebaseUser user; // Current authenticated user
     private DatabaseReference databaseReference; // Database reference for user's data
-    private TextView emailDisplay, silverCoinsTextView, nameDisplay, badgeCountDisplay, pointsDisplay; // UI elements
+    private TextView emailDisplay, silverCoinsTextView, nameDisplay, badgeCountDisplay, pointsDisplay, wordCorrectDisplay; // UI elements
     private Button updatePasswordButton, signOutButton, addCoinsButton; // Buttons for various actions
 
     @Override
@@ -49,6 +49,7 @@ public class ProfileActivity extends AppCompatActivity {
         signOutButton = findViewById(R.id.sign_out_button);
         addCoinsButton = findViewById(R.id.add_coins_button);
         updatePasswordButton = findViewById(R.id.update_password_button);
+        wordCorrectDisplay = findViewById(R.id.word_correct_display);
 
         // Display the user's email
         if (user != null) {
@@ -61,16 +62,34 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Integer points = dataSnapshot.getValue(Integer.class);
-                    pointsDisplay.setText("Points: " + (points != null ? points : 0));
+                    pointsDisplay.setText("" + (points != null ? points : 0));
                 } else {
-                    pointsDisplay.setText("Points: 0");
+                    pointsDisplay.setText("0");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(ProfileActivity.this, "Failed to load Points.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ProfileActivity.this, "Failed to load Points.", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        // Retrive and display the user's word count
+        databaseReference.child("wordsCorrect").addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               if(dataSnapshot.exists()){
+                   Integer correctWords = dataSnapshot.getValue(Integer.class);
+                   wordCorrectDisplay.setText("" + correctWords);
+               } else {
+                   wordCorrectDisplay.setText("0");
+               }
+           }
+
+           @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+               //Toast.makeText(ProfileActivity.this, "Failed to load Words.", Toast.LENGTH_SHORT).show();
+           }
         });
 
         // Retrieve and display the user's first name and last name, and calculate badge count
@@ -90,13 +109,13 @@ public class ProfileActivity extends AppCompatActivity {
                             totalBadges += (badgeCount != null && badgeCount > 0) ? badgeCount : 0;
                         }
                     }
-                    badgeCountDisplay.setText("Total Badges: " + totalBadges);
+                    badgeCountDisplay.setText("" + totalBadges);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(ProfileActivity.this, "Failed to load user information.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ProfileActivity.this, "Failed to load user information.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -105,12 +124,12 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Integer silverCoins = dataSnapshot.getValue(Integer.class);
-                silverCoinsTextView.setText("Silver Coins: " + (silverCoins != null ? silverCoins : 0));
+                silverCoinsTextView.setText("" + (silverCoins != null ? silverCoins : 0));
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(ProfileActivity.this, "Failed to load Silver Coins.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ProfileActivity.this, "Failed to load Silver Coins.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -137,7 +156,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(ProfileActivity.this, "Failed to retrieve current coins.", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(ProfileActivity.this, "Failed to retrieve current coins.", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
