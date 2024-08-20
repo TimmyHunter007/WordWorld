@@ -16,15 +16,15 @@ public class LevelThreeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
-        setContentView(R.layout.activity_level_three);
+        getSupportActionBar().hide(); // Hide the action bar for a full-screen experience
+        setContentView(R.layout.activity_level_three); // Set the layout for this activity
 
-        // Initialize the back button and set the click listener
+        // Initialize the back button and set its click listener
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                onBackPressed(); // Navigate back to the previous screen when the back button is pressed
             }
         });
 
@@ -36,7 +36,7 @@ public class LevelThreeActivity extends AppCompatActivity {
         final EditText letter5 = findViewById(R.id.letter5);
         final EditText letter6 = findViewById(R.id.letter6);
 
-        // Set focus change listeners to highlight the currently selected box
+        // Set focus change listeners to highlight the currently selected EditText
         setFocusChangeListener(letter1);
         setFocusChangeListener(letter2);
         setFocusChangeListener(letter3);
@@ -44,49 +44,55 @@ public class LevelThreeActivity extends AppCompatActivity {
         setFocusChangeListener(letter5);
         setFocusChangeListener(letter6);
 
-        // Add TextWatchers to automatically move to the next box
+        // Add TextWatchers to automatically move focus to the next EditText when a character is entered
         addTextWatcher(letter1, letter2);
         addTextWatcher(letter2, letter3);
         addTextWatcher(letter3, letter4);
         addTextWatcher(letter4, letter5);
         addTextWatcher(letter5, letter6);
 
-        // Initialize the submit button
+        // Initialize the submit button and set its click listener
         submitButton = findViewById(R.id.submit_level_three);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Add submit button logic here
+                // Add submit button logic here (e.g., handling the user's input)
             }
         });
     }
 
+    // Method to add a TextWatcher to an EditText that moves focus to the next EditText when a character is entered
     private void addTextWatcher(final EditText currentEditText, final EditText nextEditText) {
         currentEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No action needed here before the text changes
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 1) {
-                    nextEditText.requestFocus();
+                    nextEditText.requestFocus(); // Move focus to the next EditText when a character is entered
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                // No action needed here after the text changes
             }
         });
     }
 
+    // Method to set focus change listeners on an EditText to change its background when it gains or loses focus
     private void setFocusChangeListener(final EditText editText) {
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
+                    // Change the background to highlighted when the EditText gains focus
                     editText.setBackgroundResource(R.drawable.edittext_highlighted_level3);
                 } else {
+                    // Change the background to normal when the EditText loses focus
                     editText.setBackgroundResource(R.drawable.edittext_normal_level3);
                 }
             }

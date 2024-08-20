@@ -20,25 +20,26 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private FirebaseAuth auth;
-    private FirebaseUser user;
-    private DatabaseReference databaseReference;
-    private TextView emailDisplay, silverCoinsTextView, testDisplay;
-    private EditText oldPassword, newPassword;
-    private Button updatePasswordButton, signOutButton, addCoinsButton;
+    private FirebaseAuth auth; // Firebase Authentication instance
+    private FirebaseUser user; // Current authenticated user
+    private DatabaseReference databaseReference; // Database reference for user's data
+    private TextView emailDisplay, silverCoinsTextView, testDisplay; // UI elements
+    private EditText oldPassword, newPassword; // Input fields for password change
+    private Button updatePasswordButton, signOutButton, addCoinsButton; // Buttons for various actions
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
-        setContentView(R.layout.activity_profile);
+        getSupportActionBar().hide(); // Hide the action bar for a full-screen experience
+        setContentView(R.layout.activity_profile); // Set the layout for this activity
 
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
+        auth = FirebaseAuth.getInstance(); // Initialize Firebase Auth
+        user = auth.getCurrentUser(); // Get the current authenticated user
 
-        // Set up database reference
+        // Set up the database reference to the current user's data
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
 
+        // Initialize UI components
         emailDisplay = findViewById(R.id.email_display);
         silverCoinsTextView = findViewById(R.id.silver_coins);
         oldPassword = findViewById(R.id.old_password);
@@ -48,21 +49,20 @@ public class ProfileActivity extends AppCompatActivity {
         addCoinsButton = findViewById(R.id.add_coins_button);
         testDisplay = findViewById(R.id.test_display);
 
-        // Display user's email
+        // Display the user's UID (as a placeholder for email display or other user info)
         if (user != null) {
             emailDisplay.setText(user.getUid());
         }
 
+        // Retrieve and display the user's first name from the database
         databaseReference.child("fName").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Get the fName value from the database
+                    // Get the fName value from the database and display it
                     String fName = dataSnapshot.getValue(String.class);
                     Log.d("ProfileActivity", "fName: " + fName); // Log the fName value
-
-                    // Set the fName value to the TextView
-                    testDisplay.setText(fName);
+                    testDisplay.setText(fName); // Set the fName value to the TextView
                 } else {
                     Log.d("ProfileActivity", "fName does not exist");
                 }
@@ -75,11 +75,12 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // Retrieve and display Silver Coins
+        // Retrieve and display the number of Silver Coins the user has
         databaseReference.child("silverCoins").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    // Get the silverCoins value and display it
                     Integer silverCoins = dataSnapshot.getValue(Integer.class);
                     if (silverCoins != null) {
                         silverCoinsTextView.setText("Silver Coins: " + silverCoins);
@@ -101,16 +102,17 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // Add coins button click listener
+        // Add coins button click listener to increase the user's Silver Coins
         addCoinsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Retrieve current Silver Coins value and add 10 coins
                 databaseReference.child("silverCoins").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Integer currentCoins = dataSnapshot.getValue(Integer.class);
                         if (currentCoins != null) {
-                            int newCoinValue = currentCoins + 10; // Add 10 coins for testing
+                            int newCoinValue = currentCoins + 10; // Add 10 coins
                             databaseReference.child("silverCoins").setValue(newCoinValue)
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
@@ -133,22 +135,24 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // Update password button click listener
+        // Update password button click listener to change the user's password
         updatePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String oldPass = oldPassword.getText().toString().trim();
                 String newPass = newPassword.getText().toString().trim();
 
+                // Validate input fields
                 if (TextUtils.isEmpty(oldPass) || TextUtils.isEmpty(newPass)) {
                     Toast.makeText(ProfileActivity.this, "Please enter both passwords", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // Re-authenticate user before updating password
+                // Re-authenticate user before updating the password
                 AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPass);
                 user.reauthenticate(credential).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        // Update the user's password
                         user.updatePassword(newPass).addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
                                 Toast.makeText(ProfileActivity.this, "Password Updated Successfully", Toast.LENGTH_SHORT).show();
@@ -163,24 +167,24 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // Sign out button click listener
+        // Sign out button click listener to log out the user
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                auth.signOut();
+                auth.signOut(); // Sign out the user
                 Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                startActivity(intent); // Redirect to MainActivity
+                finish(); // Close the profile activity
             }
         });
 
-        // Initialize the back button and set the click listener
+        // Initialize the back button and set the click listener to navigate back
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Handle back button action
-                onBackPressed();
+                onBackPressed(); // Navigate back to the previous activity
             }
         });
     }
