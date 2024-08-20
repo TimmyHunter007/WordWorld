@@ -23,7 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth auth; // Firebase Authentication instance
     private FirebaseUser user; // Current authenticated user
     private DatabaseReference databaseReference; // Database reference for user's data
-    private TextView emailDisplay, silverCoinsTextView, testDisplay; // UI elements
+    private TextView emailDisplay, silverCoinsTextView, nameDisplay; // UI elements
     private EditText oldPassword, newPassword; // Input fields for password change
     private Button updatePasswordButton, signOutButton, addCoinsButton; // Buttons for various actions
 
@@ -47,31 +47,40 @@ public class ProfileActivity extends AppCompatActivity {
         updatePasswordButton = findViewById(R.id.update_password_button);
         signOutButton = findViewById(R.id.sign_out_button);
         addCoinsButton = findViewById(R.id.add_coins_button);
-        testDisplay = findViewById(R.id.test_display);
+        nameDisplay = findViewById(R.id.name_display);
 
         // Display the user's UID (as a placeholder for email display or other user info)
         if (user != null) {
-            emailDisplay.setText(user.getUid());
+            emailDisplay.setText(user.getEmail());
         }
 
-        // Retrieve and display the user's first name from the database
-        databaseReference.child("fName").addValueEventListener(new ValueEventListener() {
+        // Retrieve and display the user's first name and last name from the database
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Get the fName value from the database and display it
-                    String fName = dataSnapshot.getValue(String.class);
-                    Log.d("ProfileActivity", "fName: " + fName); // Log the fName value
-                    testDisplay.setText(fName); // Set the fName value to the TextView
+                    // Get the fName and lName values from the database
+                    String fName = dataSnapshot.child("fName").getValue(String.class);
+                    String lName = dataSnapshot.child("lName").getValue(String.class);
+
+                    // Combine the first and last name
+                    String fullName = fName + " " + lName;
+
+                    // Log the full name
+                    Log.d("ProfileActivity", "Full Name: " + fullName);
+
+                    // Set the full name to the TextView
+                    nameDisplay.setText(fullName);
                 } else {
-                    Log.d("ProfileActivity", "fName does not exist");
+                    Log.d("ProfileActivity", "User data does not exist");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle possible errors
-                Toast.makeText(ProfileActivity.this, "Failed to load first name.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, "Failed to load user information.", Toast.LENGTH_SHORT).show();
+                Log.e("ProfileActivity", "Database error: " + databaseError.getMessage());
             }
         });
 
