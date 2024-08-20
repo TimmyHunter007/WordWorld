@@ -4,13 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-import androidx.annotation.NonNull;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,6 +24,14 @@ public class LoginActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance();
+
+        // Check if user is already signed in
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            // User is signed in, navigate to MainActivity
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }
 
         inputEmail = findViewById(R.id.email);
         inputPassword = findViewById(R.id.password);
@@ -68,14 +73,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Sign Up Button Click
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
-            }
-        });
-
         // Initialize the profile button and set the click listener
         Button profileButton = findViewById(R.id.sign_up_button);
         profileButton.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +81,16 @@ public class LoginActivity extends AppCompatActivity {
                 // Start the SignInActivity
                 Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        // Initialize the back button and set the click listener
+        ImageButton backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle back button action
+                onBackPressed();
             }
         });
     }

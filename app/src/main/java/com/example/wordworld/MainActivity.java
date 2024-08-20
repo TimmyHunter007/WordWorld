@@ -7,24 +7,41 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-// Here is a comment
 public class MainActivity extends AppCompatActivity {
+
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private Button profileButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
         // Get current date
         String currentDate = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(new Date());
 
-        // Fine the TextView by its ID
+        // Find the TextView by its ID
         TextView dateTextView = findViewById(R.id.date);
         dateTextView.setText(currentDate);
+
+        // Find the user email TextView and set its text for testing
+        TextView userEmailTextView = findViewById(R.id.user_email);
+        if (user != null) {
+            userEmailTextView.setText("Logged in as: " + user.getEmail());
+        } else {
+            userEmailTextView.setText("Not logged in");
+        }
 
         // Initialize the back button and set the click listener
         ImageButton backButton = findViewById(R.id.back_button);
@@ -46,6 +63,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Initialize the profile button and set the click listener
+        profileButton = findViewById(R.id.profile);
+        if (user != null) {
+            profileButton.setText("PROFILE");
+            profileButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Start the ProfileActivity (placeholder for now)
+                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            profileButton.setText("SIGN IN");
+            profileButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Start the LoginActivity
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+
         // Initialize level one button and set the click listener
         Button levelOneButton = findViewById(R.id.level_one);
         levelOneButton.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, LevelOneActivity.class);
                 startActivity(intent);
             }
-
         });
 
         // Initialize level two button and set the click listener
@@ -73,17 +113,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, LevelThreeActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        // Initialize the profile button and set the click listener
-        Button profileButton = findViewById(R.id.profile);
-        profileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start the SignInActivity
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
