@@ -94,7 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
 
                                 // Create a new User object to store in the database
-                                User newUser = new User(fname, lname, email, 0, 0, 0, 0, 0, 0); // Initializing silver coins to 0
+                                User newUser = new User(fname, lname, email, "PlaceWord", 0, 0, 0, 0, 0, 0); // Initializing silver coins to 0
 
                                 // Save the user details in the database
                                 databaseReference.setValue(newUser)
@@ -132,6 +132,7 @@ public class SignUpActivity extends AppCompatActivity {
         public String fName;
         public String lName;
         public String email;
+        public String levelOneWord;
         public int silverCoins, points;
         public int hasBadge_FirstWord, hasBadge_SevenDayStreak, hasBadge_LevelThreeGuesser, wordsCorrect;
 
@@ -140,10 +141,11 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         // Constructor to initialize user data
-        public User(String fName, String lName, String email, int silverCoins, int points, int hasBadge_FirstWord, int hasBadge_SevenDayStreak, int hasBadge_LevelThreeGuesser, int wordsCorrect) {
+        public User(String fName, String lName, String email, String levelOneWord, int silverCoins, int points, int hasBadge_FirstWord, int hasBadge_SevenDayStreak, int hasBadge_LevelThreeGuesser, int wordsCorrect) {
             this.fName = fName;
             this.lName = lName;
             this.email = email;
+            this.levelOneWord = levelOneWord;
             this.silverCoins = silverCoins;
             this.points = points;
             this.hasBadge_FirstWord = hasBadge_FirstWord;
