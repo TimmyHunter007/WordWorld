@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
+
 public class WordManagement {
     private String[] fourLetterWords;
     private String[] fiveLetterWords;
@@ -21,8 +22,8 @@ public class WordManagement {
     public WordManagement(Context context) {
         this.context = context;
         loadFourLetterWords();
-        //loadFiveLetterWords();
-        //loadSixLetterWords();
+        loadFiveLetterWords();
+        loadSixLetterWords();
     }
 
 
@@ -46,31 +47,39 @@ public class WordManagement {
     }
 
     public void loadFiveLetterWords() {
-        try{
-            BufferedReader reader = new BufferedReader(new InputStreamReader(getClass(). getResourceAsStream("raw/5_letter_words.txt")));
-            List<String> words = new ArrayList<>();
-            String line;
-            while((line = reader.readLine()) != null){
-                words.add(line);
+        try {
+            InputStream inputStream = context.getResources().openRawResource(R.raw.five_letter_words);  // Check for resource existence
+            if (inputStream != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                List<String> words = new ArrayList<>();
+                String line;
+                while ((line = reader.readLine())
+                        != null) {
+                    words.add(line);
+                }
+                fiveLetterWords = words.toArray(new String[0]);
+                reader.close();
             }
-            reader.close();
-            fiveLetterWords = words.toArray(new String[0]);
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void loadSixLetterWords() {
-        try{
-            BufferedReader reader = new BufferedReader(new InputStreamReader(getClass(). getResourceAsStream("raw/6_letter_words.txt")));
-            List<String> words = new ArrayList<>();
-            String line;
-            while((line = reader.readLine()) != null){
-                words.add(line);
+        try {
+            InputStream inputStream = context.getResources().openRawResource(R.raw.six_letter_words);  // Check for resource existence
+            if (inputStream != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                List<String> words = new ArrayList<>();
+                String line;
+                while ((line = reader.readLine())
+                        != null) {
+                    words.add(line);
+                }
+                sixLetterWords = words.toArray(new String[0]);
+                reader.close();
             }
-            reader.close();
-            sixLetterWords = words.toArray(new String[0]);
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -97,9 +106,21 @@ public class WordManagement {
                     return new String[]{"Error"};
                 }
             case 2:
-                return fiveLetterWords;
+                if (fiveLetterWords != null && fiveLetterWords.length > 0) {
+                    Log.d("WordManagement", "Returning random five-letter word");
+                    return new String[]{fiveLetterWords[random.nextInt(fiveLetterWords.length)]};
+                } else {
+                    Log.e("WordManagement", "fiveLetterWords is null or empty");
+                    return new String[]{"Error"};
+                }
             case 3:
-                return sixLetterWords;
+                if (sixLetterWords != null && sixLetterWords.length > 0) {
+                    Log.d("WordManagement", "Returning random six-letter word");
+                    return new String[]{sixLetterWords[random.nextInt(sixLetterWords.length)]};
+                } else {
+                    Log.e("WordManagement", "sixLetterWords is null or empty");
+                    return new String[]{"Error"};
+                }
             default:
                 return new String[]{"No"};
 

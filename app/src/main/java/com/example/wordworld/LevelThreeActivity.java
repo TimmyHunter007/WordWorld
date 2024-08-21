@@ -7,95 +7,159 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class LevelThreeActivity extends AppCompatActivity {
-
+    private EditText letter1, letter2, letter3, letter4, letter5, letter6;
+    private TextView tvFeedBack, tvFeedBack1, tvFeedBack2, tvFeedBack3, tvFeedBack4;
+    private TextView tvAttempts;
+    private WordGame wordGame;
     private Button submitButton;
+    //private WordGame wordGames;
+    private WordManagement wordManagement;
+    private int feedbackIndex = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide(); // Hide the action bar for a full-screen experience
-        setContentView(R.layout.activity_level_three); // Set the layout for this activity
+        getSupportActionBar().hide();
+        setContentView(R.layout.activity_level_three);
 
-        // Initialize the back button and set its click listener
+        // Initialize UI components
+        letter1 = findViewById(R.id.letter1);
+        letter2 = findViewById(R.id.letter2);
+        letter3 = findViewById(R.id.letter3);
+        letter4 = findViewById(R.id.letter4);
+        letter5 = findViewById(R.id.letter5);
+        letter6 = findViewById(R.id.letter6);
+        tvFeedBack = findViewById(R.id.tv_feedback);
+        tvFeedBack1 = findViewById(R.id.tv_feedback1);
+        tvFeedBack2 = findViewById(R.id.tv_feedback2);
+        tvFeedBack3 = findViewById(R.id.tv_feedback3);
+        tvFeedBack4 = findViewById(R.id.tv_feedback4);
+        tvAttempts = findViewById(R.id.tv_attempts);
+        submitButton = findViewById(R.id.submit_level_three);
+
+        wordManagement = new WordManagement(this);
+        wordGame = new WordGame(wordManagement);
+        int level = 3;
+        wordGame.startGame(level);
+
+        // Set up the submit button listener
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleGuess();
+            }
+        });
+
+        // Initialize the back button and set the click listener
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed(); // Navigate back to the previous screen when the back button is pressed
+                // Handle back button action
+                onBackPressed();
             }
         });
 
-        // Get references to the EditText fields
-        final EditText letter1 = findViewById(R.id.letter1);
-        final EditText letter2 = findViewById(R.id.letter2);
-        final EditText letter3 = findViewById(R.id.letter3);
-        final EditText letter4 = findViewById(R.id.letter4);
-        final EditText letter5 = findViewById(R.id.letter5);
-        final EditText letter6 = findViewById(R.id.letter6);
-
-        // Set focus change listeners to highlight the currently selected EditText
-        setFocusChangeListener(letter1);
-        setFocusChangeListener(letter2);
-        setFocusChangeListener(letter3);
-        setFocusChangeListener(letter4);
-        setFocusChangeListener(letter5);
-        setFocusChangeListener(letter6);
-
-        // Add TextWatchers to automatically move focus to the next EditText when a character is entered
-        addTextWatcher(letter1, letter2);
-        addTextWatcher(letter2, letter3);
-        addTextWatcher(letter3, letter4);
-        addTextWatcher(letter4, letter5);
-        addTextWatcher(letter5, letter6);
-
-        // Initialize the submit button and set its click listener
-        submitButton = findViewById(R.id.submit_level_three);
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Add submit button logic here (e.g., handling the user's input)
-            }
-        });
+        // Add TextWatcher to move to the next EditText
+        letter1.addTextChangedListener(new LevelThreeActivity.LetterTextWatcher(letter1, letter2));
+        letter2.addTextChangedListener(new LevelThreeActivity.LetterTextWatcher(letter2, letter3));
+        letter3.addTextChangedListener(new LevelThreeActivity.LetterTextWatcher(letter3, letter4));
+        letter4.addTextChangedListener(new LevelThreeActivity.LetterTextWatcher(letter4, letter5));
+        letter5.addTextChangedListener(new LevelThreeActivity.LetterTextWatcher(letter5, letter6));
+        letter6.addTextChangedListener(new LevelThreeActivity.LetterTextWatcher(letter6, null));
     }
 
-    // Method to add a TextWatcher to an EditText that moves focus to the next EditText when a character is entered
-    private void addTextWatcher(final EditText currentEditText, final EditText nextEditText) {
-        currentEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // No action needed here before the text changes
-            }
+    private void handleGuess() {
+        String userGuess = getUserInput();
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 1) {
-                    nextEditText.requestFocus(); // Move focus to the next EditText when a character is entered
-                }
-            }
+        // Get feedback from the WordGame class
+        WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
+        tvFeedBack.setText(feedback.message);
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                // No action needed here after the text changes
-            }
-        });
+        //display previous user guesses in tvfeedback boxes
+        if (feedbackIndex == 0) {
+            tvFeedBack1.setText(userGuess);
+        }else if(feedbackIndex == 1) {
+            tvFeedBack2.setText(userGuess);
+        }else if(feedbackIndex == 2) {
+            tvFeedBack3.setText(userGuess);
+        }else if(feedbackIndex == 3) {
+            tvFeedBack4.setText(userGuess);
+        }
+        feedbackIndex++;
+
+        //update attempts
+        tvAttempts.setText("Attempts Left: " + feedback.attemptsLeft);
+
+        // Check if the game is over and disable inputs if necessary
+        if (feedback.message.contains("Congratulations") || feedback.message.contains("Sorry")) {
+            enableLetters(false); // Disable further input
+        }
+
+        clearLetters(); // Clear the input fields after each guess
     }
 
-    // Method to set focus change listeners on an EditText to change its background when it gains or loses focus
-    private void setFocusChangeListener(final EditText editText) {
-        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    // Change the background to highlighted when the EditText gains focus
-                    editText.setBackgroundResource(R.drawable.edittext_highlighted_level3);
+    private String getUserInput() {
+        return letter1.getText().toString().trim() +
+                letter2.getText().toString().trim() +
+                letter3.getText().toString().trim() +
+                letter4.getText().toString().trim() +
+                letter5.getText().toString().trim() +
+                letter6.getText().toString().trim();
+    }
+
+    private void clearLetters() {
+        letter1.setText("");
+        letter2.setText("");
+        letter3.setText("");
+        letter4.setText("");
+        letter5.setText("");
+        letter6.setText("");
+    }
+
+    private void enableLetters(boolean enabled) {
+        letter1.setEnabled(enabled);
+        letter2.setEnabled(enabled);
+        letter3.setEnabled(enabled);
+        letter4.setEnabled(enabled);
+        letter5.setEnabled(enabled);
+        letter6.setEnabled(enabled);
+    }
+
+    // TextWatcher class to move focus to the next EditText
+    private class LetterTextWatcher implements TextWatcher {
+        private final EditText currentEditText;
+        private final EditText nextEditText;
+
+        public LetterTextWatcher(EditText currentEditText, EditText nextEditText) {
+            this.currentEditText = currentEditText;
+            this.nextEditText = nextEditText;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // No action needed here
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (s.length() == 1) {
+                if (nextEditText != null) {
+                    nextEditText.requestFocus();
                 } else {
-                    // Change the background to normal when the EditText loses focus
-                    editText.setBackgroundResource(R.drawable.edittext_normal_level3);
+                    currentEditText.clearFocus(); // Clear focus on the last EditText
                 }
             }
-        });
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // No action needed here
+        }
     }
 }

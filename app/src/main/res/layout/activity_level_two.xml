@@ -109,6 +109,75 @@
                 android:imeOptions="actionNext"
                 android:cursorVisible="false" />
     </LinearLayout>
+    <TextView
+            android:id="@+id/tv_feedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@+id/submit_level_two"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:text="_____" />
+
+    <TextView
+            android:id="@+id/tv_feedback1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@+id/tv_feedback"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="" />
+
+    <TextView
+            android:id="@+id/tv_feedback2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@+id/tv_feedback1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="" />
+
+    <TextView
+            android:id="@+id/tv_feedback3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@+id/tv_feedback2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="" />
+
+    <TextView
+            android:id="@+id/tv_feedback4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@+id/tv_feedback3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="" />
     <Button
             android:id="@+id/submit_level_two"
             android:layout_width="wrap_content"
@@ -120,4 +189,17 @@
             android:layout_below="@id/game_field_2"
             android:layout_marginTop="16dp"
             android:layout_centerHorizontal="true" />
+    <TextView
+            android:id="@+id/tv_attempts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@+id/tv_feedback4"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="Attempts Left: 5" />
 </RelativeLayout>
