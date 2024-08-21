@@ -9,12 +9,12 @@ public class WordGame {
     private String chosenWord;
     private int attempts;
     private final WordManagement wordManagement; // Injected dependency
-    private String feedback;
+    //private String feedback;
 
     public WordGame(WordManagement wordManagement) {
         this.wordManagement = wordManagement;
         this.attempts = 5;
-        this.feedback = "";
+        //this.feedback = "";
     }
 
 
@@ -25,72 +25,95 @@ public class WordGame {
         int randomIndex = random.nextInt(wordList.length);
         this.attempts = 5;
         this.chosenWord = wordList[randomIndex];
-        this.feedback = "";
+        //this.feedback = "";
     }
 
     // Method to handle the user's guess
     public Feedback handleGuess(String userInput) {
         if (userInput.length() != chosenWord.length()) {
-            return new Feedback("Your guess must be " + chosenWord.length() + " letters long.", attempts);
+            return new Feedback("Your guess must be " + chosenWord.length() + " letters long.",
+                    attempts, userInput.toCharArray(), new int[chosenWord.length()]);
         }
 
-        feedback = gamePlay(chosenWord, userInput);
+        //feedback = gamePlay(chosenWord, userInput);
 
-        if (feedback.equalsIgnoreCase(chosenWord)) {
-            return new Feedback("Congratulations! You've guessed the word: " + chosenWord, attempts);
+        int[] feedbackStatus = getFeedbackStatus(chosenWord, userInput);
+
+        if (allCorrect(feedbackStatus)) {
+            return new Feedback("Congratulations! You've guessed the word: " +
+                    chosenWord, attempts, userInput.toCharArray(), feedbackStatus);
         } else {
             attempts--;
 
             if (attempts <= 0) {
-                return new Feedback("Sorry, you've run out of attempts. The word was: " + chosenWord, attempts);
+                return new Feedback("Sorry, you've run out of attempts. The word was: " +
+                        chosenWord, attempts, userInput.toCharArray(), feedbackStatus);
             } else {
-                return new Feedback(feedback, attempts);
+                return new Feedback("", attempts, userInput.toCharArray(), feedbackStatus);
             }
         }
     }
 
-
-    //game logic for game play
-    public static String gamePlay(String chosenWord, String userInput){
-        char[] feedback = new char[chosenWord.length()];
+    // Generate status for each letter: 0 = incorrect,
+    // 1 = correct letter in wrong position, 2 = correct letter in correct position
+    private static int[] getFeedbackStatus(String chosenWord, String userInput) {
+        int[] status = new int[chosenWord.length()];
         boolean[] letterUsed = new boolean[chosenWord.length()];
 
-        // show feedback to user (temporary for testing)
-        for(int i = 0; i < chosenWord.length(); i++){
-            feedback[i] = '_';
-        }
-
-        //first pass checking for correct letters in correct position of chosen word
-        for(int i = 0; i < chosenWord.length(); i++){
-            if(userInput.charAt(i) == chosenWord.charAt(i)){
-                feedback[i] = userInput.charAt(i);
-                //mark the letter as being used
+        for (int i = 0; i < chosenWord.length(); i++) {
+            if (userInput.charAt(i) == chosenWord.charAt(i)) {
+                // Correct letter in correct position
+                status[i] = 2;
                 letterUsed[i] = true;
+            } else {
+                // Incorrect
+                status[i] = 0;
             }
         }
-        //second pass checking for correct letters in wrong position in chosen word
-        for(int i = 0; i < userInput.length(); i++){
-            //skip letters match already
-            if(feedback[i] == '_'){
-                for(int j = 0; j < chosenWord.length(); j++){
-                    if(!letterUsed[j] && userInput.charAt(i) == chosenWord.charAt(j)){
-                        feedback[i] = userInput.charAt(i);
+
+        for (int i = 0; i < userInput.length(); i++) {
+            // If not already correct
+            if (status[i] == 0) {
+                for (int j = 0; j < chosenWord.length(); j++) {
+                    if (!letterUsed[j] && userInput.charAt(i) == chosenWord.charAt(j)) {
+                        // Correct letter in wrong position
+                        status[i] = 1;
                         letterUsed[j] = true;
                         break;
                     }
                 }
             }
         }
-        return new String(feedback);
+
+        return status;
     }
 
-    public static class Feedback{
+    //method to help check if all letters are correct
+    private static boolean allCorrect(int[] feedbackStatus) {
+        for(int status: feedbackStatus) {
+            //will return false if ANY letter is in the wrong position
+            if (status != 2) {
+                return false;
+            }
+        }
+        //ALL letters are in correct position
+        return true;
+    }
+
+    // Feedback class to hold feedback message, attempts left, and status of each letter
+    public static class Feedback {
         public final String message;
         public final int attemptsLeft;
+        //guessed characters
+        public final char[] feedbackChars;
+        // 0 = Incorrect, 1 = Correct letter wrong position, 2 = Correct letter correct position
+        public final int[] feedbackStatus;
 
-        public Feedback(String message, int attemptsLeft) {
+        public Feedback(String message, int attemptsLeft, char[] feedbackChars, int[] feedbackStatus) {
             this.message = message;
             this.attemptsLeft = attemptsLeft;
+            this.feedbackChars = feedbackChars;
+            this.feedbackStatus = feedbackStatus;
         }
     }
 }
