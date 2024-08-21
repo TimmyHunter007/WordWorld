@@ -1,5 +1,6 @@
 package com.example.wordworld;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -77,29 +78,57 @@ public class LevelOneActivity extends AppCompatActivity {
 
         // Get feedback from the WordGame class
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
-        tvFeedBack.setText(feedback.message);
+        //tvFeedBack.setText(feedback.message);
 
-        //display previous user guesses in tvfeedback boxes
-        if (feedbackIndex == 0) {
-            tvFeedBack1.setText(userGuess);
-        }else if(feedbackIndex == 1) {
-            tvFeedBack2.setText(userGuess);
-        }else if(feedbackIndex == 2) {
-            tvFeedBack3.setText(userGuess);
-        }else if(feedbackIndex == 3) {
-            tvFeedBack4.setText(userGuess);
+        // Handle feedback display based on feedbackIndex
+        switch (feedbackIndex) {
+            case 0:
+                setColoredFeedback(tvFeedBack, feedback.feedbackChars, feedback.feedbackStatus);
+                break;
+            case 1:
+                setColoredFeedback(tvFeedBack1, feedback.feedbackChars, feedback.feedbackStatus);
+                break;
+            case 2:
+                setColoredFeedback(tvFeedBack2, feedback.feedbackChars, feedback.feedbackStatus);
+                break;
+            case 3:
+                setColoredFeedback(tvFeedBack3, feedback.feedbackChars, feedback.feedbackStatus);
+                break;
+            case 4:
+                setColoredFeedback(tvFeedBack4, feedback.feedbackChars, feedback.feedbackStatus);
+                break;
         }
+
+        // Increment feedbackIndex and check if the game should end
         feedbackIndex++;
 
-        //update attempts
+        // Update attempts
         tvAttempts.setText("Attempts Left: " + feedback.attemptsLeft);
 
-        // Check if the game is over and disable inputs if necessary
-        if (feedback.message.contains("Congratulations") || feedback.message.contains("Sorry")) {
+        // Check if the game is over (either win or out of attempts)
+        if (feedback.message.contains("Congratulations") || feedback.attemptsLeft <= 0) {
             enableLetters(false); // Disable further input
         }
 
-        clearLetters(); // Clear the input fields after each guess
+        // Clear the input fields after each guess
+        clearLetters();
+    }
+
+    private void setColoredFeedback(TextView textView, char[] feedbackChars, int[] feedbackStatus) {
+        StringBuilder coloredText = new StringBuilder();
+        for (int i = 0; i < feedbackChars.length; i++) {
+            if (feedbackStatus[i] == 2) {
+                // Green for correct position
+                coloredText.append("<font color='#00FF00'>").append(feedbackChars[i]).append("</font>");
+            } else if (feedbackStatus[i] == 1) {
+                // Yellow for wrong position
+                coloredText.append("<font color='#FFFF00'>").append(feedbackChars[i]).append("</font>");
+            } else {
+                // Default color for incorrect letters
+                coloredText.append(feedbackChars[i]);
+            }
+        }
+        textView.setText(android.text.Html.fromHtml(coloredText.toString()));
     }
 
     private String getUserInput() {
