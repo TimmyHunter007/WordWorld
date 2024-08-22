@@ -29,6 +29,7 @@
             android:id="@+id/message_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/rounded_background"
             android:visibility="gone">
 
         <TextView
@@ -167,7 +168,7 @@
             android:layout_below="@+id/submit_level_three"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
-            android:text="______" />
+            android:text="_______" />
 
     <TextView
             android:id="@+id/tv_feedback1"
