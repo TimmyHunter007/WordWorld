@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.wordworld.WordManagement;
+import android.widget.RelativeLayout;
 
 public class LevelOneActivity extends AppCompatActivity {
     private EditText letter1, letter2, letter3, letter4;
@@ -107,7 +108,27 @@ public class LevelOneActivity extends AppCompatActivity {
 
         // Check if the game is over (either win or out of attempts)
         if (feedback.message.contains("Congratulations") || feedback.attemptsLeft <= 0) {
-            enableLetters(false); // Disable further input
+            // Disable further input
+            enableLetters(false);
+
+            // Show the message container and message
+            RelativeLayout messageContainer = findViewById(R.id.message_container);
+            TextView tvMessage = findViewById(R.id.tv_message);
+            tvMessage.setText(feedback.message);
+            messageContainer.setVisibility(View.VISIBLE);
+
+            //hide all boxes so the win/loss message is the onnly thing that shows
+            letter1.setVisibility(View.GONE);
+            letter2.setVisibility(View.GONE);
+            letter3.setVisibility(View.GONE);
+            letter4.setVisibility(View.GONE);
+            tvFeedBack.setVisibility(View.GONE);
+            tvFeedBack1.setVisibility(View.GONE);
+            tvFeedBack2.setVisibility(View.GONE);
+            tvFeedBack3.setVisibility(View.GONE);
+            tvFeedBack4.setVisibility(View.GONE);
+            tvAttempts.setVisibility(View.GONE);
+            submitButton.setVisibility(View.GONE);
         }
 
         // Clear the input fields after each guess

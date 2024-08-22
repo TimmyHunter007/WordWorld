@@ -24,6 +24,24 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp" />
 
+    <!-- Centered Message Layout -->
+    <RelativeLayout
+            android:id="@+id/message_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+        <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_centerInParent="true"
+                android:text="" />
+    </RelativeLayout>
+
     <!-- Input Boxes for 4 Letters -->
     <LinearLayout
             android:id="@+id/game_field_1"
