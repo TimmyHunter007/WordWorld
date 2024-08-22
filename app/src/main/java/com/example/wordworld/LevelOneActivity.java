@@ -1,17 +1,17 @@
 package com.example.wordworld;
 
 import android.graphics.Color;
+import android.util.Log;
+import com.example.wordworld.WordManagement;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.wordworld.WordManagement;
 import android.widget.RelativeLayout;
 
 public class LevelOneActivity extends AppCompatActivity {
@@ -117,7 +117,7 @@ public class LevelOneActivity extends AppCompatActivity {
             tvMessage.setText(feedback.message);
             messageContainer.setVisibility(View.VISIBLE);
 
-            //hide all boxes so the win/loss message is the onnly thing that shows
+            //hide all boxes so the win/loss message is the only thing that shows
             letter1.setVisibility(View.GONE);
             letter2.setVisibility(View.GONE);
             letter3.setVisibility(View.GONE);

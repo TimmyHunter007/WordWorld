@@ -24,6 +24,24 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp" />
 
+    <!-- Centered Message Layout -->
+    <RelativeLayout
+            android:id="@+id/message_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+        <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="35sp"
+                android:textStyle="bold"
+                android:layout_centerInParent="true"
+                android:text="" />
+    </RelativeLayout>
+
     <!-- Input Boxes for 5 Letters -->
     <LinearLayout
             android:id="@+id/game_field_2"
@@ -34,6 +52,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp">
 
+        <!-- Text boxes for letters starting with 1 then going to next -->
         <EditText
                 android:id="@+id/letter1"
                 android:layout_width="60dp"
@@ -109,6 +128,19 @@
                 android:imeOptions="actionNext"
                 android:cursorVisible="false" />
     </LinearLayout>
+
+    <Button
+            android:id="@+id/submit_level_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/submit"
+            android:textColor="@color/button_text"
+            android:textSize="29sp"
+            android:backgroundTint="@color/level_2"
+            android:layout_below="@id/game_field_2"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true" />
+
     <TextView
             android:id="@+id/tv_feedback"
             android:layout_width="wrap_content"
@@ -135,7 +167,7 @@
             android:layout_below="@+id/tv_feedback"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:text="" />
+            android:text="_____" />
 
     <TextView
             android:id="@+id/tv_feedback2"
@@ -149,7 +181,7 @@
             android:layout_below="@+id/tv_feedback1"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:text="" />
+            android:text="_____" />
 
     <TextView
             android:id="@+id/tv_feedback3"
@@ -163,7 +195,7 @@
             android:layout_below="@+id/tv_feedback2"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:text="" />
+            android:text="_____" />
 
     <TextView
             android:id="@+id/tv_feedback4"
@@ -177,18 +209,8 @@
             android:layout_below="@+id/tv_feedback3"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:text="" />
-    <Button
-            android:id="@+id/submit_level_two"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/submit"
-            android:textColor="@color/button_text"
-            android:textSize="29sp"
-            android:backgroundTint="@color/level_2"
-            android:layout_below="@id/game_field_2"
-            android:layout_marginTop="16dp"
-            android:layout_centerHorizontal="true" />
+            android:text="_____" />
+
     <TextView
             android:id="@+id/tv_attempts"
             android:layout_width="wrap_content"

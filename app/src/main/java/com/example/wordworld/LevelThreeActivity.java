@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import android.widget.RelativeLayout;
 
 public class LevelThreeActivity extends AppCompatActivity {
     private EditText letter1, letter2, letter3, letter4, letter5, letter6;
@@ -16,7 +17,6 @@ public class LevelThreeActivity extends AppCompatActivity {
     private TextView tvAttempts;
     private WordGame wordGame;
     private Button submitButton;
-    //private WordGame wordGames;
     private WordManagement wordManagement;
     private int feedbackIndex = 0;
 
@@ -79,18 +79,28 @@ public class LevelThreeActivity extends AppCompatActivity {
 
         // Get feedback from the WordGame class
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
-        tvFeedBack.setText(feedback.message);
+        //tvFeedBack.setText(feedback.message);
 
-        //display previous user guesses in tvfeedback boxes
-        if (feedbackIndex == 0) {
-            tvFeedBack1.setText(userGuess);
-        }else if(feedbackIndex == 1) {
-            tvFeedBack2.setText(userGuess);
-        }else if(feedbackIndex == 2) {
-            tvFeedBack3.setText(userGuess);
-        }else if(feedbackIndex == 3) {
-            tvFeedBack4.setText(userGuess);
+        // Handle feedback display based on feedbackIndex
+        switch (feedbackIndex) {
+            case 0:
+                setColoredFeedback(tvFeedBack, feedback.feedbackChars, feedback.feedbackStatus);
+                break;
+            case 1:
+                setColoredFeedback(tvFeedBack1, feedback.feedbackChars, feedback.feedbackStatus);
+                break;
+            case 2:
+                setColoredFeedback(tvFeedBack2, feedback.feedbackChars, feedback.feedbackStatus);
+                break;
+            case 3:
+                setColoredFeedback(tvFeedBack3, feedback.feedbackChars, feedback.feedbackStatus);
+                break;
+            case 4:
+                setColoredFeedback(tvFeedBack4, feedback.feedbackChars, feedback.feedbackStatus);
+                break;
         }
+
+        // Increment feedbackIndex and check if the game should end
         feedbackIndex++;
 
         //update attempts
@@ -98,10 +108,49 @@ public class LevelThreeActivity extends AppCompatActivity {
 
         // Check if the game is over and disable inputs if necessary
         if (feedback.message.contains("Congratulations") || feedback.message.contains("Sorry")) {
-            enableLetters(false); // Disable further input
+            // Disable further input
+            enableLetters(false);
+
+            // Show the message container and message
+            RelativeLayout messageContainer = findViewById(R.id.message_container);
+            TextView tvMessage = findViewById(R.id.tv_message);
+            tvMessage.setText(feedback.message);
+            messageContainer.setVisibility(View.VISIBLE);
+
+            //hide all boxes so the win/loss message is the only thing that shows
+            letter1.setVisibility(View.GONE);
+            letter2.setVisibility(View.GONE);
+            letter3.setVisibility(View.GONE);
+            letter4.setVisibility(View.GONE);
+            letter5.setVisibility(View.GONE);
+            letter6.setVisibility(View.GONE);
+            tvFeedBack.setVisibility(View.GONE);
+            tvFeedBack1.setVisibility(View.GONE);
+            tvFeedBack2.setVisibility(View.GONE);
+            tvFeedBack3.setVisibility(View.GONE);
+            tvFeedBack4.setVisibility(View.GONE);
+            tvAttempts.setVisibility(View.GONE);
+            submitButton.setVisibility(View.GONE);
         }
 
         clearLetters(); // Clear the input fields after each guess
+    }
+
+    private void setColoredFeedback(TextView textView, char[] feedbackChars, int[] feedbackStatus) {
+        StringBuilder coloredText = new StringBuilder();
+        for (int i = 0; i < feedbackChars.length; i++) {
+            if (feedbackStatus[i] == 2) {
+                // Green for correct position
+                coloredText.append("<font color='#00FF00'>").append(feedbackChars[i]).append("</font>");
+            } else if (feedbackStatus[i] == 1) {
+                // Yellow for wrong position
+                coloredText.append("<font color='#FFFF00'>").append(feedbackChars[i]).append("</font>");
+            } else {
+                // Default color for incorrect letters
+                coloredText.append(feedbackChars[i]);
+            }
+        }
+        textView.setText(android.text.Html.fromHtml(coloredText.toString()));
     }
 
     private String getUserInput() {
