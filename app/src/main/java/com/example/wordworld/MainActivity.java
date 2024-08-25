@@ -151,5 +151,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Initialize the LeaderBoard button and set its click listener to start LeaderBoard
+        Button leaderBoard = findViewById(R.id.leader_board);
+        leaderBoard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LeaderBoardActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

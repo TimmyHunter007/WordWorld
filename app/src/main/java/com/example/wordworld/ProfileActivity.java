@@ -180,42 +180,40 @@ public class ProfileActivity extends AppCompatActivity {
 
     // Method to show the Update Password dialog
     private void showUpdatePasswordDialog() {
-        // Inflate the dialog layout
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_update_password, null);
 
-        // Initialize the input fields and button
         EditText oldPasswordDialog = view.findViewById(R.id.old_password_dialog);
         EditText newPasswordDialog = view.findViewById(R.id.new_password_dialog);
         Button updatePasswordButtonDialog = view.findViewById(R.id.update_password_button_dialog);
 
-        // Create an AlertDialog to hold the custom layout
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setView(view)
                 .setTitle("Update Password")
                 .setNegativeButton("Cancel", null)
                 .create();
 
-        // Set the Update button click listener
+        // Set the background of the AlertDialog to transparent
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
         updatePasswordButtonDialog.setOnClickListener(v -> {
             String oldPass = oldPasswordDialog.getText().toString().trim();
             String newPass = newPasswordDialog.getText().toString().trim();
 
-            // Validate the input fields
             if (TextUtils.isEmpty(oldPass) || TextUtils.isEmpty(newPass)) {
                 Toast.makeText(ProfileActivity.this, "Please enter both passwords", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Re-authenticate the user before updating the password
             AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPass);
             user.reauthenticate(credential).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    // Update the user's password
                     user.updatePassword(newPass).addOnCompleteListener(task1 -> {
                         if (task1.isSuccessful()) {
                             Toast.makeText(ProfileActivity.this, "Password Updated Successfully", Toast.LENGTH_SHORT).show();
-                            alertDialog.dismiss(); // Close the dialog
+                            alertDialog.dismiss();
                         } else {
                             Toast.makeText(ProfileActivity.this, "Password Update Failed: " + task1.getException(), Toast.LENGTH_SHORT).show();
                         }
@@ -226,7 +224,6 @@ public class ProfileActivity extends AppCompatActivity {
             });
         });
 
-        // Show the dialog
         alertDialog.show();
     }
 }
