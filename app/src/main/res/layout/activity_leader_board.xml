@@ -11,7 +11,7 @@
             android:layout_below="@id/header"
             android:scaleType="centerCrop"
             android:background="@drawable/main_bg_transparency"
-            android:contentDescription="@string/background_image"/>
+            android:contentDescription="@string/background_image" />
 
     <!-- Header Layout -->
     <include
@@ -49,14 +49,13 @@
             <!-- Table Header for Leaderboard -->
             <TableRow>
                 <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="169dp"
                         android:layout_height="wrap_content"
                         android:text="Name"
                         android:padding="8dp"
                         android:textSize="18dp"
                         android:textStyle="bold"
-                        android:background="#CCCCCC"
-                        android:gravity="center" />
+                        android:background="#CCCCCC"/>
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -64,8 +63,7 @@
                         android:padding="8dp"
                         android:textSize="18dp"
                         android:textStyle="bold"
-                        android:background="#CCCCCC"
-                        android:gravity="center" />
+                        android:background="#CCCCCC" />
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -73,17 +71,7 @@
                         android:padding="8dp"
                         android:textSize="18dp"
                         android:textStyle="bold"
-                        android:background="#CCCCCC"
-                        android:gravity="center" />
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Badge"
-                        android:padding="8dp"
-                        android:textSize="18dp"
-                        android:textStyle="bold"
-                        android:background="#CCCCCC"
-                        android:gravity="center" />
+                        android:background="#CCCCCC" />
             </TableRow>
 
             <!-- Data rows will be added dynamically in the code -->
@@ -112,10 +100,10 @@
                         android:layout_height="wrap_content"
                         android:text="Your Rank"
                         android:padding="8dp"
-                        android:textSize="18dp"
+                        android:textSize="25dp"
                         android:textStyle="bold"
                         android:background="#CCCCCC"
-                        android:gravity="center"/>
+                        android:gravity="center" />
             </TableRow>
         </TableLayout>
 
