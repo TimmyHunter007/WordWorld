@@ -106,14 +106,16 @@ public class LeaderBoardActivity extends AppCompatActivity {
                     }
                 });
 
-                // Display the top 100 users on the leaderboard and the current user's rank
+                // Display the top 100 users on the leaderboard regardless of login status
                 displayTop100Users();
+
+                // Display the current user's rank if they are logged in, otherwise show a login prompt
                 displayCurrentUser();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors when accessing the database
+                Toast.makeText(LeaderBoardActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -277,6 +279,7 @@ public class LeaderBoardActivity extends AppCompatActivity {
             userInfoTextView.setPadding(16, 16, 16, 16);
             userInfoTextView.setTextSize(18); // Set text size
             userInfoTextView.setGravity(Gravity.CENTER);
+            userInfoTextView.setBackgroundResource(R.drawable.rounded_background);
             userInfoTextView.setTextColor(ContextCompat.getColor(this, android.R.color.white));
             userTable.addView(userInfoTextView);
         }
