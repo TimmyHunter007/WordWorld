@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.RelativeLayout;
+import android.content.Context;
 
 public class LevelTwoActivity extends AppCompatActivity {
     private EditText letter1, letter2, letter3, letter4, letter5;
@@ -102,6 +104,10 @@ public class LevelTwoActivity extends AppCompatActivity {
         // Increment feedbackIndex and check if the game should end
         feedbackIndex++;
 
+        // Hide the keyboard when user hits submit
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(submitButton.getWindowToken(), 0);
+
         //update attempts
         tvAttempts.setText("Attempts Left: " + feedback.attemptsLeft);
 
@@ -140,10 +146,10 @@ public class LevelTwoActivity extends AppCompatActivity {
         for (int i = 0; i < feedbackChars.length; i++) {
             if (feedbackStatus[i] == 2) {
                 // Green for correct position
-                coloredText.append("<font color='#00FF00'>").append(feedbackChars[i]).append("</font>");
+                coloredText.append("<font color='#3CB371'>").append(feedbackChars[i]).append("</font>");
             } else if (feedbackStatus[i] == 1) {
                 // Yellow for wrong position
-                coloredText.append("<font color='#FFFF00'>").append(feedbackChars[i]).append("</font>");
+                coloredText.append("<font color='#FFBF00'>").append(feedbackChars[i]).append("</font>");
             } else {
                 // Default color for incorrect letters
                 coloredText.append(feedbackChars[i]);
