@@ -1,6 +1,5 @@
 package com.example.wordworld;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -8,9 +7,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.navigation.NavigationView;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -47,31 +44,11 @@ public class MainActivity extends AppCompatActivity {
         ImageButton navButton = findViewById(R.id.nav_button);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
-        navigationView.post(new Runnable() {
-            @Override
-            public void run() {
-                navigationView.setTranslationX(-navigationView.getWidth());
-                navigationView.setVisibility(View.GONE);
-            }
-        });
+
         navButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                //setContentView(R.layout.sidbar_layout);
-                if(NavOpen)
-                {
-                    ObjectAnimator.ofFloat(navigationView,"translationX",-navigationView.getWidth()).start();
-                    navigationView.setVisibility(View.GONE);
-                }
-                else
-                {
-                    navigationView.setVisibility(View.VISIBLE);
-                    ObjectAnimator.ofFloat(navigationView,"translationX",0).start();
-                }
-                NavOpen = !NavOpen;
-
-
 
 
             }

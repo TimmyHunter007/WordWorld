@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+       android:id="@+id/level_one"
+       android:title="@string/level_one"/>
+
+        <item
+                android:id="@+id/level_two"
+                android:title="@string/level_two"/>
+        <item
+                android:id="@+id/level_three"
+                android:title="@string/level_three"/>
+        <item
+                android:id="@+id/badges"
+                android:title="@string/badges"/>
+        <item
+                android:id="@+id/profile"
+                android:title="@string/profile"/>
+        <item
+                android:id="@+id/leader_board"
+                android:title="@string/leader_board"/>
+
+    </group>
+
+</menu>
