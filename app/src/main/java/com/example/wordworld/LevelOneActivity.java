@@ -75,7 +75,11 @@ public class LevelOneActivity extends AppCompatActivity {
         // message notifying the user that the submission was too short
         if(userGuess.length() != wordGame.chosenWord.length()){
             // Display a message to the user
-            Toast.makeText(this, "Your guess must be " + wordGame.chosenWord.length() + " letters long.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Your guess must be " + wordGame.chosenWord.length() +
+                    " letters long.", Toast.LENGTH_SHORT).show();
+            // Hide the keyboard when user hits submit
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(submitButton.getWindowToken(), 0);
             return;
         }
 
