@@ -211,6 +211,10 @@ public class LevelTwoActivity extends AppCompatActivity {
                     nextEditText.requestFocus();
                 } else {
                     currentEditText.clearFocus(); // Clear focus on the last EditText
+
+                    // Hide the keyboard when the last letter is entered
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(currentEditText.getWindowToken(), 0);
                 }
             }
         }
