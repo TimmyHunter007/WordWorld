@@ -5,12 +5,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import android.widget.RelativeLayout;
 import android.content.Context;
 
 public class LevelThreeActivity extends AppCompatActivity {
@@ -79,7 +75,18 @@ public class LevelThreeActivity extends AppCompatActivity {
     private void handleGuess() {
         String userGuess = getUserInput();
 
-        // Get feedback from the WordGame class
+        // message notifying the user that the submission was too short
+        if(userGuess.length() != wordGame.chosenWord.length()){
+            // Display a message to the user
+            Toast.makeText(this, "Your guess must be " + wordGame.chosenWord.length() +
+                    " letters long.", Toast.LENGTH_SHORT).show();
+            // Hide the keyboard when user hits submit
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(submitButton.getWindowToken(), 0);
+            return;
+        }
+
+        // Get feedback from the WordGame class if length check is good
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
         //tvFeedBack.setText(feedback.message);
 
