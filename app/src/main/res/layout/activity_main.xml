@@ -1,125 +1,145 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
+<androidx.drawerlayout.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+    <!-- Main content view with your existing layout -->
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+        <ImageView
+                android:id="@+id/background_image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".MainActivity">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/header"
+                android:scaleType="centerCrop"
+                android:background="@drawable/main_bg_transparency"
+                android:contentDescription="@string/nav"/>
 
-    <ImageView
-            android:id="@+id/background_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/header"
-            android:scaleType="centerCrop"
-            android:background="@drawable/main_bg_transparency"
-            android:contentDescription="@string/nav"/>
+        <!-- Header Layout -->
+        <include
+                layout="@layout/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    <!-- Header Layout -->
-    <include
-            layout="@layout/header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <!-- Show date based on phone's date -->
+        <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder_text"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="40sp"
+                android:layout_below="@id/header"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp" />
 
-    <!-- Show date based on phones date -->
-    <TextView
-            android:id="@+id/date"
+        <!-- Level One Button -->
+        <Button
+                android:id="@+id/level_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/level_one"
+                android:textColor="@color/button_text"
+                android:textSize="29sp"
+                android:backgroundTint="@color/level_1"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/date"
+                android:layout_centerHorizontal="true" />
+
+        <!-- Level Two Button -->
+        <Button
+                android:id="@+id/level_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/level_two"
+                android:textColor="@color/button_text"
+                android:textSize="29sp"
+                android:backgroundTint="@color/level_2"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/level_one"
+                android:layout_centerHorizontal="true" />
+
+        <!-- Level Three Button -->
+        <Button
+                android:id="@+id/level_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/level_three"
+                android:textColor="@color/button_text"
+                android:textSize="29sp"
+                android:backgroundTint="@color/level_3"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/level_two"
+                android:layout_centerHorizontal="true" />
+
+        <!-- Badge Button -->
+        <Button
+                android:id="@+id/badges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/badges"
+                android:textColor="@color/button_text"
+                android:textSize="29sp"
+                android:backgroundTint="@color/badge_button"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/level_three"
+                android:layout_centerHorizontal="true" />
+
+        <TextView
+                android:id="@+id/coin_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Silver Coins: ---"
+                android:textColor="@color/white"
+                android:textSize="29sp"
+                android:textStyle="bold"
+                android:layout_above="@id/leader_board"
+                android:layout_marginBottom="16dp"
+                android:layout_centerHorizontal="true"/>
+
+        <!-- Leader Board Button -->
+        <Button
+                android:id="@+id/leader_board"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/leader_board"
+                android:textColor="@color/button_text"
+                android:textSize="29sp"
+                android:backgroundTint="@color/profile_leaderBoard_button"
+                android:layout_above="@+id/profile"
+                android:layout_marginBottom="16dp"
+                android:layout_centerHorizontal="true" />
+
+        <!-- Profile Button -->
+        <Button
+                android:id="@+id/profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile"
+                android:textColor="@color/button_text"
+                android:textSize="29sp"
+                android:backgroundTint="@color/profile_leaderBoard_button"
+                android:layout_marginBottom="16dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+    <!-- Navigation Drawer -->
+    <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/placeholder_text"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="40sp"
-            android:layout_below="@id/header"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp" />
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:menu="@menu/menu"
+            tools:ignore="MissingConstraints"/>
 
-    <!-- Level One Button -->
-    <Button
-            android:id="@+id/level_one"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/level_one"
-            android:textColor="@color/button_text"
-            android:textSize="29sp"
-            android:backgroundTint="@color/level_1"
-            android:layout_marginTop="16dp"
-            android:layout_below="@id/date"
-            android:layout_centerHorizontal="true" />
-
-    <!-- Level Two Button -->
-    <Button
-            android:id="@+id/level_two"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/level_two"
-            android:textColor="@color/button_text"
-            android:textSize="29sp"
-            android:backgroundTint="@color/level_2"
-            android:layout_marginTop="16dp"
-            android:layout_below="@id/level_one"
-            android:layout_centerHorizontal="true" />
-
-    <!-- Level Three Button -->
-    <Button
-            android:id="@+id/level_three"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/level_three"
-            android:textColor="@color/button_text"
-            android:textSize="29sp"
-            android:backgroundTint="@color/level_3"
-            android:layout_marginTop="16dp"
-            android:layout_below="@id/level_two"
-            android:layout_centerHorizontal="true" />
-
-    <!-- Badge Button -->
-    <Button
-            android:id="@+id/badges"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/badges"
-            android:textColor="@color/button_text"
-            android:textSize="29sp"
-            android:backgroundTint="@color/badge_button"
-            android:layout_marginTop="16dp"
-            android:layout_below="@id/level_three"
-            android:layout_centerHorizontal="true" />
-
-    <TextView
-            android:id="@+id/coin_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Silver Coins: ---"
-            android:textColor="@color/white"
-            android:textSize="29sp"
-            android:textStyle="bold"
-            android:layout_above="@id/leader_board"
-            android:layout_marginBottom="16dp"
-            android:layout_centerHorizontal="true"/>
-
-    <!-- Leader Board Button -->
-    <Button
-            android:id="@+id/leader_board"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/leader_board"
-            android:textColor="@color/button_text"
-            android:textSize="29sp"
-            android:backgroundTint="@color/profile_leaderBoard_button"
-            android:layout_above="@+id/profile"
-            android:layout_marginBottom="16dp"
-            android:layout_centerHorizontal="true" />
-
-    <!-- Profile Button -->
-    <Button
-            android:id="@+id/profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/profile"
-            android:textColor="@color/button_text"
-            android:textSize="29sp"
-            android:backgroundTint="@color/profile_leaderBoard_button"
-            android:layout_marginBottom="16dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true" />
-
-</RelativeLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
