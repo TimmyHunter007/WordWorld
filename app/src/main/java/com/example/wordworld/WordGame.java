@@ -6,7 +6,7 @@ import com.example.wordworld.WordManagement;
 
 public class WordGame {
 
-    private String chosenWord;
+    String chosenWord;
     private int attempts;
     private final WordManagement wordManagement; // Injected dependency
     //private String feedback;

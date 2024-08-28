@@ -5,12 +5,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import android.widget.RelativeLayout;
 import android.content.Context;
 
 public class LevelTwoActivity extends AppCompatActivity {
@@ -78,7 +74,14 @@ public class LevelTwoActivity extends AppCompatActivity {
     private void handleGuess() {
         String userGuess = getUserInput();
 
-        // Get feedback from the WordGame class
+        // Check if the guess has the correct number of characters
+        if (userGuess.length() != wordGame.chosenWord.length()) {
+            // Display a message to the user
+            Toast.makeText(this, "Your guess must be " + wordGame.chosenWord.length() + " letters long.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Get feedback from the WordGame class if length check is good
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
         //tvFeedBack.setText(feedback.message);
 
