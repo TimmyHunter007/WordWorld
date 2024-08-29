@@ -8,10 +8,12 @@
         tools:context=".MainActivity">
 
     <!-- Main content view with your existing layout -->
+
+    <!-- Navigation Drawer -->
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
+    >
 
         <ImageView
                 android:id="@+id/background_image"
@@ -26,7 +28,7 @@
         <include
                 layout="@layout/header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 
         <!-- Show date based on phone's date -->
         <TextView
@@ -39,7 +41,7 @@
                 android:textSize="40sp"
                 android:layout_below="@id/header"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"/>
 
     <!-- Level One Button -->
     <Button
@@ -93,29 +95,29 @@
             android:layout_below="@id/level_three"
             android:layout_centerHorizontal="true" />
 
-    <TextView
-            android:id="@+id/points"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Points: ---"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:layout_above="@id/coin_count"
-            android:layout_marginBottom="16dp"
-            android:layout_centerHorizontal="true" />
+        <TextView
+                android:id="@+id/points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Points: ---"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:layout_above="@id/coin_count"
+                android:layout_marginBottom="16dp"
+                android:layout_centerHorizontal="true" />
 
-    <TextView
-            android:id="@+id/coin_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Silver Coins: ---"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:layout_above="@id/leader_board"
-            android:layout_marginBottom="16dp"
-            android:layout_centerHorizontal="true" />
+        <TextView
+                android:id="@+id/coin_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Silver Coins: ---"
+                android:textColor="@color/white"
+                android:textSize="29sp"
+                android:textStyle="bold"
+                android:layout_above="@id/leader_board"
+                android:layout_marginBottom="16dp"
+                android:layout_centerHorizontal="true"/>
 
         <!-- Leader Board Button -->
         <Button
@@ -128,7 +130,7 @@
                 android:backgroundTint="@color/profile_leaderBoard_button"
                 android:layout_above="@+id/profile"
                 android:layout_marginBottom="16dp"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"/>
 
         <!-- Profile Button -->
         <Button
@@ -141,7 +143,7 @@
                 android:backgroundTint="@color/profile_leaderBoard_button"
                 android:layout_marginBottom="16dp"
                 android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true" />
+                android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
 
@@ -149,8 +151,11 @@
     <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
+            android:translationX="90dp"
+            android:translationY="50dp"
+            android:layout_height="440dp"
+            android:layout_gravity="end"
+            android:background="@color/headerBar"
             app:menu="@menu/menu"
             tools:ignore="MissingConstraints"/>
 

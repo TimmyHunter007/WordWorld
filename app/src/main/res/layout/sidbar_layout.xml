@@ -17,13 +17,14 @@
 
         <com.google.android.material.navigation.NavigationView
                 android:id="@+id/nav_view"
-                android:layout_width="200dp"
-                android:layout_height="663dp"
-                tools:layout_editor_absoluteY="-44dp"
-                tools:layout_editor_absoluteX="5dp"
+                android:layout_width="00dp"
+                android:layout_height="440dp"
+                tools:layout_editor_absoluteY="-34dp"
+                tools:layout_editor_absoluteX="2dp"
                 android:layout_gravity="start"
                 android:translationX="200dp"
                 android:translationY="100dp"
+                android:background="@color/headerBar"
                 app:menu="@menu/menu"
                 tools:ignore="MissingConstraints"/>
 
