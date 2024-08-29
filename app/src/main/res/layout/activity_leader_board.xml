@@ -10,8 +10,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/header"
             android:scaleType="centerCrop"
-            android:background="@drawable/main_bg_transparency"
-            android:contentDescription="@string/background_image" />
+            android:background="@drawable/main_bg_transparency" />
 
     <!-- Header Layout -->
     <include

@@ -24,6 +24,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     private FirebaseAuth auth; // Firebase Authentication instance
     private FirebaseUser user; // Current authenticated user
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set up the DrawerLayout and NavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
 
         // Handle navigation item clicks
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -83,11 +84,13 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(MainActivity.this, LevelThreeActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.badges) {
-                    // Navigate to Badges activity
+
                 } else if (id == R.id.profile) {
-                    // Navigate to Profile activity
+                    intent = new Intent(MainActivity.this, ProfileActivity.class);
+                    startActivity(intent);
                 } else if (id == R.id.leader_board) {
-                    // Navigate to Leaderboard activity
+                    intent = new Intent(MainActivity.this, LeaderBoardActivity.class);
+                    startActivity(intent);
                 }
 
                 drawerLayout.closeDrawers(); // Close the drawer after an item is clicked
@@ -117,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
         String currentDate = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(new Date());
 
         // Find the TextView by its ID and set the current date
-        // Find the TextView by its ID and set the date
         TextView dateTextView = findViewById(R.id.date);
         dateTextView.setText(currentDate);
 
@@ -128,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Handle back button action
                 onBackPressed(); // Navigate back to the previous activity
-                onBackPressed();
             }
         });
 
