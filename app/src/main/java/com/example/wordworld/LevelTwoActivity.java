@@ -143,8 +143,9 @@ public class LevelTwoActivity extends AppCompatActivity {
             RelativeLayout messageContainer = findViewById(R.id.message_container);
             TextView tvMessage = findViewById(R.id.tv_message);
             if (feedback.message.contains("Congratulations")) {
-                int coinsEarned = rewardManager.awardLevelCompletionReward(2); // Use correct level
-                int pointsEarned = rewardManager.getPointsEarned(2); // Use correct level
+                int coinsEarned = rewardManager.awardLevelCompletionReward(2);
+                int pointsEarned = rewardManager.getPointsEarned(2);
+                rewardManager.getWordCount(2);
                 tvMessage.setText(feedback.message + "\n\nYou earned:\n" + coinsEarned + " Silver Coins\n" + pointsEarned + " Points");
             } else {
                 tvMessage.setText(feedback.message);

@@ -131,4 +131,56 @@ public class RewardManager {
 
         return pointsEarned;
     }
+
+    // Method to increase word count when word is correct
+    public int getWordCount(int word) {
+        int wordCount;
+
+        switch (word) {
+            case 1:
+                wordCount = 1;
+                break;
+            case 2:
+                wordCount = 1;
+                break;
+            case 3:
+                wordCount = 1;
+                break;
+            default:
+                wordCount = 0;
+                break;
+        }
+
+        // Store new word count
+        databaseReference.child("wordsCorrect").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer currentWordCount = dataSnapshot.getValue(Integer.class);
+
+                if (currentWordCount != null) {
+                    int newWordCount = currentWordCount + wordCount;
+
+                    databaseReference.child("wordsCorrect").setValue(newWordCount)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("RewardManager", "Words updated successfully");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(Exception e) {
+                                    Log.e("RewardManager", "Error updating words: " + e.getMessage());
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("RewardManager", "Error fetching word count: " + databaseError.getMessage());
+            }
+        });
+        return wordCount;
+    }
 }

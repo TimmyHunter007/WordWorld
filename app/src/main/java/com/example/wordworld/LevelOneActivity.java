@@ -143,6 +143,7 @@ public class LevelOneActivity extends AppCompatActivity {
             if (feedback.message.contains("Congratulations")) {
                 int coinsEarned = rewardManager.awardLevelCompletionReward(1);
                 int pointsEarned = rewardManager.getPointsEarned(1);
+                rewardManager.getWordCount(1);
                 tvMessage.setText(feedback.message + "\n\nYou earned:\n" + coinsEarned + " Silver Coins\n" + pointsEarned + " Points");
             } else {
                 tvMessage.setText(feedback.message);
