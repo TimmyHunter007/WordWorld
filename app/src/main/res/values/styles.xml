@@ -5,6 +5,8 @@
         <item name="colorPrimaryDark">@color/purple_700</item>
         <item name="colorAccent">@color/teal_200</item>
         <item name="android:textSize">20sp</item>
+    </style>
+    <style name="MenuTextBold" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textStyle">bold</item>
     </style>
 </resources>

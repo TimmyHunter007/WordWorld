@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:text="Silver Coins: ---"
                 android:textColor="@color/white"
-                android:textSize="29sp"
+                android:textSize="25sp"
                 android:textStyle="bold"
                 android:layout_above="@id/leader_board"
                 android:layout_marginBottom="16dp"
@@ -158,5 +158,4 @@
             android:background="@color/headerBar"
             app:menu="@menu/menu"
             tools:ignore="MissingConstraints"/>
-
-</androidx.drawerlayout.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
