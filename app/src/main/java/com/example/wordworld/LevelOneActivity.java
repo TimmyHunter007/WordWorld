@@ -13,6 +13,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.RelativeLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LevelOneActivity extends AppCompatActivity {
     private EditText letter1, letter2, letter3, letter4;
@@ -23,6 +27,10 @@ public class LevelOneActivity extends AppCompatActivity {
     //private WordGame wordGames;
     private WordManagement wordManagement;
     private int feedbackIndex = 0;
+    private FirebaseUser user;
+    private RewardManager rewardManager;
+    private DatabaseReference userDatabaseReference;
+
 
 
     @Override
@@ -48,6 +56,21 @@ public class LevelOneActivity extends AppCompatActivity {
         wordGame = new WordGame(wordManagement);
         int level = 1;
         wordGame.startGame(level);
+
+        // Initialize Firebase components
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+        } else {
+            // Handle the case where the user is not authenticated
+            Log.e("LevelOneActivity", "User not authenticated");
+        }
+
+        // Initialize RewardManager with the correct DatabaseReference
+        if (userDatabaseReference != null) {
+            rewardManager = new RewardManager(userDatabaseReference);
+        }
 
         // Set up the submit button listener
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +152,11 @@ public class LevelOneActivity extends AppCompatActivity {
             tvFeedBack4.setVisibility(View.GONE);
             tvAttempts.setVisibility(View.GONE);
             submitButton.setVisibility(View.GONE);
+
+            // Call RewardManager to award level completion reward (assuming level is 1)
+            if (feedback.message.contains("Congratulations")) {
+                rewardManager.awardLevelCompletionReward(1);
+            }
         }
 
         // Clear the input fields after each guess
