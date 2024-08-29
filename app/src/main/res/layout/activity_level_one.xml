@@ -18,11 +18,32 @@
             android:layout_height="wrap_content"
             android:text="@string/level_one"
             android:textColor="@color/white"
-            android:textSize="50sp"
+            android:textSize="60sp"
             android:textStyle="bold"
             android:layout_below="@id/header"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp" />
+
+    <!-- Centered Message Layout -->
+    <RelativeLayout
+            android:id="@+id/message_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded_background"
+            android:visibility="gone">
+
+        <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:padding="20dp"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:layout_centerInParent="true"
+                android:text="" />
+    </RelativeLayout>
 
     <!-- Input Boxes for 4 Letters -->
     <LinearLayout
@@ -34,11 +55,12 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp">
 
+        <!-- Text boxes for letters starting with 1 then going to next -->
         <EditText
                 android:id="@+id/letter1"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/edittext_normal_level1"
+                android:background="@drawable/edittext_selector_level1"
                 android:gravity="center"
                 android:textColor="@color/primary_text"
                 android:textSize="32sp"
@@ -53,7 +75,7 @@
                 android:id="@+id/letter2"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/edittext_normal_level1"
+                android:background="@drawable/edittext_selector_level1"
                 android:gravity="center"
                 android:textColor="@color/primary_text"
                 android:textSize="32sp"
@@ -68,7 +90,7 @@
                 android:id="@+id/letter3"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/edittext_normal_level1"
+                android:background="@drawable/edittext_selector_level1"
                 android:gravity="center"
                 android:textColor="@color/primary_text"
                 android:textSize="32sp"
@@ -83,7 +105,7 @@
                 android:id="@+id/letter4"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/edittext_normal_level1"
+                android:background="@drawable/edittext_selector_level1"
                 android:gravity="center"
                 android:textColor="@color/primary_text"
                 android:textSize="32sp"
@@ -94,6 +116,7 @@
                 android:imeOptions="actionNext"
                 android:cursorVisible="false" />
     </LinearLayout>
+
     <Button
             android:id="@+id/submit_level_one"
             android:layout_width="wrap_content"
@@ -105,4 +128,90 @@
             android:layout_below="@id/game_field_1"
             android:layout_marginTop="16dp"
             android:layout_centerHorizontal="true" />
+
+    <TextView
+            android:id="@+id/tv_feedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@+id/submit_level_one"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:text="____" />
+
+    <TextView
+            android:id="@+id/tv_feedback1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@+id/tv_feedback"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="____" />
+
+    <TextView
+            android:id="@+id/tv_feedback2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@+id/tv_feedback1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="____" />
+
+    <TextView
+            android:id="@+id/tv_feedback3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@+id/tv_feedback2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="____" />
+
+    <TextView
+            android:id="@+id/tv_feedback4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@+id/tv_feedback3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="____" />
+
+
+    <TextView
+            android:id="@+id/tv_attempts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:padding="8dp"
+            android:background="@drawable/rounded_background"
+            android:layout_below="@+id/tv_feedback4"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="Attempts Left: 5" />
+
 </RelativeLayout>
