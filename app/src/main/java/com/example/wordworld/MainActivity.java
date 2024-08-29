@@ -67,16 +67,6 @@ public class MainActivity extends AppCompatActivity {
         TextView dateTextView = findViewById(R.id.date);
         dateTextView.setText(currentDate);
 
-        // Find the user email TextView and set its text for testing purposes
-        TextView userEmailTextView = findViewById(R.id.user_email);
-        if (user != null) {
-            // If the user is signed in, display their email
-            userEmailTextView.setText("Logged in as: " + user.getEmail());
-        } else {
-            // If no user is signed in, display "Not logged in"
-            userEmailTextView.setText("Not logged in");
-        }
-
         // Initialize the back button and set its click listener to navigate back to the previous screen
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
