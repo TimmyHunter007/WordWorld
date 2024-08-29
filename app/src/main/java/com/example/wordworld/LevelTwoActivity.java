@@ -1,10 +1,12 @@
 package com.example.wordworld;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -22,13 +24,11 @@ public class LevelTwoActivity extends AppCompatActivity {
     private TextView tvAttempts;
     private WordGame wordGame;
     private Button submitButton;
-    //private WordGame wordGames;
     private WordManagement wordManagement;
     private int feedbackIndex = 0;
     private FirebaseUser user;
     private RewardManager rewardManager;
     private DatabaseReference userDatabaseReference;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class LevelTwoActivity extends AppCompatActivity {
             userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
         } else {
             // Handle the case where the user is not authenticated
-            Log.e("LevelOneActivity", "User not authenticated");
+            Log.e("LevelTwoActivity", "User not authenticated");
         }
 
         // Initialize RewardManager with the correct DatabaseReference
@@ -88,12 +88,12 @@ public class LevelTwoActivity extends AppCompatActivity {
             }
         });
 
-        // Add TextWatcher to move to the next EditText
-        letter1.addTextChangedListener(new LevelTwoActivity.LetterTextWatcher(letter1, letter2));
-        letter2.addTextChangedListener(new LevelTwoActivity.LetterTextWatcher(letter2, letter3));
-        letter3.addTextChangedListener(new LevelTwoActivity.LetterTextWatcher(letter3, letter4));
-        letter4.addTextChangedListener(new LevelTwoActivity.LetterTextWatcher(letter4, letter5));
-        letter5.addTextChangedListener(new LevelTwoActivity.LetterTextWatcher(letter5, null));
+        // Add TextWatcher to move to the next EditText and handle backspace navigation
+        letter1.addTextChangedListener(new LetterTextWatcher(letter1, letter2, null));
+        letter2.addTextChangedListener(new LetterTextWatcher(letter2, letter3, letter1));
+        letter3.addTextChangedListener(new LetterTextWatcher(letter3, letter4, letter2));
+        letter4.addTextChangedListener(new LetterTextWatcher(letter4, letter5, letter3));
+        letter5.addTextChangedListener(new LetterTextWatcher(letter5, null, letter4));
     }
 
     private void handleGuess() {
@@ -101,7 +101,6 @@ public class LevelTwoActivity extends AppCompatActivity {
 
         // Get feedback from the WordGame class
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
-        //tvFeedBack.setText(feedback.message);
 
         // Handle feedback display based on feedbackIndex
         switch (feedbackIndex) {
@@ -125,7 +124,7 @@ public class LevelTwoActivity extends AppCompatActivity {
         // Increment feedbackIndex and check if the game should end
         feedbackIndex++;
 
-        //update attempts
+        // Update attempts
         tvAttempts.setText("Attempts Left: " + feedback.attemptsLeft);
 
         // Check if the game is over and disable inputs if necessary
@@ -136,10 +135,16 @@ public class LevelTwoActivity extends AppCompatActivity {
             // Show the message container and message
             RelativeLayout messageContainer = findViewById(R.id.message_container);
             TextView tvMessage = findViewById(R.id.tv_message);
-            tvMessage.setText(feedback.message);
+            if (feedback.message.contains("Congratulations")) {
+                int coinsEarned = rewardManager.awardLevelCompletionReward(2); // Use correct level
+                int pointsEarned = rewardManager.getPointsEarned(2); // Use correct level
+                tvMessage.setText(feedback.message + "\n\nYou earned:\n" + coinsEarned + " Silver Coins\n" + pointsEarned + " Points");
+            } else {
+                tvMessage.setText(feedback.message);
+            }
             messageContainer.setVisibility(View.VISIBLE);
 
-            //hide all boxes so the win/loss message is the only thing that shows
+            // Hide all boxes so the win/loss message is the only thing that shows
             letter1.setVisibility(View.GONE);
             letter2.setVisibility(View.GONE);
             letter3.setVisibility(View.GONE);
@@ -152,11 +157,6 @@ public class LevelTwoActivity extends AppCompatActivity {
             tvFeedBack4.setVisibility(View.GONE);
             tvAttempts.setVisibility(View.GONE);
             submitButton.setVisibility(View.GONE);
-
-            // Call RewardManager to award level completion reward (assuming level is 1)
-            if (feedback.message.contains("Congratulations")) {
-                rewardManager.awardLevelCompletionReward(2);
-            }
         }
 
         // Clear the input fields after each guess
@@ -208,10 +208,28 @@ public class LevelTwoActivity extends AppCompatActivity {
     private class LetterTextWatcher implements TextWatcher {
         private final EditText currentEditText;
         private final EditText nextEditText;
+        private final EditText prevEditText;
 
-        public LetterTextWatcher(EditText currentEditText, EditText nextEditText) {
+        public LetterTextWatcher(EditText currentEditText, EditText nextEditText, EditText prevEditText) {
             this.currentEditText = currentEditText;
             this.nextEditText = nextEditText;
+            this.prevEditText = prevEditText;
+
+            // Add a listener for detecting backspace
+            this.currentEditText.setOnKeyListener((v, keyCode, event) -> {
+                if (event.getAction() == android.view.KeyEvent.ACTION_DOWN &&
+                        keyCode == android.view.KeyEvent.KEYCODE_DEL) {
+
+                    // Check if currentEditText is empty and move to the previous EditText
+                    if (currentEditText.getText().toString().isEmpty() && prevEditText != null) {
+                        prevEditText.requestFocus();
+                        prevEditText.setText("");  // Clear the previous EditText
+                        prevEditText.setSelection(prevEditText.getText().length());  // Place cursor at the end
+                        return true;
+                    }
+                }
+                return false;
+            });
         }
 
         @Override
@@ -221,12 +239,14 @@ public class LevelTwoActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.length() == 1) {
-                if (nextEditText != null) {
-                    nextEditText.requestFocus();
-                } else {
-                    currentEditText.clearFocus(); // Clear focus on the last EditText
-                }
+            if (s.length() == 1 && nextEditText != null) {
+                nextEditText.requestFocus();
+            } else if (s.length() == 1 && nextEditText == null) {
+                currentEditText.clearFocus(); // Clear focus on the last EditText
+
+                // Hide the keyboard when the last letter is entered
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(currentEditText.getWindowToken(), 0);
             }
         }
 

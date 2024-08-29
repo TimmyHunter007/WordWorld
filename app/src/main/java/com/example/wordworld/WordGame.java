@@ -40,7 +40,7 @@ public class WordGame {
         int[] feedbackStatus = getFeedbackStatus(chosenWord, userInput);
 
         if (allCorrect(feedbackStatus)) {
-            return new Feedback("Congratulations! You've guessed the word: " +
+            return new Feedback("Congratulations! You've guessed the word: \n" +
                     chosenWord, attempts, userInput.toCharArray(), feedbackStatus);
         } else {
             attempts--;

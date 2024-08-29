@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser user; // Current authenticated user
     private DatabaseReference databaseReference; // Database reference for user's data
     private Button profileButton; // Button for navigating to the profile or login screen
-    private TextView silverCoins; // UI Element
+    private TextView silverCoins, points; // UI Element
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +52,19 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     // Handle possible error
+                    Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            databaseReference.child("points").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    points = findViewById(R.id.points);
+                    Integer point = dataSnapshot.getValue(Integer.class);
+                    points.setText("Points: " + point);
+                }
+
+                public void onCancelled(@NonNull DatabaseError databaseError) {
                     Toast.makeText(MainActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });

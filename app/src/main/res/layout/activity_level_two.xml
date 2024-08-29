@@ -37,8 +37,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="35sp"
+                android:padding="20dp"
+                android:textSize="30sp"
                 android:textStyle="bold"
+                android:textAlignment="center"
                 android:layout_centerInParent="true"
                 android:text="" />
     </RelativeLayout>
