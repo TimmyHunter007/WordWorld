@@ -7,12 +7,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import android.widget.RelativeLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -101,6 +97,17 @@ public class LevelThreeActivity extends AppCompatActivity {
     private void handleGuess() {
         String userGuess = getUserInput();
 
+        // message notifying the user that the submission was too short
+        if(userGuess.length() != wordGame.chosenWord.length()){
+            // Display a message to the user
+            Toast.makeText(this, "Your guess must be " + wordGame.chosenWord.length() +
+                    " letters long.", Toast.LENGTH_SHORT).show();
+            // Hide the keyboard when user hits submit
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(submitButton.getWindowToken(), 0);
+            return;
+        }
+
         // Get feedback from the WordGame class
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
 
@@ -171,10 +178,10 @@ public class LevelThreeActivity extends AppCompatActivity {
         for (int i = 0; i < feedbackChars.length; i++) {
             if (feedbackStatus[i] == 2) {
                 // Green for correct position
-                coloredText.append("<font color='#00FF00'>").append(feedbackChars[i]).append("</font>");
+                coloredText.append("<font color='#3CB371'>").append(feedbackChars[i]).append("</font>");
             } else if (feedbackStatus[i] == 1) {
                 // Yellow for wrong position
-                coloredText.append("<font color='#FFFF00'>").append(feedbackChars[i]).append("</font>");
+                coloredText.append("<font color='#FFBF00'>").append(feedbackChars[i]).append("</font>");
             } else {
                 // Default color for incorrect letters
                 coloredText.append(feedbackChars[i]);
