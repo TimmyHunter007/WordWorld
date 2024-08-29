@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">WordWorld</string>
-    <string name="background_image">Background Image</string>
+    <string name="nav">Background Image</string>
+    <string name="nav_view">Background Image</string>
     <string name="level_one">Level One</string>
     <string name="level_two">Level Two</string>
     <string name="level_three">Level Three</string>
@@ -9,4 +10,6 @@
     <string name="profile">Profile</string>
     <string name="submit">Submit</string>
     <string name="placeholder_text">Place Holder</string>
+
+
 </resources>

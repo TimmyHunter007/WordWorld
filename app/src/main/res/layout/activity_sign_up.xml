@@ -1,0 +1,106 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/main_bg_transparency"
+                tools:context=".SignUpActivity">
+
+    <include
+            layout="@layout/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <TextView
+            android:id="@+id/signup_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:textColor="@color/white"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:layout_below="@id/header"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp" />
+
+    <EditText
+            android:id="@+id/fname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="First Name"
+            android:inputType="textPersonName"
+            android:layout_below="@id/signup_title"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/input_fields_profile"
+            android:textColor="@color/primary_text"
+            android:textSize="18sp"
+            android:padding="16dp"/>
+
+    <EditText
+            android:id="@+id/lname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Last Name"
+            android:inputType="textPersonName"
+            android:layout_below="@id/fname"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/input_fields_profile"
+            android:textColor="@color/primary_text"
+            android:textSize="18sp"
+            android:padding="16dp"/>
+
+    <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:layout_below="@id/lname"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/input_fields_profile"
+            android:textColor="@color/primary_text"
+            android:textSize="18sp"
+            android:padding="16dp"/>
+
+    <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_below="@id/email"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/input_fields_profile"
+            android:textColor="@color/primary_text"
+            android:textSize="18sp"
+            android:padding="16dp"/>
+
+    <Button
+            android:id="@+id/sign_up_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:textColor="@color/button_text"
+            android:textSize="20sp"
+            android:backgroundTint="@color/level_1"
+            android:layout_below="@id/password"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
+    <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"/>
+
+</RelativeLayout>
