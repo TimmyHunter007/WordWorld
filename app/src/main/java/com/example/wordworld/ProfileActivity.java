@@ -46,6 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Set up the database reference to the current user's data in Firebase Realtime Database
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+        RewardManager rewardManager = new RewardManager(databaseReference);
 
         // Initialize UI components
         emailDisplay = findViewById(R.id.email_display);
