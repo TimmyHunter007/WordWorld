@@ -8,10 +8,12 @@
         tools:context=".MainActivity">
 
     <!-- Main content view with your existing layout -->
+
+    <!-- Navigation Drawer -->
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
+    >
 
         <ImageView
                 android:id="@+id/background_image"
@@ -26,7 +28,7 @@
         <include
                 layout="@layout/header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 
         <!-- Show date based on phone's date -->
         <TextView
@@ -39,7 +41,7 @@
                 android:textSize="40sp"
                 android:layout_below="@id/header"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"/>
 
         <!-- Level One Button -->
         <Button
@@ -52,7 +54,7 @@
                 android:backgroundTint="@color/level_1"
                 android:layout_marginTop="16dp"
                 android:layout_below="@id/date"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"/>
 
         <!-- Level Two Button -->
         <Button
@@ -65,7 +67,7 @@
                 android:backgroundTint="@color/level_2"
                 android:layout_marginTop="16dp"
                 android:layout_below="@id/level_one"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"/>
 
         <!-- Level Three Button -->
         <Button
@@ -78,7 +80,7 @@
                 android:backgroundTint="@color/level_3"
                 android:layout_marginTop="16dp"
                 android:layout_below="@id/level_two"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"/>
 
         <!-- Badge Button -->
         <Button
@@ -91,7 +93,7 @@
                 android:backgroundTint="@color/badge_button"
                 android:layout_marginTop="16dp"
                 android:layout_below="@id/level_three"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"/>
 
         <TextView
                 android:id="@+id/coin_count"
@@ -116,7 +118,7 @@
                 android:backgroundTint="@color/profile_leaderBoard_button"
                 android:layout_above="@+id/profile"
                 android:layout_marginBottom="16dp"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"/>
 
         <!-- Profile Button -->
         <Button
@@ -129,16 +131,17 @@
                 android:backgroundTint="@color/profile_leaderBoard_button"
                 android:layout_marginBottom="16dp"
                 android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true" />
+                android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
-
-    <!-- Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
+            android:translationX="90dp"
+            android:translationY="50dp"
+            android:layout_height="440dp"
+            android:layout_gravity="end"
+            android:background="@color/headerBar"
             app:menu="@menu/menu"
             tools:ignore="MissingConstraints"/>
 
