@@ -8,11 +8,15 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class LevelOneActivity extends AppCompatActivity {
     private EditText letter1, letter2, letter3, letter4;
@@ -64,6 +68,8 @@ public class LevelOneActivity extends AppCompatActivity {
         if (userDatabaseReference != null) {
             rewardManager = new RewardManager(userDatabaseReference);
         }
+
+        checkIfUserCanGuess();
 
         // Set up the submit button listener
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +142,7 @@ public class LevelOneActivity extends AppCompatActivity {
         if (feedback.message.contains("Congratulations") || feedback.attemptsLeft <= 0) {
             // Disable further input
             enableLetters(false);
+            updateUserMetaData();
 
             // Show the message container and message
             RelativeLayout messageContainer = findViewById(R.id.message_container);
@@ -167,6 +174,71 @@ public class LevelOneActivity extends AppCompatActivity {
         // Clear the input fields after each guess
         clearLetters();
     }
+
+    private void updateUserMetaData() {
+        if (userDatabaseReference != null) {
+            long currentTime = System.currentTimeMillis();
+
+            userDatabaseReference.child("metaData").child("l1WordGuess").setValue(1);
+            userDatabaseReference.child("metaData").child("l1DateTried").setValue(currentTime);
+        }
+    }
+
+    private void checkIfUserCanGuess() {
+        userDatabaseReference.child("metaData").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Retrieve the stored date as a String (e.g., "August 5, 2024")
+                    String storedDate = snapshot.child("l1DateTried").getValue(String.class);
+
+                    // Get today's date in the same format
+                    SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+                    String currentDate = sdf.format(Calendar.getInstance().getTime());
+
+                    Integer wordGuess = snapshot.child("l1WordGuess").exists() ?
+                            snapshot.child("l1WordGuess").getValue(Integer.class) : 0;
+
+                    // Check if the dates match
+                    if (storedDate != null && storedDate.equals(currentDate) && wordGuess == 1) {
+                        // Prevent guessing for today
+                        Toast.makeText(LevelOneActivity.this, "You have already guessed today.", Toast.LENGTH_SHORT).show();
+
+                        RelativeLayout messageContainer = findViewById(R.id.message_container);
+                        TextView tvMessage = findViewById(R.id.tv_message);
+                        tvMessage.setText("You have already guessed today.");
+                        messageContainer.setVisibility(View.VISIBLE);
+
+                        letter1.setVisibility(View.GONE);
+                        letter2.setVisibility(View.GONE);
+                        letter3.setVisibility(View.GONE);
+                        letter4.setVisibility(View.GONE);
+                        tvFeedBack.setVisibility(View.GONE);
+                        tvFeedBack1.setVisibility(View.GONE);
+                        tvFeedBack2.setVisibility(View.GONE);
+                        tvFeedBack3.setVisibility(View.GONE);
+                        tvFeedBack4.setVisibility(View.GONE);
+                        tvAttempts.setVisibility(View.GONE);
+                        submitButton.setVisibility(View.GONE);
+
+                        enableLetters(false);  // Disable input
+                        submitButton.setEnabled(false);
+                    } else {
+                        // Allow user to guess and reset WordGuess and DateTried for the new day
+                        userDatabaseReference.child("metaData").child("l1WordGuess").setValue(0);
+                        userDatabaseReference.child("metaData").child("l1DateTried").setValue(currentDate);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("LevelOneActivity", "Failed to fetch user metadata");
+            }
+        });
+    }
+
+
 
     private void setColoredFeedback(TextView textView, char[] feedbackChars, int[] feedbackStatus) {
         StringBuilder coloredText = new StringBuilder();
