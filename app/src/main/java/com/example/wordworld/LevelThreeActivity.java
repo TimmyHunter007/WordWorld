@@ -14,7 +14,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class LevelThreeActivity extends AppCompatActivity {
     private EditText letter1, letter2, letter3, letter4, letter5, letter6;
@@ -193,65 +195,63 @@ public class LevelThreeActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    Long dateTried = snapshot.child("l3WordGuess").getValue(Long.class);
-                    int wordGuess = snapshot.child("l3WordGuess").getValue(Integer.class);
+                    // Try to retrieve the date as String (formatted date) or Long (timestamp)
+                    String storedDate = null;
 
-                    // Get the current date
-                    Calendar currentCalendar = Calendar.getInstance();
-                    currentCalendar.set(Calendar.HOUR_OF_DAY, 0);
-                    currentCalendar.set(Calendar.MINUTE, 0);
-                    currentCalendar.set(Calendar.SECOND, 0);
-                    currentCalendar.set(Calendar.MILLISECOND, 0);
-                    long currentDate = currentCalendar.getTimeInMillis();
+                    // Check if "l1DateTried" exists and handle Long and String types
+                    if (snapshot.child("l3DateTried").getValue() instanceof Long) {
+                        Long dateAsLong = snapshot.child("l3DateTried").getValue(Long.class);
+                        // Convert Long (timestamp) to a human-readable date
+                        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+                        storedDate = sdf.format(dateAsLong);
+                    } else {
+                        storedDate = snapshot.child("l3DateTried").getValue(String.class);
+                    }
 
-                    if (dateTried != null && wordGuess == 1) {
-                        Calendar lastTriedCalendar = Calendar.getInstance();
-                        lastTriedCalendar.setTimeInMillis(dateTried);
-                        lastTriedCalendar.set(Calendar.HOUR_OF_DAY, 0);
-                        lastTriedCalendar.set(Calendar.MINUTE, 0);
-                        lastTriedCalendar.set(Calendar.SECOND, 0);
-                        lastTriedCalendar.set(Calendar.MILLISECOND, 0);
-                        long lastTriedDate = lastTriedCalendar.getTimeInMillis();
+                    // Get today's date in the same format
+                    SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+                    String currentDate = sdf.format(Calendar.getInstance().getTime());
 
-                        if (currentDate == lastTriedDate) {
-                            // Prevent guessing for today
-                            Toast.makeText(LevelThreeActivity.this, "You have already guessed today.", Toast.LENGTH_SHORT).show();
+                    Integer wordGuess = snapshot.child("l3WordGuess").exists() ?
+                            snapshot.child("l3WordGuess").getValue(Integer.class) : 0;
 
-                            RelativeLayout messageContainer = findViewById(R.id.message_container);
-                            TextView tvMessage = findViewById(R.id.tv_message);
-                            tvMessage.setText("You have already guessed today.");
-                            messageContainer.setVisibility(View.VISIBLE);
+                    // Check if the dates match
+                    if (storedDate != null && storedDate.equals(currentDate) && wordGuess == 1) {
+                        // Prevent guessing for today
+                        Toast.makeText(LevelThreeActivity.this, "You have already guessed today.", Toast.LENGTH_SHORT).show();
 
-                            letter1.setVisibility(View.GONE);
-                            letter2.setVisibility(View.GONE);
-                            letter3.setVisibility(View.GONE);
-                            letter4.setVisibility(View.GONE);
-                            letter5.setVisibility(View.GONE);
-                            letter6.setVisibility(View.GONE);
-                            tvFeedBack.setVisibility(View.GONE);
-                            tvFeedBack1.setVisibility(View.GONE);
-                            tvFeedBack2.setVisibility(View.GONE);
-                            tvFeedBack3.setVisibility(View.GONE);
-                            tvFeedBack4.setVisibility(View.GONE);
-                            tvAttempts.setVisibility(View.GONE);
-                            submitButton.setVisibility(View.GONE);
+                        RelativeLayout messageContainer = findViewById(R.id.message_container);
+                        TextView tvMessage = findViewById(R.id.tv_message);
+                        tvMessage.setText("You have already guessed today.");
+                        messageContainer.setVisibility(View.VISIBLE);
 
+                        letter1.setVisibility(View.GONE);
+                        letter2.setVisibility(View.GONE);
+                        letter3.setVisibility(View.GONE);
+                        letter4.setVisibility(View.GONE);
+                        letter5.setVisibility(View.GONE);
+                        letter6.setVisibility(View.GONE);
+                        tvFeedBack.setVisibility(View.GONE);
+                        tvFeedBack1.setVisibility(View.GONE);
+                        tvFeedBack2.setVisibility(View.GONE);
+                        tvFeedBack3.setVisibility(View.GONE);
+                        tvFeedBack4.setVisibility(View.GONE);
+                        tvAttempts.setVisibility(View.GONE);
+                        submitButton.setVisibility(View.GONE);
 
-
-                            enableLetters(false);  // Disable input
-                            submitButton.setEnabled(false);
-                        } else {
-                            // Reset WordGuess and DateTried for a new day
-                            userDatabaseReference.child("metaData").child("l3WordGuess").setValue(0);
-                            userDatabaseReference.child("metaData").child("l3DateTried").setValue(0);
-                        }
+                        enableLetters(false);  // Disable input
+                        submitButton.setEnabled(false);
+                    } else {
+                        // Allow user to guess and reset WordGuess and DateTried for the new day
+                        userDatabaseReference.child("metaData").child("l3WordGuess").setValue(0);
+                        userDatabaseReference.child("metaData").child("l3DateTried").setValue(currentDate);
                     }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("LevelOneActivity", "Failed to fetch user metadata");
+                Log.e("LevelThreeActivity", "Failed to fetch user metadata");
             }
         });
     }

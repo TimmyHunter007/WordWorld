@@ -189,8 +189,18 @@ public class LevelOneActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    // Retrieve the stored date as a String (e.g., "August 5, 2024")
-                    String storedDate = snapshot.child("l1DateTried").getValue(String.class);
+                    // Try to retrieve the date as String (formatted date) or Long (timestamp)
+                    String storedDate = null;
+
+                    // Check if "l1DateTried" exists and handle Long and String types
+                    if (snapshot.child("l1DateTried").getValue() instanceof Long) {
+                        Long dateAsLong = snapshot.child("l1DateTried").getValue(Long.class);
+                        // Convert Long (timestamp) to a human-readable date
+                        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+                        storedDate = sdf.format(dateAsLong);
+                    } else {
+                        storedDate = snapshot.child("l1DateTried").getValue(String.class);
+                    }
 
                     // Get today's date in the same format
                     SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
@@ -237,6 +247,7 @@ public class LevelOneActivity extends AppCompatActivity {
             }
         });
     }
+
 
 
 
