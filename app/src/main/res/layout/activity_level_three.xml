@@ -1,5 +1,13 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
+<androidx.drawerlayout.widget.DrawerLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+<RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/main_bg_transparency"
@@ -136,3 +144,14 @@
             android:layout_marginTop="16dp"
             android:layout_centerHorizontal="true" />
 </RelativeLayout>
+    <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:translationX="90dp"
+            android:translationY="50dp"
+            android:layout_height="440dp"
+            android:layout_gravity="end"
+            android:background="@color/headerBar"
+            app:menu="@menu/menu"
+            tools:ignore="MissingConstraints"/>
+</androidx.drawerlayout.widget.DrawerLayout>
