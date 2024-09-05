@@ -45,6 +45,8 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
+    implementation ("nl.dionsegijn:konfetti-xml:2.0.2")
+
     implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
     //implementation("com.google.firebase:firebase-auth-ktx")
 }

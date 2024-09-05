@@ -128,18 +128,6 @@
     </TableLayout>
 
     <Button
-            android:id="@+id/add_coins_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Coins (10)"
-            android:textColor="@color/button_text"
-            android:textSize="20sp"
-            android:backgroundTint="@color/profile_leaderBoard_button"
-            android:layout_above="@id/update_password_button"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="16dp" />
-
-    <Button
             android:id="@+id/update_password_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

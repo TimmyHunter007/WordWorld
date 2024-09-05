@@ -31,7 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
     // UI elements to display user's email, silver coins, name, badge count, points, and word correct count
     private TextView emailDisplay, silverCoinsTextView, nameDisplay, badgeCountDisplay, pointsDisplay, wordCorrectDisplay;
     // Buttons for updating password, signing out, and adding coins
-    private Button updatePasswordButton, signOutButton, addCoinsButton;
+    private Button updatePasswordButton, signOutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,6 @@ public class ProfileActivity extends AppCompatActivity {
         badgeCountDisplay = findViewById(R.id.badge_count_display);
         pointsDisplay = findViewById(R.id.points_display);
         signOutButton = findViewById(R.id.sign_out_button);
-        addCoinsButton = findViewById(R.id.add_coins_button);
         updatePasswordButton = findViewById(R.id.update_password_button);
         wordCorrectDisplay = findViewById(R.id.word_correct_display);
 
@@ -149,38 +148,6 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors that occur when retrieving data from the database
-            }
-        });
-
-        // Add coins button click listener to increase the user's Silver Coins by 10
-        addCoinsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                databaseReference.child("silverCoins").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        // Retrieve the current coins value from the database
-                        Integer currentCoins = dataSnapshot.getValue(Integer.class);
-                        if (currentCoins != null) {
-                            // Add 10 coins to the current coins value and update it in the database
-                            int newCoinValue = currentCoins + 10;
-                            databaseReference.child("silverCoins").setValue(newCoinValue)
-                                    .addOnCompleteListener(task -> {
-                                        // Notify the user that 10 coins have been added successfully or if the operation failed
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(ProfileActivity.this, "10 Coins Added!", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(ProfileActivity.this, "Failed to add coins.", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Handle errors that occur when retrieving data from the database
-                    }
-                });
             }
         });
 

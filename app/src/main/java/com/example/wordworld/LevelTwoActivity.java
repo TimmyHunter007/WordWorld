@@ -70,7 +70,11 @@ public class LevelTwoActivity extends AppCompatActivity {
             rewardManager = new RewardManager(userDatabaseReference);
         }
 
-        checkIfUserCanGuess();
+        if (userDatabaseReference != null) {
+            checkIfUserCanGuess();
+        } else {
+            logInRequired();
+        }
 
         // Set up the submit button listener
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -176,6 +180,25 @@ public class LevelTwoActivity extends AppCompatActivity {
 
         // Clear the input fields after each guess
         clearLetters();
+    }
+
+    private void logInRequired() {
+        RelativeLayout messageContainer = findViewById(R.id.message_container);
+        TextView tvMessage = findViewById(R.id.tv_message);
+        messageContainer.setVisibility(View.VISIBLE);
+        letter1.setVisibility(View.GONE);
+        letter2.setVisibility(View.GONE);
+        letter3.setVisibility(View.GONE);
+        letter4.setVisibility(View.GONE);
+        letter5.setVisibility(View.GONE);
+        tvFeedBack.setVisibility(View.GONE);
+        tvFeedBack1.setVisibility(View.GONE);
+        tvFeedBack2.setVisibility(View.GONE);
+        tvFeedBack3.setVisibility(View.GONE);
+        tvFeedBack4.setVisibility(View.GONE);
+        tvAttempts.setVisibility(View.GONE);
+        submitButton.setVisibility(View.GONE);
+        tvMessage.setText("You need to be logged in to play this level.");
     }
 
     private void updateUserMetaData() {
