@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 20% opacity black for a transparent look -->
+    <solid android:color="#4D000000" />
+    <!-- Adjust the radius for curved edges -->
+    <corners android:radius="12dp" />
+
+</shape>
