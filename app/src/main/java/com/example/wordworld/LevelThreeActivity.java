@@ -146,6 +146,8 @@ public class LevelThreeActivity extends AppCompatActivity {
         // Update attempts
         tvAttempts.setText("Attempts Left: " + feedback.attemptsLeft);
 
+        updateAttemptsInDatabase(feedback.attemptsLeft);
+
         // Check if the game is over and disable inputs if necessary
         if (feedback.message.contains("Congratulations") || feedback.attemptsLeft <= 0) {
             // Disable further input
@@ -183,6 +185,12 @@ public class LevelThreeActivity extends AppCompatActivity {
 
         // Clear the input fields after each guess
         clearLetters();
+    }
+
+    private void updateAttemptsInDatabase(int attemptsLeft) {
+        if (userDatabaseReference != null) {
+            userDatabaseReference.child("metaData").child("l3AttemptsLeft").setValue(attemptsLeft);
+        }
     }
 
     private void logInRequired() {
@@ -266,6 +274,14 @@ public class LevelThreeActivity extends AppCompatActivity {
                         enableLetters(false);  // Disable input
                         submitButton.setEnabled(false);
                     } else {
+                        // Retrieve saved attempts if they exist, otherwise set to 5
+                        Integer savedAttempts = snapshot.child("l3AttemptsLeft").exists() ?
+                                snapshot.child("l3AttemptsLeft").getValue(Integer.class) : 5;
+
+                        // Set the saved attempts in the WordGame class
+                        wordGame.attempts = savedAttempts;
+                        tvAttempts.setText("Attempts Left: " + savedAttempts);
+
                         // Allow user to guess and reset WordGuess and DateTried for the new day
                         userDatabaseReference.child("metaData").child("l3WordGuess").setValue(0);
                         userDatabaseReference.child("metaData").child("l3DateTried").setValue(currentDate);

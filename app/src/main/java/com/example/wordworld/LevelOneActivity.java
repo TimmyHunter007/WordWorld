@@ -143,6 +143,8 @@ public class LevelOneActivity extends AppCompatActivity {
         // Update attempts
         tvAttempts.setText("Attempts Left: " + feedback.attemptsLeft);
 
+        updateAttemptsInDatabase(feedback.attemptsLeft);
+
         // Check if the game is over (either win or out of attempts)
         if (feedback.message.contains("Congratulations") || feedback.attemptsLeft <= 0) {
             // Disable further input
@@ -178,6 +180,12 @@ public class LevelOneActivity extends AppCompatActivity {
 
         // Clear the input fields after each guess
         clearLetters();
+    }
+
+    private void updateAttemptsInDatabase(int attemptsLeft) {
+        if (userDatabaseReference != null) {
+            userDatabaseReference.child("metaData").child("l1AttemptsLeft").setValue(attemptsLeft);
+        }
     }
 
     private void logInRequired() {
@@ -242,6 +250,7 @@ public class LevelOneActivity extends AppCompatActivity {
                         tvMessage.setText("You have already guessed today.");
                         messageContainer.setVisibility(View.VISIBLE);
 
+                        // Hide input fields and disable the submit button
                         letter1.setVisibility(View.GONE);
                         letter2.setVisibility(View.GONE);
                         letter3.setVisibility(View.GONE);
@@ -257,6 +266,14 @@ public class LevelOneActivity extends AppCompatActivity {
                         enableLetters(false);  // Disable input
                         submitButton.setEnabled(false);
                     } else {
+                        // Retrieve saved attempts if they exist, otherwise set to 5
+                        Integer savedAttempts = snapshot.child("l1AttemptsLeft").exists() ?
+                                snapshot.child("l1AttemptsLeft").getValue(Integer.class) : 5;
+
+                        // Set the saved attempts in the WordGame class
+                        wordGame.attempts = savedAttempts;
+                        tvAttempts.setText("Attempts Left: " + savedAttempts);
+
                         // Allow user to guess and reset WordGuess and DateTried for the new day
                         userDatabaseReference.child("metaData").child("l1WordGuess").setValue(0);
                         userDatabaseReference.child("metaData").child("l1DateTried").setValue(currentDate);
@@ -270,9 +287,6 @@ public class LevelOneActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 
     private void setColoredFeedback(TextView textView, char[] feedbackChars, int[] feedbackStatus) {
         StringBuilder coloredText = new StringBuilder();
