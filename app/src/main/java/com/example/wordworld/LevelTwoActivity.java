@@ -1,6 +1,7 @@
 package com.example.wordworld;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,6 +30,7 @@ public class LevelTwoActivity extends AppCompatActivity {
     private FirebaseUser user;
     private RewardManager rewardManager;
     private DatabaseReference userDatabaseReference;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,6 @@ public class LevelTwoActivity extends AppCompatActivity {
         if (user != null) {
             userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
         } else {
-            // Handle the case where the user is not authenticated
             Log.e("LevelTwoActivity", "User not authenticated");
         }
 
@@ -89,7 +90,6 @@ public class LevelTwoActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle back button action
                 onBackPressed();
             }
         });
@@ -105,18 +105,15 @@ public class LevelTwoActivity extends AppCompatActivity {
     private void handleGuess() {
         String userGuess = getUserInput();
 
-        // message notifying the user that the submission was too short
-        if(userGuess.length() != wordGame.chosenWord.length()){
-            // Display a message to the user
+        if (userGuess.length() != wordGame.chosenWord.length()) {
             Toast.makeText(this, "Your guess must be " + wordGame.chosenWord.length() +
                     " letters long.", Toast.LENGTH_SHORT).show();
-            // Hide the keyboard when user hits submit
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(submitButton.getWindowToken(), 0);
+            playSoundEffect(R.raw.error_sound);
             return;
         }
 
-        // Get feedback from the WordGame class
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
 
         // Handle feedback display based on feedbackIndex
@@ -138,62 +135,78 @@ public class LevelTwoActivity extends AppCompatActivity {
                 break;
         }
 
-        // Increment feedbackIndex and check if the game should end
         feedbackIndex++;
 
         // Update attempts
         tvAttempts.setText("Attempts Left: " + feedback.attemptsLeft);
-
         updateAttemptsInDatabase(feedback.attemptsLeft);
 
-        // Check if the game is over and disable inputs if necessary
         if (feedback.message.contains("Congratulations") || feedback.attemptsLeft <= 0) {
-            // Disable further input
             enableLetters(false);
             updateUserMetaData();
 
-            // Show the message container and message
             RelativeLayout messageContainer = findViewById(R.id.message_container);
             TextView tvMessage = findViewById(R.id.tv_message);
+
             if (feedback.message.contains("Congratulations")) {
                 int coinsEarned = rewardManager.awardLevelCompletionReward(2);
                 int pointsEarned = rewardManager.getPointsEarned(2);
-                rewardManager.getWordCount(2);
-                tvMessage.setText(feedback.message + "\n\nYou earned:\n" + coinsEarned + " Silver Coins\n" + pointsEarned + " Points");
+
+                // Fetch the current total points from Firebase
+                userDatabaseReference.child("points").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int currentPoints = 0;  // Default value if points do not exist yet
+
+                        if (snapshot.exists()) {
+                            currentPoints = snapshot.getValue(Integer.class);  // Get current points from database
+                        }
+
+                        int newTotalPoints = currentPoints + pointsEarned;  // Update the total points
+
+                        // Save the updated total points back to the database
+                        userDatabaseReference.child("points").setValue(newTotalPoints);
+
+                        // Display the message to the user with the new total points
+                        tvMessage.setText(feedback.message + "\n\nYou earned:\n" + coinsEarned + " Silver Coins\n" + pointsEarned + " Points" +
+                                "\n\nTotal Points: " + newTotalPoints);
+
+                        playSoundEffect(R.raw.victory_sound); // Play victory sound
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("LevelTwoActivity", "Failed to fetch total points");
+                    }
+                });
+
             } else {
                 tvMessage.setText(feedback.message);
+                playSoundEffect(R.raw.sad_sound); // Play sad sound
             }
-            messageContainer.setVisibility(View.VISIBLE);
 
-            // Hide all boxes so the win/loss message is the only thing that shows
-            letter1.setVisibility(View.GONE);
-            letter2.setVisibility(View.GONE);
-            letter3.setVisibility(View.GONE);
-            letter4.setVisibility(View.GONE);
-            letter5.setVisibility(View.GONE);
-            tvFeedBack.setVisibility(View.GONE);
-            tvFeedBack1.setVisibility(View.GONE);
-            tvFeedBack2.setVisibility(View.GONE);
-            tvFeedBack3.setVisibility(View.GONE);
-            tvFeedBack4.setVisibility(View.GONE);
-            tvAttempts.setVisibility(View.GONE);
-            submitButton.setVisibility(View.GONE);
+            messageContainer.setVisibility(View.VISIBLE);
+            hideGameComponents();
         }
 
-        // Clear the input fields after each guess
         clearLetters();
     }
 
-    private void updateAttemptsInDatabase(int attemptsLeft) {
-        if (userDatabaseReference != null) {
-            userDatabaseReference.child("metaData").child("l2AttemptsLeft").setValue(attemptsLeft);
+    private void playSoundEffect(int soundResourceId) {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
         }
+        mediaPlayer = MediaPlayer.create(this, soundResourceId);
+        mediaPlayer.start();
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            }
+        });
     }
 
-    private void logInRequired() {
-        RelativeLayout messageContainer = findViewById(R.id.message_container);
-        TextView tvMessage = findViewById(R.id.tv_message);
-        messageContainer.setVisibility(View.VISIBLE);
+    private void hideGameComponents() {
         letter1.setVisibility(View.GONE);
         letter2.setVisibility(View.GONE);
         letter3.setVisibility(View.GONE);
@@ -206,13 +219,26 @@ public class LevelTwoActivity extends AppCompatActivity {
         tvFeedBack4.setVisibility(View.GONE);
         tvAttempts.setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);
+    }
+
+    private void updateAttemptsInDatabase(int attemptsLeft) {
+        if (userDatabaseReference != null) {
+            userDatabaseReference.child("metaData").child("l2AttemptsLeft").setValue(attemptsLeft);
+        }
+    }
+
+    private void logInRequired() {
+        RelativeLayout messageContainer = findViewById(R.id.message_container);
+        TextView tvMessage = findViewById(R.id.tv_message);
+        messageContainer.setVisibility(View.VISIBLE);
+        hideGameComponents();
         tvMessage.setText("You need to be logged in to play this level.");
+        playSoundEffect(R.raw.error_sound);
     }
 
     private void updateUserMetaData() {
         if (userDatabaseReference != null) {
             long currentTime = System.currentTimeMillis();
-
             userDatabaseReference.child("metaData").child("l2WordGuess").setValue(1);
             userDatabaseReference.child("metaData").child("l2DateTried").setValue(currentTime);
         }
@@ -223,62 +249,34 @@ public class LevelTwoActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    // Try to retrieve the date as String (formatted date) or Long (timestamp)
-                    String storedDate = null;
-
-                    // Check if "l1DateTried" exists and handle Long and String types
-                    if (snapshot.child("l2DateTried").getValue() instanceof Long) {
-                        Long dateAsLong = snapshot.child("l2DateTried").getValue(Long.class);
-                        // Convert Long (timestamp) to a human-readable date
-                        SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
-                        storedDate = sdf.format(dateAsLong);
-                    } else {
-                        storedDate = snapshot.child("l2DateTried").getValue(String.class);
-                    }
-
-                    // Get today's date in the same format
+                    String storedDate = getStoredDate(snapshot);
                     SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
                     String currentDate = sdf.format(Calendar.getInstance().getTime());
 
                     Integer wordGuess = snapshot.child("l2WordGuess").exists() ?
                             snapshot.child("l2WordGuess").getValue(Integer.class) : 0;
 
-                    // Check if the dates match
-                    if (storedDate != null && storedDate.equals(currentDate) && wordGuess == 1) {
-                        // Prevent guessing for today
-                        Toast.makeText(LevelTwoActivity.this, "You have already guessed today.", Toast.LENGTH_SHORT).show();
-
-                        RelativeLayout messageContainer = findViewById(R.id.message_container);
-                        TextView tvMessage = findViewById(R.id.tv_message);
-                        tvMessage.setText("You have already guessed today.");
-                        messageContainer.setVisibility(View.VISIBLE);
-
-                        letter1.setVisibility(View.GONE);
-                        letter2.setVisibility(View.GONE);
-                        letter3.setVisibility(View.GONE);
-                        letter4.setVisibility(View.GONE);
-                        letter5.setVisibility(View.GONE);
-                        tvFeedBack.setVisibility(View.GONE);
-                        tvFeedBack1.setVisibility(View.GONE);
-                        tvFeedBack2.setVisibility(View.GONE);
-                        tvFeedBack3.setVisibility(View.GONE);
-                        tvFeedBack4.setVisibility(View.GONE);
-                        tvAttempts.setVisibility(View.GONE);
-                        submitButton.setVisibility(View.GONE);
-
-                        enableLetters(false);  // Disable input
-                        submitButton.setEnabled(false);
-                    } else {
-                        // Retrieve saved attempts if they exist, otherwise set to 5
+                    if (storedDate != null && storedDate.equals(currentDate)) {
                         Integer savedAttempts = snapshot.child("l2AttemptsLeft").exists() ?
                                 snapshot.child("l2AttemptsLeft").getValue(Integer.class) : 5;
-
-                        // Set the saved attempts in the WordGame class
                         wordGame.attempts = savedAttempts;
                         tvAttempts.setText("Attempts Left: " + savedAttempts);
 
-                        // Allow user to guess and reset WordGuess and DateTried for the new day
+                        if (wordGuess == 1) {
+                            preventFurtherGuessing();
+                        }
+                    } else {
+                        int attempts = 5;
+
+                        // Update the database with the new number of attempts
+                        userDatabaseReference.child("metaData").child("l2AttemptsLeft").setValue(attempts);
+                        wordGame.attempts = attempts;
+                        tvAttempts.setText("Attempts Left: " + attempts);
+
+                        // Reset the word guess for the new day
                         userDatabaseReference.child("metaData").child("l2WordGuess").setValue(0);
+
+                        // Store the current date as a human-readable string
                         userDatabaseReference.child("metaData").child("l2DateTried").setValue(currentDate);
                     }
                 }
@@ -289,6 +287,28 @@ public class LevelTwoActivity extends AppCompatActivity {
                 Log.e("LevelTwoActivity", "Failed to fetch user metadata");
             }
         });
+    }
+
+    private String getStoredDate(DataSnapshot snapshot) {
+        if (snapshot.child("l2DateTried").getValue() instanceof Long) {
+            Long dateAsLong = snapshot.child("l2DateTried").getValue(Long.class);
+            SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+            return sdf.format(dateAsLong);
+        } else {
+            return snapshot.child("l2DateTried").getValue(String.class);
+        }
+    }
+
+    private void preventFurtherGuessing() {
+        Toast.makeText(LevelTwoActivity.this, "You have already guessed today.", Toast.LENGTH_SHORT).show();
+        RelativeLayout messageContainer = findViewById(R.id.message_container);
+        TextView tvMessage = findViewById(R.id.tv_message);
+        tvMessage.setText("You have already guessed today.");
+        playSoundEffect(R.raw.error_sound);
+        messageContainer.setVisibility(View.VISIBLE);
+        hideGameComponents();
+        enableLetters(false);
+        submitButton.setEnabled(false);
     }
 
     private void setColoredFeedback(TextView textView, char[] feedbackChars, int[] feedbackStatus) {
@@ -332,7 +352,6 @@ public class LevelTwoActivity extends AppCompatActivity {
         letter5.setEnabled(enabled);
     }
 
-    // TextWatcher class to move focus to the next EditText
     private class LetterTextWatcher implements TextWatcher {
         private final EditText currentEditText;
         private final EditText nextEditText;
@@ -343,16 +362,13 @@ public class LevelTwoActivity extends AppCompatActivity {
             this.nextEditText = nextEditText;
             this.prevEditText = prevEditText;
 
-            // Add a listener for detecting backspace
             this.currentEditText.setOnKeyListener((v, keyCode, event) -> {
                 if (event.getAction() == android.view.KeyEvent.ACTION_DOWN &&
                         keyCode == android.view.KeyEvent.KEYCODE_DEL) {
-
-                    // Check if currentEditText is empty and move to the previous EditText
                     if (currentEditText.getText().toString().isEmpty() && prevEditText != null) {
                         prevEditText.requestFocus();
-                        prevEditText.setText("");  // Clear the previous EditText
-                        prevEditText.setSelection(prevEditText.getText().length());  // Place cursor at the end
+                        prevEditText.setText("");
+                        prevEditText.setSelection(prevEditText.getText().length());
                         return true;
                     }
                 }
@@ -362,25 +378,28 @@ public class LevelTwoActivity extends AppCompatActivity {
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            // No action needed here
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.length() == 1 && nextEditText != null) {
-                nextEditText.requestFocus();
-            } else if (s.length() == 1 && nextEditText == null) {
-                currentEditText.clearFocus(); // Clear focus on the last EditText
-
-                // Hide the keyboard when the last letter is entered
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(currentEditText.getWindowToken(), 0);
+            if (s.length() == 1) {
+                if (nextEditText != null) {
+                    nextEditText.requestFocus();
+                } else {
+                    currentEditText.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(currentEditText.getWindowToken(), 0);
+                }
             }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            // No action needed here
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
