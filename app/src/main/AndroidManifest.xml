@@ -19,6 +19,7 @@
         <activity android:name=".LevelOneActivity" />
         <activity android:name=".LevelTwoActivity" />
         <activity android:name=".LevelThreeActivity" />
+        <activity android:name=".BadgesActivity" />
 </application>
 
         </manifest>

@@ -46,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(MainActivity.this, LevelThreeActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.badges) {
-                    // Navigate to Badges activity
+                    intent = new Intent(MainActivity.this, BadgesActivity.class);
+                    startActivity(intent);
                 } else if (id == R.id.profile) {
                     // Navigate to Profile activity
                 } else if (id == R.id.leader_board) {
@@ -113,6 +114,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, LevelThreeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button badgesButton = findViewById(R.id.badges);
+        badgesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, BadgesActivity.class);
                 startActivity(intent);
             }
         });
