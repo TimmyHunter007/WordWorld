@@ -62,17 +62,18 @@
                     android:text=""/>
         </RelativeLayout>
 
-        <!-- Row 1 -->
-        <LinearLayout
-                android:id="@+id/row1"
+        <!-- Grid Layout for Input Boxes (5 Rows, 5 Columns) -->
+        <GridLayout
+                android:id="@+id/guess_grid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_below="@id/level_three_title"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="20dp"
+                android:columnCount="6"
+                android:rowCount="5">
 
-            <!-- Text boxes for row 1 -->
+            <!-- Row 1 -->
             <EditText
                     android:id="@+id/letter1_row1"
                     android:layout_width="60dp"
@@ -81,8 +82,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -98,8 +98,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -115,8 +114,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -132,8 +130,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -149,8 +146,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -166,27 +162,15 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"/>
-        </LinearLayout>
 
-        <!-- Row 2 -->
-        <LinearLayout
-                android:id="@+id/row2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@id/row1"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="1.5dp">
-
-            <!-- Text boxes for row 2 -->
+            <!-- Row 2 -->
             <EditText
                     android:id="@+id/letter1_row2"
                     android:layout_width="60dp"
@@ -195,8 +179,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -212,8 +195,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -229,8 +211,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -246,8 +227,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -263,8 +243,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -280,27 +259,15 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"/>
-        </LinearLayout>
 
-        <!-- Row 3 -->
-        <LinearLayout
-                android:id="@+id/row3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@id/row2"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="1.5dp">
-
-            <!-- Text boxes for row 3 -->
+            <!-- Row 3 -->
             <EditText
                     android:id="@+id/letter1_row3"
                     android:layout_width="60dp"
@@ -309,8 +276,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -326,8 +292,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -343,8 +308,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -360,8 +324,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -377,8 +340,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -394,27 +356,15 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"/>
-        </LinearLayout>
 
-        <!-- Row 4 -->
-        <LinearLayout
-                android:id="@+id/row4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@id/row3"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="1.5dp">
-
-            <!-- Text boxes for row 4 -->
+            <!-- Row 4 -->
             <EditText
                     android:id="@+id/letter1_row4"
                     android:layout_width="60dp"
@@ -423,8 +373,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -440,8 +389,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -457,8 +405,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -474,8 +421,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -491,8 +437,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -508,27 +453,15 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"/>
-        </LinearLayout>
 
-        <!-- Row 5 -->
-        <LinearLayout
-                android:id="@+id/row5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@id/row4"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="1.5dp">
-
-            <!-- Text boxes for row 5 -->
+            <!-- Row 5 -->
             <EditText
                     android:id="@+id/letter1_row5"
                     android:layout_width="60dp"
@@ -537,8 +470,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -554,8 +486,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -571,8 +502,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -588,8 +518,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -605,8 +534,7 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
@@ -622,26 +550,25 @@
                     android:gravity="center"
                     android:textColor="@color/primary_text"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
+                    android:layout_margin="1.5dp"
                     android:inputType="textCapCharacters"
                     android:maxLength="1"
                     android:imeOptions="actionNext"
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"/>
-        </LinearLayout>
+        </GridLayout>
 
         <!-- Submit button -->
         <Button
-                android:id="@+id/submit_level_one"
+                android:id="@+id/submit_level_three"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/submit"
                 android:textColor="@color/button_text"
                 android:textSize="29sp"
                 android:backgroundTint="@color/level_1"
-                android:layout_below="@+id/row5"
+                android:layout_below="@+id/guess_grid"
                 android:layout_marginTop="24dp"
                 android:layout_centerHorizontal="true"/>
 
@@ -651,7 +578,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_below="@+id/submit_level_one"
+                android:layout_below="@+id/submit_level_three"
                 android:gravity="center_horizontal"
                 android:layout_marginTop="20dp">
 

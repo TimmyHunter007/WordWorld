@@ -5,7 +5,6 @@ import com.example.wordworld.WordManagement;
 
 
 public class WordGame {
-
     String chosenWord;
     private int attempts;
     private final WordManagement wordManagement; // Injected dependency
@@ -13,8 +12,6 @@ public class WordGame {
 
     public WordGame(WordManagement wordManagement) {
         this.wordManagement = wordManagement;
-        this.attempts = 5;
-        //this.feedback = "";
     }
 
 
@@ -23,20 +20,12 @@ public class WordGame {
         String[] wordList = wordManagement.getRandomWord(level);
         Random random = new Random();
         int randomIndex = random.nextInt(wordList.length);
-        this.attempts = 5;
         this.chosenWord = wordList[randomIndex];
-        //this.feedback = "";
+        this.attempts = 5;
     }
 
     // Method to handle the user's guess
     public Feedback handleGuess(String userInput) {
-        if (userInput.length() != chosenWord.length()) {
-            return new Feedback("Your guess must be " + chosenWord.length() + " letters long.",
-                    attempts, userInput.toCharArray(), new int[chosenWord.length()]);
-        }
-
-        //feedback = gamePlay(chosenWord, userInput);
-
         int[] feedbackStatus = getFeedbackStatus(chosenWord, userInput);
 
         if (allCorrect(feedbackStatus)) {

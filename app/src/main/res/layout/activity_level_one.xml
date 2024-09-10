@@ -62,33 +62,32 @@
                     android:text=""/>
         </RelativeLayout>
 
-        <!-- Row 1 -->
-        <LinearLayout
-                android:id="@+id/row1"
+        <!-- Grid Layout for Input Boxes (5 Rows, 4 Columns) -->
+        <GridLayout
+                android:id="@+id/guess_grid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_below="@id/level_one_title"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="20dp"
+                android:columnCount="4"
+                android:rowCount="5">
 
-            <!-- Text boxes for row 1 -->
+            <!-- Row 1 -->
             <EditText
                     android:id="@+id/letter1_row1"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter2_row1"
@@ -96,16 +95,14 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter3_row1"
@@ -113,16 +110,14 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter4_row1"
@@ -130,45 +125,30 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
-        </LinearLayout>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
-        <!-- Row 2 -->
-        <LinearLayout
-                android:id="@+id/row2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@id/row1"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="1.5dp">
-
-            <!-- Text boxes for row 2 -->
+            <!-- Row 2 -->
             <EditText
                     android:id="@+id/letter1_row2"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter2_row2"
@@ -176,16 +156,14 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter3_row2"
@@ -193,16 +171,14 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter4_row2"
@@ -210,45 +186,30 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
-        </LinearLayout>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
-        <!-- Row 3 -->
-        <LinearLayout
-                android:id="@+id/row3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@id/row2"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="1.5dp">
-
-            <!-- Text boxes for row 3 -->
+            <!-- Row 3 -->
             <EditText
                     android:id="@+id/letter1_row3"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter2_row3"
@@ -256,16 +217,14 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter3_row3"
@@ -273,16 +232,14 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter4_row3"
@@ -290,45 +247,30 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
-        </LinearLayout>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
-        <!-- Row 4 -->
-        <LinearLayout
-                android:id="@+id/row4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@id/row3"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="1.5dp">
-
-            <!-- Text boxes for row 4 -->
+            <!-- Row 4 -->
             <EditText
                     android:id="@+id/letter1_row4"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter2_row4"
@@ -336,16 +278,14 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter3_row4"
@@ -353,16 +293,14 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter4_row4"
@@ -370,45 +308,30 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
-        </LinearLayout>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
-        <!-- Row 5 -->
-        <LinearLayout
-                android:id="@+id/row5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@id/row4"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="1.5dp">
-
-            <!-- Text boxes for row 5 -->
+            <!-- Row 5 -->
             <EditText
                     android:id="@+id/letter1_row5"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter2_row5"
@@ -416,16 +339,14 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter3_row5"
@@ -433,16 +354,14 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
 
             <EditText
                     android:id="@+id/letter4_row5"
@@ -450,17 +369,15 @@
                     android:layout_height="60dp"
                     android:background="@drawable/letter_box_background"
                     android:gravity="center"
-                    android:textColor="@color/primary_text"
+                    android:textColor="@color/white"
                     android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
+                    android:layout_margin="1.5dp"
+                    android:inputType="none"
                     android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"/>
-        </LinearLayout>
+                    android:cursorVisible="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"/>
+        </GridLayout>
 
         <!-- Submit button -->
         <Button
@@ -471,7 +388,7 @@
                 android:textColor="@color/button_text"
                 android:textSize="29sp"
                 android:backgroundTint="@color/level_1"
-                android:layout_below="@+id/row5"
+                android:layout_below="@+id/guess_grid"
                 android:layout_marginTop="24dp"
                 android:layout_centerHorizontal="true"/>
 
@@ -557,7 +474,7 @@
                         android:layout_marginStart="-2.5dp"/>
 
                 <Button
-                        android:id="@+id/kay_i"
+                        android:id="@+id/key_i"
                         android:layout_width="40dp"
                         android:layout_height="match_parent"
                         android:textColor="@color/button_text"
@@ -566,7 +483,7 @@
                         android:layout_marginStart="-2.5dp"/>
 
                 <Button
-                        android:id="@+id/kay_o"
+                        android:id="@+id/key_o"
                         android:layout_width="40dp"
                         android:layout_height="match_parent"
                         android:textColor="@color/button_text"
@@ -575,7 +492,7 @@
                         android:layout_marginStart="-2.5dp"/>
 
                 <Button
-                        android:id="@+id/kay_p"
+                        android:id="@+id/key_p"
                         android:layout_width="40dp"
                         android:layout_height="match_parent"
                         android:textColor="@color/button_text"
@@ -656,7 +573,7 @@
                         android:layout_marginStart="-2.5dp"/>
 
                 <Button
-                        android:id="@+id/kay_k"
+                        android:id="@+id/key_k"
                         android:layout_width="40dp"
                         android:layout_height="match_parent"
                         android:textColor="@color/button_text"
@@ -665,7 +582,7 @@
                         android:layout_marginStart="-2.5dp"/>
 
                 <Button
-                        android:id="@+id/kay_l"
+                        android:id="@+id/key_l"
                         android:layout_width="40dp"
                         android:layout_height="match_parent"
                         android:textColor="@color/button_text"
