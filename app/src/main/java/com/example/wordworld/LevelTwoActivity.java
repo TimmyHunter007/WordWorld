@@ -25,6 +25,7 @@ public class LevelTwoActivity extends AppCompatActivity {
     private FirebaseUser user;
     private RewardManager rewardManager;
     private DatabaseReference userDatabaseReference;
+    private Button hintButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class LevelTwoActivity extends AppCompatActivity {
         tvFeedBack4 = findViewById(R.id.tv_feedback4);
         tvAttempts = findViewById(R.id.tv_attempts);
         submitButton = findViewById(R.id.submit_level_two);
+        hintButton = findViewById(R.id.hint_level_two);
 
         wordManagement = new WordManagement(this);
         wordGame = new WordGame(wordManagement);
@@ -72,6 +74,33 @@ public class LevelTwoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 handleGuess();
             }
+        });
+
+        hintButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WordGame.Hint hint = wordGame.giveHint();
+
+                if (hint != null) {
+                    Log.d("HintDebug", "Hint message: " + hint.message);
+                    Log.d("HintDebug", "Revealed letter: " + hint.revealedLetter);
+                    Log.d("HintDebug", "Position: " + hint.position);
+
+                    if (hint.revealedLetter != null && hint.position >= 0 && hint.position < 5) {
+                        // Reveal the letter in the correct EditText
+                        EditText[] letterBoxes = {letter1, letter2, letter3, letter4, letter5};
+                        letterBoxes[hint.position].setText(String.valueOf(hint.revealedLetter));
+
+                        // Provide feedback to the user
+                        Toast.makeText(LevelTwoActivity.this, hint.message + " Letter: " + hint.revealedLetter, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(LevelTwoActivity.this, "Error: Invalid hint data.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(LevelTwoActivity.this, "Error: No hint available.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
         });
 
         // Initialize the back button and set the click listener

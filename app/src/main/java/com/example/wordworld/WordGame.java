@@ -9,6 +9,7 @@ public class WordGame {
     String chosenWord;
     private int attempts;
     private final WordManagement wordManagement; // Injected dependency
+    private boolean[] revealedPositions; //To track which positions have been revealed
     //private String feedback;
 
     public WordGame(WordManagement wordManagement) {
@@ -26,6 +27,10 @@ public class WordGame {
         this.attempts = 5;
         this.chosenWord = wordList[randomIndex];
         //this.feedback = "";
+
+        // Initialize revealedPositions array for tracking revealed letters
+        this.revealedPositions = new boolean[chosenWord.length()];
+        Arrays.fill(this.revealedPositions, false); // All positions are initially unrevealed
     }
 
     // Method to handle the user's guess
@@ -98,6 +103,56 @@ public class WordGame {
         }
         //ALL letters are in correct position
         return true;
+    }
+
+    //New Hint Method
+    //This method will reveal a correct letter in a random unrevealed position
+    public Hint giveHint(){
+        Random random = new Random();
+
+        // Check if any unrevealed positions are left
+        if (revealedPositions == null || revealedPositions.length == 0) {
+            return new Hint("Hint system not initialized", null, -1);
+        }
+
+        int unrevealedCount = 0;
+        for (boolean revealed : revealedPositions) {
+            if (!revealed) unrevealedCount++;
+        }
+
+        if (unrevealedCount == 0) {
+            // All positions have been revealed
+            return new Hint("All letters are revealed", null, -1);
+        }
+
+        // Find an unrevealed position to provide a hint
+        int hintPosition = -1;
+        while (hintPosition == -1) {
+            int randomIndex = random.nextInt(chosenWord.length());
+            if (!revealedPositions[randomIndex]) {
+                hintPosition = randomIndex;
+                revealedPositions[randomIndex] = true; // Mark this position as revealed
+            }
+        }
+
+        // Return a hint with the revealed letter and its position
+        return new Hint("Here's a hint!", chosenWord.charAt(hintPosition), hintPosition);
+
+    }
+
+
+    // **Hint Class**
+    // A class to encapsulate the hint result
+    public static class Hint {
+        public final String message;
+        public final Character revealedLetter;
+        public final int position;
+
+        public Hint(String message, Character revealedLetter, int position) {
+            this.message = message;
+            this.revealedLetter = revealedLetter;
+            this.position = position;
+        }
     }
 
     // Feedback class to hold feedback message, attempts left, and status of each letter
