@@ -2,19 +2,21 @@ package com.example.wordworld;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
-import android.view.View;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import android.graphics.Color;
 
 public class LevelOneActivity extends AppCompatActivity {
     private EditText[][] letterBoxes;
@@ -22,7 +24,8 @@ public class LevelOneActivity extends AppCompatActivity {
     private WordGame wordGame;
     private Button submitButton;
     private WordManagement wordManagement;
-    private int currentRow = 0;
+    private int feedbackIndex = 0;
+    private  int currentRow = 0;
     private FirebaseUser user;
     private RewardManager rewardManager;
     private DatabaseReference userDatabaseReference;
@@ -32,6 +35,14 @@ public class LevelOneActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_level_one);
+
+        letterBoxes = new EditText[][]{
+                {findViewById(R.id.letter1_row1), findViewById(R.id.letter2_row1), findViewById(R.id.letter3_row1), findViewById(R.id.letter4_row1)},
+                {findViewById(R.id.letter1_row2), findViewById(R.id.letter2_row2), findViewById(R.id.letter3_row2), findViewById(R.id.letter4_row2)},
+                {findViewById(R.id.letter1_row3), findViewById(R.id.letter2_row3), findViewById(R.id.letter3_row3), findViewById(R.id.letter4_row3)},
+                {findViewById(R.id.letter1_row4), findViewById(R.id.letter2_row4), findViewById(R.id.letter3_row4), findViewById(R.id.letter4_row4)},
+                {findViewById(R.id.letter1_row5), findViewById(R.id.letter2_row5), findViewById(R.id.letter3_row5), findViewById(R.id.letter4_row5)}
+        };
 
         // Initialize UI components
         submitButton = findViewById(R.id.submit_level_one);
@@ -55,9 +66,14 @@ public class LevelOneActivity extends AppCompatActivity {
             rewardManager = new RewardManager(userDatabaseReference);
         }
 
-        //initialize letter boxes
-        initializeLetterBoxes();
-        initializeCustomKeyboard();
+        // Set up listeners for all letterBoxes
+        setUpLetterBoxListeners(currentRow);
+
+        // Initialize the keyboard listeners
+        initializeKeyboardListeners();
+
+        // Automatically focus the first text box
+        letterBoxes[0][0].requestFocus();
 
         // Set up the submit button listener
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -79,143 +95,132 @@ public class LevelOneActivity extends AppCompatActivity {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void initializeLetterBoxes() {
-        letterBoxes = new EditText[5][4];
+    private void setUpLetterBoxListeners(int row) {
+        // Only add listeners to the current row (no need for other rows)
+        for (int i = 0; i < letterBoxes[row].length; i++) {
+            final EditText currentBox = letterBoxes[row][i];
+            final int index = i;
 
-        for (int row = 0; row < 5; row++) {
-            for (int col = 0; col < 4; col++) {
-                String editTextId = "letter" + (col + 1) + "_row" + (row + 1);
-                @SuppressLint("DiscouragedApi") int resID = getResources().getIdentifier(editTextId, "id", getPackageName());
-                letterBoxes[row][col] = findViewById(resID);
+            // Prevent the system keyboard from appearing
+            currentBox.setOnTouchListener((v, event) -> {
+                v.onTouchEvent(event);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                // Consume the touch event so the system keyboard doesn't appear
+                return true;
+            });
 
-                // Ensure focusable and custom keyboard works
-                letterBoxes[row][col].setFocusable(true);
-                letterBoxes[row][col].setFocusableInTouchMode(true);
-                letterBoxes[row][col].setCursorVisible(true);
-                // Prevent system keyboard
-                letterBoxes[row][col].setShowSoftInputOnFocus(false);
+            // Set focus change listener to track active EditText
+            currentBox.setOnFocusChangeListener((v, hasFocus) -> {
+                if (hasFocus) {
+                    // Track active EditText
+                    activeEditText = currentBox;
+                }
+            });
 
-                // Add TextWatcher to automatically move to the next box after typing a character
-                final int currentRow = row;
-                final int currentCol = col;
+            // TextWatcher to move focus to the next box in the same row
+            currentBox.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-                letterBoxes[row][col].addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.length() == 1 && index < letterBoxes[row].length - 1) {
+                        letterBoxes[row][index + 1].requestFocus();
                     }
+                }
 
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (s.length() == 1) {
-                            moveToNextBox(currentRow, currentCol);
-                        }
-                    }
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                    }
-                });
-            }
+            // Focus listener to track active EditText
+            currentBox.setOnFocusChangeListener((v, hasFocus) -> {
+                if (hasFocus) {
+                    activeEditText = currentBox;
+                }
+            });
         }
     }
 
-    private void moveToNextBox(int row, int col) {
-        if (col < 3) {
-            // Move to the next column in the same row
-            letterBoxes[row][col + 1].requestFocus();
-        } else if (row < 4) {
-            // Move to the first column in the next row
-            letterBoxes[row + 1][0].requestFocus();
+    private void initializeKeyboardListeners() {
+        findViewById(R.id.key_q).setOnClickListener(v -> insertLetter("Q"));
+        findViewById(R.id.key_w).setOnClickListener(v -> insertLetter("W"));
+        findViewById(R.id.key_e).setOnClickListener(v -> insertLetter("E"));
+        findViewById(R.id.key_r).setOnClickListener(v -> insertLetter("R"));
+        findViewById(R.id.key_t).setOnClickListener(v -> insertLetter("T"));
+        findViewById(R.id.key_y).setOnClickListener(v -> insertLetter("Y"));
+        findViewById(R.id.key_u).setOnClickListener(v -> insertLetter("U"));
+        findViewById(R.id.key_i).setOnClickListener(v -> insertLetter("I"));
+        findViewById(R.id.key_o).setOnClickListener(v -> insertLetter("O"));
+        findViewById(R.id.key_p).setOnClickListener(v -> insertLetter("P"));
+
+        findViewById(R.id.key_a).setOnClickListener(v -> insertLetter("A"));
+        findViewById(R.id.key_s).setOnClickListener(v -> insertLetter("S"));
+        findViewById(R.id.key_d).setOnClickListener(v -> insertLetter("D"));
+        findViewById(R.id.key_f).setOnClickListener(v -> insertLetter("F"));
+        findViewById(R.id.key_g).setOnClickListener(v -> insertLetter("G"));
+        findViewById(R.id.key_h).setOnClickListener(v -> insertLetter("H"));
+        findViewById(R.id.key_j).setOnClickListener(v -> insertLetter("J"));
+        findViewById(R.id.key_k).setOnClickListener(v -> insertLetter("K"));
+        findViewById(R.id.key_l).setOnClickListener(v -> insertLetter("L"));
+
+        findViewById(R.id.key_z).setOnClickListener(v -> insertLetter("Z"));
+        findViewById(R.id.key_x).setOnClickListener(v -> insertLetter("X"));
+        findViewById(R.id.key_c).setOnClickListener(v -> insertLetter("C"));
+        findViewById(R.id.key_v).setOnClickListener(v -> insertLetter("V"));
+        findViewById(R.id.key_b).setOnClickListener(v -> insertLetter("B"));
+        findViewById(R.id.key_n).setOnClickListener(v -> insertLetter("N"));
+        findViewById(R.id.key_m).setOnClickListener(v -> insertLetter("M"));
+
+        findViewById(R.id.key_back_space).setOnClickListener(v -> deleteLastLetter());
+    }
+
+    private void insertLetter(String letter) {
+        if (activeEditText != null && activeEditText.isEnabled()) {
+            activeEditText.setText(letter);
         }
     }
 
-    // Initialize the custom keyboard buttons
-    private void initializeCustomKeyboard() {
-        findViewById(R.id.key_q).setOnClickListener(v -> onKeyClick("Q"));
-        findViewById(R.id.key_w).setOnClickListener(v -> onKeyClick("W"));
-        findViewById(R.id.key_e).setOnClickListener(v -> onKeyClick("E"));
-        findViewById(R.id.key_r).setOnClickListener(v -> onKeyClick("R"));
-        findViewById(R.id.key_t).setOnClickListener(v -> onKeyClick("T"));
-        findViewById(R.id.key_y).setOnClickListener(v -> onKeyClick("Y"));
-        findViewById(R.id.key_u).setOnClickListener(v -> onKeyClick("U"));
-        findViewById(R.id.key_i).setOnClickListener(v -> onKeyClick("I"));
-        findViewById(R.id.key_o).setOnClickListener(v -> onKeyClick("O"));
-        findViewById(R.id.key_p).setOnClickListener(v -> onKeyClick("P"));
-
-        findViewById(R.id.key_a).setOnClickListener(v -> onKeyClick("A"));
-        findViewById(R.id.key_s).setOnClickListener(v -> onKeyClick("S"));
-        findViewById(R.id.key_d).setOnClickListener(v -> onKeyClick("D"));
-        findViewById(R.id.key_f).setOnClickListener(v -> onKeyClick("F"));
-        findViewById(R.id.key_g).setOnClickListener(v -> onKeyClick("G"));
-        findViewById(R.id.key_h).setOnClickListener(v -> onKeyClick("H"));
-        findViewById(R.id.key_j).setOnClickListener(v -> onKeyClick("J"));
-        findViewById(R.id.key_k).setOnClickListener(v -> onKeyClick("K"));
-        findViewById(R.id.key_l).setOnClickListener(v -> onKeyClick("L"));
-
-        findViewById(R.id.key_z).setOnClickListener(v -> onKeyClick("Z"));
-        findViewById(R.id.key_x).setOnClickListener(v -> onKeyClick("X"));
-        findViewById(R.id.key_c).setOnClickListener(v -> onKeyClick("C"));
-        findViewById(R.id.key_v).setOnClickListener(v -> onKeyClick("V"));
-        findViewById(R.id.key_b).setOnClickListener(v -> onKeyClick("B"));
-        findViewById(R.id.key_n).setOnClickListener(v -> onKeyClick("N"));
-        findViewById(R.id.key_m).setOnClickListener(v -> onKeyClick("M"));
-
-        findViewById(R.id.key_back_space).setOnClickListener(v -> onBackspaceClick());
-    }
-
-    //insert letter into the active EditText
-    private void onKeyClick(String letter) {
+    private void deleteLastLetter() {
         if (activeEditText != null) {
-            activeEditText.setText(letter); // Set the letter in the active EditText
-            moveToNextBox(getRowOf(activeEditText), getColOf(activeEditText)); // Move to next box
-        }
-    }
-
-    private void onBackspaceClick() {
-        if (activeEditText != null) {
-            int row = getRowOf(activeEditText);
-            int col = getColOf(activeEditText);
-
             if (activeEditText.getText().length() > 0) {
-                activeEditText.setText(""); // Clear the current box
-            } else if (col > 0) {
-                //letterBoxes[row][col - 1].setText(""); // Move to the previous box and clear
-                letterBoxes[row][col - 1].requestFocus();
-            } else if (row > 0) {
-                //letterBoxes[row - 1][3].setText(""); // Move to the last box in the previous row and clear
-                letterBoxes[row - 1][3].requestFocus();
-            }
-        }
-    }
-
-    private int getRowOf(EditText editText){
-        for(int row = 0; row < letterBoxes.length; row++) {
-            for(int col = 0; col < letterBoxes[row].length; col++) {
-                if(letterBoxes[row][col] == editText){
-                    return row;
+                // Erase the current letter
+                activeEditText.setText("");
+            } else {
+                // Move to the previous EditText if the current one is empty
+                moveToPreviousEditText();
+                if (activeEditText != null) {
+                    activeEditText.setText("");  // Also clear the previous EditText
                 }
             }
         }
-        return -1;
     }
 
-    private int getColOf(EditText editText){
-        for(int row = 0; row < letterBoxes.length; row++) {
-            for(int col = 0; col < letterBoxes[row].length; col++) {
-                if(letterBoxes[row][col] == editText){
-                    return col;
+    private void moveToPreviousEditText() {
+        for (int row = 0; row < letterBoxes.length; row++) {
+            for (int col = 0; col < letterBoxes[row].length; col++) {
+                if (letterBoxes[row][col].equals(activeEditText)) {
+                    if (col > 0) {
+                        // Move to the previous box
+                        letterBoxes[row][col - 1].requestFocus();
+                        activeEditText = letterBoxes[row][col - 1];
+                    } else if (row > 0) {
+                        // Move to the last box in the previous row
+                        letterBoxes[row - 1][letterBoxes[row - 1].length - 1].requestFocus();
+                        activeEditText = letterBoxes[row - 1][letterBoxes[row - 1].length - 1];
+                    }
+                    return;
                 }
             }
         }
-        return -1;
     }
-
 
     private void handleGuess() {
         String userGuess = getUserInput();
 
         // message notifying the user that the submission was too short
-        if (userGuess.length() != wordGame.chosenWord.length()) {
+        if(userGuess.length() != wordGame.chosenWord.length()){
             // Display a message to the user
             Toast.makeText(this, "Your guess must be " + wordGame.chosenWord.length() +
                     " letters long.", Toast.LENGTH_SHORT).show();
@@ -225,67 +230,166 @@ public class LevelOneActivity extends AppCompatActivity {
         // Get feedback from the WordGame class
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
 
-        // Set colored feedback for the current row
-        setColoredFeedback(currentRow, feedback.feedbackChars, feedback.feedbackStatus);
+        //text box color feedback
+        displayFeedback(feedback);
 
-        //move to the next row
-        currentRow++;
+        //disable the previous row once submit button has been clicked
+        disableRow(currentRow);
 
-        // Check if the game is over (either win or out of attempts)
+        // Now, handle the end of the game if the player wins or is out of attempts
         if (feedback.message.contains("Congratulations") || feedback.attemptsLeft <= 0) {
-            endGame(feedback);
+            endGame(feedback); // Call endGame to finalize the game
+        } else {
+            // Move to the next row for another attempt
+            if (currentRow < letterBoxes.length - 1) {
+                // Increment the row
+                currentRow++;
+                // Set up listeners for the new row
+                setUpLetterBoxListeners(currentRow);
+                // Move the cursor to the first box in the new row
+                letterBoxes[currentRow][0].requestFocus();
+            } else {
+                // If there are no more rows, disable input and show message
+                endGame(feedback);
+            }
         }
     }
 
-    private String getUserInput() {
-        StringBuilder userGuess = new StringBuilder();
-        for (int col = 0; col < 4; col++) {
-            userGuess.append(letterBoxes[currentRow][col].getText().toString().trim());
+    //disables all EditText boxes in a given row
+    private void disableRow(int row) {
+        for (EditText editText : letterBoxes[row]) {
+            editText.setEnabled(false);
         }
-        return userGuess.toString();
     }
 
     private void setColoredFeedback(int row, char[] feedbackChars, int[] feedbackStatus) {
-        for (int col = 0; col < 4; col++) {
-            String color;
-            if (feedbackStatus[col] == 2) {
-                // Green for correct position
-                color = "#3CB371";
-            } else if (feedbackStatus[col] == 1) {
-                // Yellow for wrong position
-                color = "#FFBF00";
+        for (int i = 0; i < feedbackChars.length; i++) {
+            EditText letterBox = letterBoxes[row][i];
+            if (feedbackStatus[i] == 2) {
+                // Green
+                letterBox.setBackground(createColoredBackground(Color.parseColor("#3CB371")));
+            } else if (feedbackStatus[i] == 1) {
+                // Yellow
+                letterBox.setBackground(createColoredBackground(Color.parseColor("#FFBF00")));
             } else {
-                // Default color for incorrect letters
-                color = "#000000";
+                // Default
+                letterBox.setBackground(createColoredBackground(Color.parseColor("#4D000000")));
             }
-            letterBoxes[row][col].setTextColor(Color.parseColor(color));
-            letterBoxes[row][col].setText(String.valueOf(feedbackChars[col]));
+            letterBox.setText(String.valueOf(feedbackChars[i]));
+            // Add a black outline around the text using setShadowLayer
+            letterBox.setShadowLayer(15f, 0f, 0f, Color.BLACK);
+        }
+    }
+
+    private Drawable createColoredBackground(int color) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setShape(GradientDrawable.RECTANGLE);
+        drawable.setColor(color); // Set the desired color
+        drawable.setCornerRadius(32f); // Rounded corners (same as in your XML)
+
+        return drawable;
+    }
+
+    private String getUserInput() {
+        StringBuilder guess = new StringBuilder();
+        for (EditText box : letterBoxes[currentRow]) {
+            guess.append(box.getText().toString());
+        }
+        return guess.toString();
+    }
+
+    private void displayFeedback(WordGame.Feedback feedback) {
+        // Color feedback for the current row
+        setColoredFeedback(currentRow, feedback.feedbackChars, feedback.feedbackStatus);
+    }
+
+    private void enableLetters(boolean enabled) {
+        for (EditText[] row : letterBoxes) {
+            for (EditText letterBox : row) {
+                letterBox.setEnabled(enabled);
+            }
         }
     }
 
     private void endGame(WordGame.Feedback feedback) {
         // Disable further input
-        submitButton.setEnabled(false);
+        enableLetters(false);
 
-        // Show a message to the user
+        // Show the message container and message
         RelativeLayout messageContainer = findViewById(R.id.message_container);
         TextView tvMessage = findViewById(R.id.tv_message);
 
-        // Check if the user has won
         if (feedback.message.contains("Congratulations")) {
-            // Award the user for completing Level 1
-            int coinsEarned = rewardManager.awardLevelCompletionReward(1); // Level 1
+            int coinsEarned = rewardManager.awardLevelCompletionReward(1);
             int pointsEarned = rewardManager.getPointsEarned(1);
             rewardManager.getWordCount(1);
-
-            // Display the success message with rewards earned
             tvMessage.setText(feedback.message + "\n\nYou earned:\n" + coinsEarned + " Silver Coins\n" + pointsEarned + " Points");
         } else {
-            // Display failure message (if no rewards are earned)
             tvMessage.setText(feedback.message);
         }
 
-        // Show the message container with the result
+        //allow end message to display
         messageContainer.setVisibility(View.VISIBLE);
+
+        // Hide game UI when displaying the end message
+        findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
+        findViewById(R.id.keyboard).setVisibility(View.GONE);
+        submitButton.setVisibility(View.GONE);
+    }
+
+    // TextWatcher class to move focus to the next EditText and handle backspace navigation
+    private class LetterTextWatcher implements TextWatcher {
+        private final EditText currentEditText;
+        private final EditText nextEditText;
+        private final EditText prevEditText;
+
+        public LetterTextWatcher(EditText currentEditText, EditText nextEditText, EditText prevEditText) {
+            this.currentEditText = currentEditText;
+            this.nextEditText = nextEditText;
+            this.prevEditText = prevEditText;
+
+            // Add a listener for detecting backspace
+            this.currentEditText.setOnKeyListener((v, keyCode, event) -> {
+                if (event.getAction() == android.view.KeyEvent.ACTION_DOWN &&
+                        keyCode == android.view.KeyEvent.KEYCODE_DEL) {
+
+                    // Check if currentEditText is empty and move to the previous EditText
+                    if (currentEditText.getText().toString().isEmpty() && prevEditText != null) {
+                        prevEditText.requestFocus();
+                        // Clear the previous EditText
+                        prevEditText.setText("");
+                        // Place cursor at the end
+                        prevEditText.setSelection(prevEditText.getText().length());
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // No action needed here
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (s.length() == 1) {
+                if (nextEditText != null) {
+                    nextEditText.requestFocus();
+                } else {
+                    currentEditText.clearFocus(); // Clear focus on the last EditText
+
+                    // Hide the keyboard when the last letter is entered
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(currentEditText.getWindowToken(), 0);
+                }
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // No action needed here
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.wordworld;
+/*package com.example.wordworld;
 
 import android.content.Context;
 import android.util.Log;
@@ -165,3 +165,4 @@ public class LevelThreeActivity extends AppCompatActivity {
         messageContainer.setVisibility(View.VISIBLE);
     }
 }
+*/
