@@ -184,17 +184,48 @@ public class LevelOneActivity extends AppCompatActivity {
 
     private void deleteLastLetter() {
         if (activeEditText != null) {
-            if (activeEditText.getText().length() > 0) {
-                // Erase the current letter
-                activeEditText.setText("");
-            } else {
-                // Move to the previous EditText if the current one is empty
-                moveToPreviousEditText();
-                if (activeEditText != null) {
-                    activeEditText.setText("");  // Also clear the previous EditText
+            int currentRowIndex = getActiveEditTextRowIndex();
+            int currentColIndex = getActiveEditTextColIndex();
+
+            if (currentRowIndex == currentRow) {
+                if (activeEditText.getText().length() > 0) {
+                    // Erase the current letter
+                    activeEditText.setText("");
+                } else {
+                    // If we are not at the first EditText in the row, move to the previous EditText
+                    if (currentColIndex > 0) {
+                        letterBoxes[currentRow][currentColIndex - 1].requestFocus();
+                        activeEditText = letterBoxes[currentRow][currentColIndex - 1];
+                        activeEditText.setText("");  // Clear the previous EditText
+                    }
                 }
             }
         }
+    }
+
+    // Helper method to get the row index of the active EditText
+    private int getActiveEditTextRowIndex() {
+        for (int row = 0; row < letterBoxes.length; row++) {
+            for (int col = 0; col < letterBoxes[row].length; col++) {
+                if (letterBoxes[row][col].equals(activeEditText)) {
+                    return row;
+                }
+            }
+        }
+        // Return -1 if no active row is found (this shouldn't happen)
+        return -1;
+    }
+
+    private int getActiveEditTextColIndex() {
+        for (int row = 0; row < letterBoxes.length; row++) {
+            for (int col = 0; col < letterBoxes[row].length; col++) {
+                if (letterBoxes[row][col].equals(activeEditText)) {
+                    return col;
+                }
+            }
+        }
+        // Return -1 if not found
+        return -1;
     }
 
     private void moveToPreviousEditText() {
@@ -267,10 +298,12 @@ public class LevelOneActivity extends AppCompatActivity {
             EditText letterBox = letterBoxes[row][i];
             if (feedbackStatus[i] == 2) {
                 // Green
-                letterBox.setBackground(createColoredBackground(Color.parseColor("#3CB371")));
+                //letterBox.setBackground(createColoredBackground(Color.parseColor("#3CB371")));
+                letterBox.setBackground(createColoredBackground(Color.parseColor("#556B2F")));
             } else if (feedbackStatus[i] == 1) {
                 // Yellow
-                letterBox.setBackground(createColoredBackground(Color.parseColor("#FFBF00")));
+                //letterBox.setBackground(createColoredBackground(Color.parseColor("#FFBF00")));
+                letterBox.setBackground(createColoredBackground(Color.parseColor("#DAA520")));
             } else {
                 // Default
                 letterBox.setBackground(createColoredBackground(Color.parseColor("#4D000000")));
@@ -284,8 +317,8 @@ public class LevelOneActivity extends AppCompatActivity {
     private Drawable createColoredBackground(int color) {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setShape(GradientDrawable.RECTANGLE);
-        drawable.setColor(color); // Set the desired color
-        drawable.setCornerRadius(32f); // Rounded corners (same as in your XML)
+        drawable.setColor(color);
+        drawable.setCornerRadius(32f);
 
         return drawable;
     }
