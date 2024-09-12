@@ -24,7 +24,6 @@ public class LevelOneActivity extends AppCompatActivity {
     private WordGame wordGame;
     private Button submitButton;
     private WordManagement wordManagement;
-    private int feedbackIndex = 0;
     private  int currentRow = 0;
     private FirebaseUser user;
     private RewardManager rewardManager;
@@ -132,13 +131,6 @@ public class LevelOneActivity extends AppCompatActivity {
 
                 @Override
                 public void afterTextChanged(Editable s) {}
-            });
-
-            // Focus listener to track active EditText
-            currentBox.setOnFocusChangeListener((v, hasFocus) -> {
-                if (hasFocus) {
-                    activeEditText = currentBox;
-                }
             });
         }
     }
@@ -368,61 +360,5 @@ public class LevelOneActivity extends AppCompatActivity {
         findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
         findViewById(R.id.keyboard).setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);
-    }
-
-    // TextWatcher class to move focus to the next EditText and handle backspace navigation
-    private class LetterTextWatcher implements TextWatcher {
-        private final EditText currentEditText;
-        private final EditText nextEditText;
-        private final EditText prevEditText;
-
-        public LetterTextWatcher(EditText currentEditText, EditText nextEditText, EditText prevEditText) {
-            this.currentEditText = currentEditText;
-            this.nextEditText = nextEditText;
-            this.prevEditText = prevEditText;
-
-            // Add a listener for detecting backspace
-            this.currentEditText.setOnKeyListener((v, keyCode, event) -> {
-                if (event.getAction() == android.view.KeyEvent.ACTION_DOWN &&
-                        keyCode == android.view.KeyEvent.KEYCODE_DEL) {
-
-                    // Check if currentEditText is empty and move to the previous EditText
-                    if (currentEditText.getText().toString().isEmpty() && prevEditText != null) {
-                        prevEditText.requestFocus();
-                        // Clear the previous EditText
-                        prevEditText.setText("");
-                        // Place cursor at the end
-                        prevEditText.setSelection(prevEditText.getText().length());
-                        return true;
-                    }
-                }
-                return false;
-            });
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            // No action needed here
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.length() == 1) {
-                if (nextEditText != null) {
-                    nextEditText.requestFocus();
-                } else {
-                    currentEditText.clearFocus(); // Clear focus on the last EditText
-
-                    // Hide the keyboard when the last letter is entered
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(currentEditText.getWindowToken(), 0);
-                }
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            // No action needed here
-        }
     }
 }
