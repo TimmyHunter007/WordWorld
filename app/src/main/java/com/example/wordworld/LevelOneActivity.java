@@ -1,6 +1,7 @@
 package com.example.wordworld;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.os.Bundle;
@@ -8,11 +9,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 
 public class LevelOneActivity extends AppCompatActivity {
     private EditText letter1, letter2, letter3, letter4;
@@ -78,28 +81,48 @@ public class LevelOneActivity extends AppCompatActivity {
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WordGame.Hint hint = wordGame.giveHint();
-
-                if (hint != null) {
-                    Log.d("HintDebug", "Hint message: " + hint.message);
-                    Log.d("HintDebug", "Revealed letter: " + hint.revealedLetter);
-                    Log.d("HintDebug", "Position: " + hint.position);
-
-                    if (hint.revealedLetter != null && hint.position >= 0 && hint.position < 4) {
-                        // Reveal the letter in the correct EditText
-                        EditText[] letterBoxes = {letter1, letter2, letter3, letter4};
-                        letterBoxes[hint.position].setText(String.valueOf(hint.revealedLetter));
-
-                        // Provide feedback to the user
-                        Toast.makeText(LevelOneActivity.this, hint.message + " Letter: " + hint.revealedLetter, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(LevelOneActivity.this, "Error: Invalid hint data.", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(LevelOneActivity.this, "Error: No hint available.", Toast.LENGTH_SHORT).show();
-                }
+                showHintDialog();
+//                final int hintCost = 5;  // Define the cost of a hint (e.g., 5 silver coins)
+//
+//                // Deduct coins for a hint
+//                rewardManager.deductCoins(hintCost, new RewardManager.RewardCallback() {
+//                    @Override
+//                    public void onSuccess() {
+//                        // If coins were successfully deducted, provide the hint
+//                        WordGame.Hint hint = wordGame.giveHint();
+//
+//                        if (hint != null) {
+//                            Log.d("HintDebug", "Hint message: " + hint.message);
+//                            Log.d("HintDebug", "Revealed letter: " + hint.revealedLetter);
+//                            Log.d("HintDebug", "Position: " + hint.position);
+//
+//                            if (hint.revealedLetter != null && hint.position >= 0 && hint.position < 4) {
+//                                EditText[] letterBoxes = {letter1, letter2, letter3, letter4};
+//                                letterBoxes[hint.position].setText(String.valueOf(hint.revealedLetter));
+//
+//                                // Provide feedback to the user
+//                                Toast.makeText(LevelOneActivity.this, hint.message + " Letter: " + hint.revealedLetter, Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(LevelOneActivity.this, "Error: Invalid hint data.", Toast.LENGTH_SHORT).show();
+//                            }
+//                        } else {
+//                            Toast.makeText(LevelOneActivity.this, "Error: No hint available.", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure() {
+//                        // Handle case when there was an error deducting coins
+//                        Toast.makeText(LevelOneActivity.this, "Error deducting coins. Try again.", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onInsufficientFunds() {
+//                        // Inform the user they don't have enough coins
+//                        Toast.makeText(LevelOneActivity.this, "Insufficient funds for a hint!", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
             }
-
         });
 
         // Initialize the back button and set the click listener
@@ -119,6 +142,65 @@ public class LevelOneActivity extends AppCompatActivity {
         letter4.addTextChangedListener(new LetterTextWatcher(letter4, null, letter3));
     }
 
+    private void showHintDialog() {
+        Object context;
+        AlertDialog.Builder builder = new AlertDialog.Builder(LevelOneActivity.this);
+        builder.setTitle("Buy a Hint");
+
+        builder.setMessage("Would you like to buy a hint?");
+
+
+        builder.setPositiveButton("Buy Hint", (dialog, which) -> {
+            final int hintCost = 5;  // Define the cost of a hint (e.g., 5 silver coins)
+
+            // Deduct coins for a hint
+            rewardManager.deductCoins(hintCost, new RewardManager.RewardCallback() {
+                @Override
+                public void onSuccess() {
+                    // If coins were successfully deducted, provide the hint
+                    WordGame.Hint hint = wordGame.giveHint();
+
+                    if (hint != null) {
+                        Log.d("HintDebug", "Hint message: " + hint.message);
+                        Log.d("HintDebug", "Revealed letter: " + hint.revealedLetter);
+                        Log.d("HintDebug", "Position: " + hint.position);
+
+                        if (hint.revealedLetter != null && hint.position >= 0 && hint.position < 4) {
+                            EditText[] letterBoxes = {letter1, letter2, letter3, letter4};
+                            letterBoxes[hint.position].setText(String.valueOf(hint.revealedLetter));
+
+                            // Provide feedback to the user
+                            Toast.makeText(LevelOneActivity.this, hint.message + " Letter: " + hint.revealedLetter, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LevelOneActivity.this, "Error: Invalid hint data.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(LevelOneActivity.this, "Error: No hint available.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure() {
+                    // Handle case when there was an error deducting coins
+                    Toast.makeText(LevelOneActivity.this, "Error deducting coins. Try again.", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onInsufficientFunds() {
+                    // Inform the user they don't have enough coins
+                    Toast.makeText(LevelOneActivity.this, "Insufficient funds for a hint!", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+
+
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     private void handleGuess() {
         String userGuess = getUserInput();
 
@@ -130,8 +212,10 @@ public class LevelOneActivity extends AppCompatActivity {
             // Hide the keyboard when user hits submit
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(submitButton.getWindowToken(), 0);
+
             return;
         }
+
 
         // Get feedback from the WordGame class
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
@@ -191,6 +275,8 @@ public class LevelOneActivity extends AppCompatActivity {
             tvFeedBack4.setVisibility(View.GONE);
             tvAttempts.setVisibility(View.GONE);
             submitButton.setVisibility(View.GONE);
+            hintButton.setVisibility(View.GONE);
+
         }
 
         // Clear the input fields after each guess
@@ -287,5 +373,7 @@ public class LevelOneActivity extends AppCompatActivity {
         public void afterTextChanged(Editable s) {
             // No action needed here
         }
+
+
     }
 }

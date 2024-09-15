@@ -165,7 +165,7 @@
             android:text="Hint"
             android:textColor="@color/button_text"
             android:textSize="29sp"
-            android:backgroundTint="@color/level_1"
+            android:backgroundTint="@color/level_3"
             android:layout_below="@id/game_field_1"
             android:layout_marginTop="14dp"
 

@@ -10,6 +10,7 @@ public class WordGame {
     private int attempts;
     private final WordManagement wordManagement; // Injected dependency
     private boolean[] revealedPositions; //To track which positions have been revealed
+    private boolean[] correctlyGuessed;  // To track which letters have been correctly guessed
     //private String feedback;
 
     public WordGame(WordManagement wordManagement) {
@@ -28,9 +29,11 @@ public class WordGame {
         this.chosenWord = wordList[randomIndex];
         //this.feedback = "";
 
-        // Initialize revealedPositions array for tracking revealed letters
+        // Initialize arrays for tracking revealed and correctly guessed letters
         this.revealedPositions = new boolean[chosenWord.length()];
+        this.correctlyGuessed = new boolean[chosenWord.length()];
         Arrays.fill(this.revealedPositions, false); // All positions are initially unrevealed
+        Arrays.fill(this.correctlyGuessed, false);  // No letters are guessed at the start
     }
 
     // Method to handle the user's guess
@@ -43,6 +46,13 @@ public class WordGame {
         //feedback = gamePlay(chosenWord, userInput);
 
         int[] feedbackStatus = getFeedbackStatus(chosenWord, userInput);
+
+        // Update correctlyGuessed array based on feedback
+        for (int i = 0; i < feedbackStatus.length; i++) {
+            if (feedbackStatus[i] == 2) {
+                correctlyGuessed[i] = true;  // Mark position as correctly guessed
+            }
+        }
 
         if (allCorrect(feedbackStatus)) {
             return new Feedback("Congratulations! You've guessed the word: \n" +
@@ -93,21 +103,20 @@ public class WordGame {
         return status;
     }
 
-    //method to help check if all letters are correct
+    // Method to check if all letters are correct
     private static boolean allCorrect(int[] feedbackStatus) {
-        for(int status: feedbackStatus) {
-            //will return false if ANY letter is in the wrong position
+        for (int status : feedbackStatus) {
+            // Will return false if ANY letter is in the wrong position
             if (status != 2) {
                 return false;
             }
         }
-        //ALL letters are in correct position
+        // ALL letters are in the correct position
         return true;
     }
 
-    //New Hint Method
-    //This method will reveal a correct letter in a random unrevealed position
-    public Hint giveHint(){
+    // Hint method to reveal a correct letter in a random unrevealed position
+    public Hint giveHint() {
         Random random = new Random();
 
         // Check if any unrevealed positions are left
@@ -116,20 +125,22 @@ public class WordGame {
         }
 
         int unrevealedCount = 0;
-        for (boolean revealed : revealedPositions) {
-            if (!revealed) unrevealedCount++;
+        for (int i = 0; i < revealedPositions.length; i++) {
+            if (!revealedPositions[i] && !correctlyGuessed[i]) {
+                unrevealedCount++;
+            }
         }
 
         if (unrevealedCount == 0) {
-            // All positions have been revealed
-            return new Hint("All letters are revealed", null, -1);
+            // All positions have been revealed or correctly guessed
+            return new Hint("All letters are revealed or correctly guessed", null, -1);
         }
 
-        // Find an unrevealed position to provide a hint
+        // Find an unrevealed and unguessed position to provide a hint
         int hintPosition = -1;
         while (hintPosition == -1) {
             int randomIndex = random.nextInt(chosenWord.length());
-            if (!revealedPositions[randomIndex]) {
+            if (!revealedPositions[randomIndex] && !correctlyGuessed[randomIndex]) {
                 hintPosition = randomIndex;
                 revealedPositions[randomIndex] = true; // Mark this position as revealed
             }
@@ -137,7 +148,6 @@ public class WordGame {
 
         // Return a hint with the revealed letter and its position
         return new Hint("Here's a hint!", chosenWord.charAt(hintPosition), hintPosition);
-
     }
 
 
