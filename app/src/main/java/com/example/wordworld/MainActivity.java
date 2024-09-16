@@ -78,11 +78,11 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(MainActivity.this, LevelOneActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.level_two) {
-                    //intent = new Intent(MainActivity.this, LevelTwoActivity.class);
-                    //startActivity(intent);
+                    intent = new Intent(MainActivity.this, LevelTwoActivity.class);
+                    startActivity(intent);
                 } else if (id == R.id.level_three) {
-                    //intent = new Intent(MainActivity.this, LevelThreeActivity.class);
-                    //startActivity(intent);
+                    intent = new Intent(MainActivity.this, LevelThreeActivity.class);
+                    startActivity(intent);
                 } else if (id == R.id.badges) {
 
                 } else if (id == R.id.profile) {
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         } else {
-            // If no user is signed in, handle it accordingly (e.g., show a message or redirect to login)
+            // If no user is signed in, handle it accordingly (e.g., show a message or redirect to log in)
             Toast.makeText(this, "No user is signed in.", Toast.LENGTH_SHORT).show();
         }
 
@@ -189,8 +189,8 @@ public class MainActivity extends AppCompatActivity {
         levelTwoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(MainActivity.this, LevelTwoActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, LevelTwoActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -199,8 +199,8 @@ public class MainActivity extends AppCompatActivity {
         levelThreeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(MainActivity.this, LevelThreeActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, LevelThreeActivity.class);
+                startActivity(intent);
             }
         });
 
