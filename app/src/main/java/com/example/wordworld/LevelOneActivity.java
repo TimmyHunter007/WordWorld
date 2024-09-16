@@ -261,7 +261,7 @@ public class LevelOneActivity extends AppCompatActivity {
 
         // Now, handle the end of the game if the player wins or is out of attempts
         if (feedback.message.contains("Congratulations") || feedback.attemptsLeft <= 0) {
-            endGame(feedback); // Call endGame to finalize the game
+            endGame(feedback);
         } else {
             // Move to the next row for another attempt
             if (currentRow < letterBoxes.length - 1) {
