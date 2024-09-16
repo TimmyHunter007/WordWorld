@@ -143,7 +143,6 @@ public class LevelOneActivity extends AppCompatActivity {
     }
 
     private void showHintDialog() {
-        Object context;
         AlertDialog.Builder builder = new AlertDialog.Builder(LevelOneActivity.this);
         builder.setTitle("Buy a Hint");
 
