@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         } else {
-            // If no user is signed in, handle it accordingly (e.g., show a message or redirect to login)
+            // If no user is signed in, handle it accordingly (e.g., show a message or redirect to log in)
             Toast.makeText(this, "No user is signed in.", Toast.LENGTH_SHORT).show();
         }
 

@@ -15,8 +15,6 @@ public class WordGame {
 
     public WordGame(WordManagement wordManagement) {
         this.wordManagement = wordManagement;
-        this.attempts = 5;
-        //this.feedback = "";
     }
 
 
@@ -38,13 +36,6 @@ public class WordGame {
 
     // Method to handle the user's guess
     public Feedback handleGuess(String userInput) {
-        if (userInput.length() != chosenWord.length()) {
-            return new Feedback("Your guess must be " + chosenWord.length() + " letters long.",
-                    attempts, userInput.toCharArray(), new int[chosenWord.length()]);
-        }
-
-        //feedback = gamePlay(chosenWord, userInput);
-
         int[] feedbackStatus = getFeedbackStatus(chosenWord, userInput);
 
         // Update correctlyGuessed array based on feedback
@@ -103,15 +94,15 @@ public class WordGame {
         return status;
     }
 
-    // Method to check if all letters are correct
+    //method to help check if all letters are correct
     private static boolean allCorrect(int[] feedbackStatus) {
-        for (int status : feedbackStatus) {
-            // Will return false if ANY letter is in the wrong position
+        for(int status: feedbackStatus) {
+            //will return false if ANY letter is in the wrong position
             if (status != 2) {
                 return false;
             }
         }
-        // ALL letters are in the correct position
+        //ALL letters are in correct position
         return true;
     }
 

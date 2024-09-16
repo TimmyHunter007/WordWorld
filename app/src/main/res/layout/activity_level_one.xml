@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            app:menu="@menu/menu" />
+            app:menu="@menu/menu"/>
 
     <!-- Main Content -->
     <RelativeLayout
@@ -26,7 +26,7 @@
         <include
                 layout="@layout/header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 
         <!-- Level One Title -->
         <TextView
@@ -39,7 +39,7 @@
                 android:textStyle="bold"
                 android:layout_below="@id/header"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="8dp"/>
 
         <!-- Centered Message Layout -->
         <RelativeLayout
@@ -59,81 +59,429 @@
                     android:textStyle="bold"
                     android:textAlignment="center"
                     android:layout_centerInParent="true"
-                    android:text="" />
+                    android:text=""/>
         </RelativeLayout>
 
-        <!-- Input Boxes for 4 Letters -->
         <LinearLayout
-                android:id="@+id/game_field_1"
+                android:id="@+id/letterBoxesContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_below="@id/level_one_title"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="24dp">
+                android:layout_marginTop="10dp">
+            <!-- Row 1 -->
+            <LinearLayout
+                    android:id="@+id/row1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <!-- Text boxes for letters starting with 1 then going to next -->
-            <EditText
-                    android:id="@+id/letter1"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/edittext_selector_level1"
-                    android:gravity="center"
-                    android:textColor="@color/primary_text"
-                    android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
-                    android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false" />
+                <!-- Text boxes for row 1 -->
+                <EditText
+                        android:id="@+id/letter1_row1"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
 
-            <EditText
-                    android:id="@+id/letter2"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/edittext_selector_level1"
-                    android:gravity="center"
-                    android:textColor="@color/primary_text"
-                    android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
-                    android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false" />
 
-            <EditText
-                    android:id="@+id/letter3"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/edittext_selector_level1"
-                    android:gravity="center"
-                    android:textColor="@color/primary_text"
-                    android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
-                    android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false" />
+                <EditText
+                        android:id="@+id/letter2_row1"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
 
-            <EditText
-                    android:id="@+id/letter4"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/edittext_selector_level1"
-                    android:gravity="center"
-                    android:textColor="@color/primary_text"
-                    android:textSize="32sp"
-                    android:layout_marginLeft="1.5dp"
-                    android:layout_marginRight="1.5dp"
-                    android:inputType="textCapCharacters"
-                    android:maxLength="1"
-                    android:imeOptions="actionNext"
-                    android:cursorVisible="false" />
+                <EditText
+                        android:id="@+id/letter3_row1"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter4_row1"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+            </LinearLayout>
+
+            <!-- Row 2 -->
+            <LinearLayout
+                    android:id="@+id/row2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="1.5dp">
+
+                <!-- Text boxes for row 2 -->
+                <EditText
+                        android:id="@+id/letter1_row2"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter2_row2"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter3_row2"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter4_row2"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+            </LinearLayout>
+
+            <!-- Row 3 -->
+            <LinearLayout
+                    android:id="@+id/row3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="1.5dp">
+
+                <!-- Text boxes for row 3 -->
+                <EditText
+                        android:id="@+id/letter1_row3"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter2_row3"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter3_row3"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter4_row3"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+            </LinearLayout>
+
+            <!-- Row 4 -->
+            <LinearLayout
+                    android:id="@+id/row4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="1.5dp">
+
+                <!-- Text boxes for row 4 -->
+                <EditText
+                        android:id="@+id/letter1_row4"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter2_row4"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter3_row4"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter4_row4"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+            </LinearLayout>
+
+            <!-- Row 5 -->
+            <LinearLayout
+                    android:id="@+id/row5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="1.5dp">
+
+                <!-- Text boxes for row 5 -->
+                <EditText
+                        android:id="@+id/letter1_row5"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter2_row5"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter3_row5"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+
+                <EditText
+                        android:id="@+id/letter4_row5"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/letter_box_background"
+                        android:gravity="center"
+                        android:textColor="@color/white"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:layout_marginLeft="1.5dp"
+                        android:layout_marginRight="1.5dp"
+                        android:inputType="textCapCharacters"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:cursorVisible="false"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"/>
+            </LinearLayout>
         </LinearLayout>
 
+        <!-- Submit button -->
         <Button
                 android:id="@+id/submit_level_one"
                 android:layout_width="wrap_content"
@@ -142,106 +490,291 @@
                 android:textColor="@color/button_text"
                 android:textSize="29sp"
                 android:backgroundTint="@color/level_1"
-                android:layout_below="@id/game_field_1"
-                android:layout_marginTop="16dp"
-                android:layout_centerHorizontal="true" />
-
-
-        <Button
-                android:id="@+id/hint_level_one"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hint"
-                android:textColor="@color/button_text"
-                android:textSize="29sp"
-                android:backgroundTint="@color/level_1"
-                android:layout_below="@id/game_field_1"
-                android:layout_marginTop="14dp"
-
-                tools:ignore="HardcodedText"/>
-        <TextView
-                android:id="@+id/tv_feedback"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="35sp"
-                android:textStyle="bold"
-                android:padding="8dp"
-                android:background="@drawable/rounded_background"
-                android:layout_below="@+id/submit_level_one"
-                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/letterBoxesContainer"
                 android:layout_marginTop="24dp"
-                android:text="____" />
+                android:layout_centerHorizontal="true"/>
 
-        <TextView
-                android:id="@+id/tv_feedback1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="35sp"
-                android:textStyle="bold"
-                android:padding="8dp"
-                android:background="@drawable/rounded_background"
-                android:layout_below="@+id/tv_feedback"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:text="____" />
+        <!-- Keyboard UI -->
+        <LinearLayout
+                android:id="@+id/keyboard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_below="@+id/submit_level_one"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="20dp">
 
-        <TextView
-                android:id="@+id/tv_feedback2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="35sp"
-                android:textStyle="bold"
-                android:padding="8dp"
-                android:background="@drawable/rounded_background"
-                android:layout_below="@+id/tv_feedback1"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:text="____" />
+            <!-- Row 1 of keyboard: QWERTYUIOP -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
-        <TextView
-                android:id="@+id/tv_feedback3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="35sp"
-                android:textStyle="bold"
-                android:padding="8dp"
-                android:background="@drawable/rounded_background"
-                android:layout_below="@+id/tv_feedback2"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:text="____" />
+                <!-- Buttons for row 1 -->
+                <Button
+                        android:id="@+id/key_q"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="Q"
+                        android:layout_marginStart="-2.5dp"/>
 
-        <TextView
-                android:id="@+id/tv_feedback4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="35sp"
-                android:textStyle="bold"
-                android:padding="8dp"
-                android:background="@drawable/rounded_background"
-                android:layout_below="@+id/tv_feedback3"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:text="____" />
+                <Button
+                        android:id="@+id/key_w"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="W"
+                        android:layout_marginStart="-2.5dp"/>
 
-        <TextView
-                android:id="@+id/tv_attempts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:padding="8dp"
-                android:background="@drawable/rounded_background"
-                android:layout_below="@+id/tv_feedback4"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="16dp"
-                android:text="Attempts Left: 5" />
+                <Button
+                        android:id="@+id/key_e"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="E"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_r"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="R"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_t"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="T"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_y"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="Y"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_u"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="U"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_i"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="I"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_o"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="O"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_p"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="P"
+                        android:layout_marginStart="-2.5dp"/>
+            </LinearLayout>
+
+            <!-- Row 2 of keyboard: ASDFGHJKL -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                <!-- Buttons for row 2 -->
+                <Button
+                        android:id="@+id/key_a"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="A"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_s"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="S"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_d"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="D"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_f"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="F"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_g"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="G"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_h"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="H"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_j"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="J"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_k"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="K"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_l"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="L"
+                        android:layout_marginStart="-2.5dp"/>
+            </LinearLayout>
+
+            <!-- Row 3 of keyboard: ZXCVBNM -->
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                <!-- Buttons for row 3 -->
+                <Button
+                        android:id="@+id/key_z"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="Z"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_x"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="X"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_c"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="C"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_v"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="V"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_b"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="B"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_n"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="N"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_m"
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="M"
+                        android:layout_marginStart="-2.5dp"/>
+
+                <Button
+                        android:id="@+id/key_back_space"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/button_text"
+                        android:backgroundTint="@color/level_1"
+                        android:text="BACK"
+                        android:layout_marginStart="-2.5dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
 
     </RelativeLayout>
 
