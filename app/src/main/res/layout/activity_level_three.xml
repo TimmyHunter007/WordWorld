@@ -757,7 +757,7 @@
                         android:layout_marginStart="-2.5dp"/>
 
                 <Button
-                        android:id="@+id/kay_i"
+                        android:id="@+id/key_i"
                         android:layout_width="40dp"
                         android:layout_height="match_parent"
                         android:textColor="@color/button_text"
@@ -766,7 +766,7 @@
                         android:layout_marginStart="-2.5dp"/>
 
                 <Button
-                        android:id="@+id/kay_o"
+                        android:id="@+id/key_o"
                         android:layout_width="40dp"
                         android:layout_height="match_parent"
                         android:textColor="@color/button_text"
@@ -775,7 +775,7 @@
                         android:layout_marginStart="-2.5dp"/>
 
                 <Button
-                        android:id="@+id/kay_p"
+                        android:id="@+id/key_p"
                         android:layout_width="40dp"
                         android:layout_height="match_parent"
                         android:textColor="@color/button_text"
@@ -856,7 +856,7 @@
                         android:layout_marginStart="-2.5dp"/>
 
                 <Button
-                        android:id="@+id/kay_k"
+                        android:id="@+id/key_k"
                         android:layout_width="40dp"
                         android:layout_height="match_parent"
                         android:textColor="@color/button_text"
@@ -865,7 +865,7 @@
                         android:layout_marginStart="-2.5dp"/>
 
                 <Button
-                        android:id="@+id/kay_l"
+                        android:id="@+id/key_l"
                         android:layout_width="40dp"
                         android:layout_height="match_parent"
                         android:textColor="@color/button_text"
