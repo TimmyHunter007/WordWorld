@@ -3,14 +3,14 @@ package com.example.wordworld;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,10 +24,13 @@ public class LevelOneActivity extends AppCompatActivity {
     private WordGame wordGame;
     private Button submitButton;
     private WordManagement wordManagement;
-    private  int currentRow = 0;
+    private int currentRow = 0;
     private FirebaseUser user;
     private RewardManager rewardManager;
     private DatabaseReference userDatabaseReference;
+    private int currentAttemptsLeft = 5;
+    private int currentWordGuess = 0;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +58,14 @@ public class LevelOneActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+            initializeUserData();  // Fetch and initialize user data for attempts and guesses
         } else {
-            // Handle the case where the user is not authenticated
-            Log.e("LevelOneActivity", "User not authenticated");
+            // User is not logged in
+            showLoginRequiredMessage();
+            return;
         }
 
-        // Initialize RewardManager with the correct DatabaseReference
+            // Initialize RewardManager with the correct DatabaseReference
         if (userDatabaseReference != null) {
             rewardManager = new RewardManager(userDatabaseReference);
         }
@@ -75,49 +80,32 @@ public class LevelOneActivity extends AppCompatActivity {
         letterBoxes[0][0].requestFocus();
 
         // Set up the submit button listener
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleGuess();
-            }
-        });
+        submitButton.setOnClickListener(v -> handleGuess());
 
-        // Initialize the back button and set the click listener
+        // Initialize the back button and set the click listener to navigate back to the previous activity
         ImageButton backButton = findViewById(R.id.back_button);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle back button action
-                onBackPressed();
-            }
-        });
+        backButton.setOnClickListener(v -> onBackPressed());
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void setUpLetterBoxListeners(int row) {
-        // Only add listeners to the current row (no need for other rows)
         for (int i = 0; i < letterBoxes[row].length; i++) {
             final EditText currentBox = letterBoxes[row][i];
             final int index = i;
 
-            // Prevent the system keyboard from appearing
             currentBox.setOnTouchListener((v, event) -> {
                 v.onTouchEvent(event);
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                // Consume the touch event so the system keyboard doesn't appear
                 return true;
             });
 
-            // Set focus change listener to track active EditText
             currentBox.setOnFocusChangeListener((v, hasFocus) -> {
                 if (hasFocus) {
-                    // Track active EditText
                     activeEditText = currentBox;
                 }
             });
 
-            // TextWatcher to move focus to the next box in the same row
             currentBox.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -181,21 +169,16 @@ public class LevelOneActivity extends AppCompatActivity {
 
             if (currentRowIndex == currentRow) {
                 if (activeEditText.getText().length() > 0) {
-                    // Erase the current letter
                     activeEditText.setText("");
-                } else {
-                    // If we are not at the first EditText in the row, move to the previous EditText
-                    if (currentColIndex > 0) {
-                        letterBoxes[currentRow][currentColIndex - 1].requestFocus();
-                        activeEditText = letterBoxes[currentRow][currentColIndex - 1];
-                        activeEditText.setText("");  // Clear the previous EditText
-                    }
+                } else if (currentColIndex > 0) {
+                    letterBoxes[currentRow][currentColIndex - 1].requestFocus();
+                    activeEditText = letterBoxes[currentRow][currentColIndex - 1];
+                    activeEditText.setText("");
                 }
             }
         }
     }
 
-    // Helper method to get the row index of the active EditText
     private int getActiveEditTextRowIndex() {
         for (int row = 0; row < letterBoxes.length; row++) {
             for (int col = 0; col < letterBoxes[row].length; col++) {
@@ -204,7 +187,6 @@ public class LevelOneActivity extends AppCompatActivity {
                 }
             }
         }
-        // Return -1 if no active row is found (this shouldn't happen)
         return -1;
     }
 
@@ -216,103 +198,55 @@ public class LevelOneActivity extends AppCompatActivity {
                 }
             }
         }
-        // Return -1 if not found
         return -1;
-    }
-
-    private void moveToPreviousEditText() {
-        for (int row = 0; row < letterBoxes.length; row++) {
-            for (int col = 0; col < letterBoxes[row].length; col++) {
-                if (letterBoxes[row][col].equals(activeEditText)) {
-                    if (col > 0) {
-                        // Move to the previous box
-                        letterBoxes[row][col - 1].requestFocus();
-                        activeEditText = letterBoxes[row][col - 1];
-                    } else if (row > 0) {
-                        // Move to the last box in the previous row
-                        letterBoxes[row - 1][letterBoxes[row - 1].length - 1].requestFocus();
-                        activeEditText = letterBoxes[row - 1][letterBoxes[row - 1].length - 1];
-                    }
-                    return;
-                }
-            }
-        }
     }
 
     private void handleGuess() {
         String userGuess = getUserInput();
 
-        // message notifying the user that the submission was too short
-        if(userGuess.length() != wordGame.chosenWord.length()){
-            // Display a message to the user
-            Toast.makeText(this, "Your guess must be " + wordGame.chosenWord.length() +
-                    " letters long.", Toast.LENGTH_SHORT).show();
+        // Check if the user has no attempts left
+        if (currentAttemptsLeft <= 0) {
+            Toast.makeText(this, "No more attempts left for today.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validate if the guess length matches the expected word length
+        if (userGuess.length() != wordGame.chosenWord.length()) {
+            Toast.makeText(this, "Your guess must be " + wordGame.chosenWord.length() + " letters long.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Get feedback from the WordGame class
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
-
-        //text box color feedback
         displayFeedback(feedback);
 
-        //disable the previous row once submit button has been clicked
-        disableRow(currentRow);
+        // Decrease attempts left
+        currentAttemptsLeft--;
 
-        // Now, handle the end of the game if the player wins or is out of attempts
-        if (feedback.message.contains("Congratulations") || feedback.attemptsLeft <= 0) {
+        // If the user guesses correctly or if attempts are exhausted, mark the word as guessed
+        if (feedback.message.contains("Congratulations") || currentAttemptsLeft == 0) {
+            userDatabaseReference.child("metaData").child("l1WordGuess").setValue(1);
             endGame(feedback);
         } else {
-            // Move to the next row for another attempt
+            // Move to the next row
             if (currentRow < letterBoxes.length - 1) {
-                // Increment the row
                 currentRow++;
-                // Set up listeners for the new row
                 setUpLetterBoxListeners(currentRow);
-                // Move the cursor to the first box in the new row
                 letterBoxes[currentRow][0].requestFocus();
             } else {
-                // If there are no more rows, disable input and show message
+                // End the game if no more rows are left
                 endGame(feedback);
             }
         }
+
+        // Update attempts left and save the current date of the attempt
+        saveAttemptDate();
+        userDatabaseReference.child("metaData").child("l1AttemptsLeft").setValue(currentAttemptsLeft);
     }
 
-    //disables all EditText boxes in a given row
-    private void disableRow(int row) {
-        for (EditText editText : letterBoxes[row]) {
-            editText.setEnabled(false);
-        }
-    }
-
-    private void setColoredFeedback(int row, char[] feedbackChars, int[] feedbackStatus) {
-        for (int i = 0; i < feedbackChars.length; i++) {
-            EditText letterBox = letterBoxes[row][i];
-            if (feedbackStatus[i] == 2) {
-                // Green
-                //letterBox.setBackground(createColoredBackground(Color.parseColor("#3CB371")));
-                letterBox.setBackground(createColoredBackground(Color.parseColor("#556B2F")));
-            } else if (feedbackStatus[i] == 1) {
-                // Yellow
-                //letterBox.setBackground(createColoredBackground(Color.parseColor("#FFBF00")));
-                letterBox.setBackground(createColoredBackground(Color.parseColor("#DAA520")));
-            } else {
-                // Default
-                letterBox.setBackground(createColoredBackground(Color.parseColor("#4D000000")));
-            }
-            letterBox.setText(String.valueOf(feedbackChars[i]));
-            // Add a black outline around the text using setShadowLayer
-            letterBox.setShadowLayer(15f, 0f, 0f, Color.BLACK);
-        }
-    }
-
-    private Drawable createColoredBackground(int color) {
-        GradientDrawable drawable = new GradientDrawable();
-        drawable.setShape(GradientDrawable.RECTANGLE);
-        drawable.setColor(color);
-        drawable.setCornerRadius(32f);
-
-        return drawable;
+    private void saveAttemptDate() {
+        long currentDate = System.currentTimeMillis() / 1000;
+        userDatabaseReference.child("metaData").child("l1DateTried").setValue(currentDate);
     }
 
     private String getUserInput() {
@@ -324,8 +258,30 @@ public class LevelOneActivity extends AppCompatActivity {
     }
 
     private void displayFeedback(WordGame.Feedback feedback) {
-        // Color feedback for the current row
         setColoredFeedback(currentRow, feedback.feedbackChars, feedback.feedbackStatus);
+    }
+
+    private void setColoredFeedback(int row, char[] feedbackChars, int[] feedbackStatus) {
+        for (int i = 0; i < feedbackChars.length; i++) {
+            EditText letterBox = letterBoxes[row][i];
+            if (feedbackStatus[i] == 2) {
+                letterBox.setBackground(createColoredBackground(Color.parseColor("#556B2F")));
+            } else if (feedbackStatus[i] == 1) {
+                letterBox.setBackground(createColoredBackground(Color.parseColor("#DAA520")));
+            } else {
+                letterBox.setBackground(createColoredBackground(Color.parseColor("#4D000000")));
+            }
+            letterBox.setText(String.valueOf(feedbackChars[i]));
+            letterBox.setShadowLayer(15f, 0f, 0f, Color.BLACK);
+        }
+    }
+
+    private Drawable createColoredBackground(int color) {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setShape(GradientDrawable.RECTANGLE);
+        drawable.setColor(color);
+        drawable.setCornerRadius(32f);
+        return drawable;
     }
 
     private void enableLetters(boolean enabled) {
@@ -337,28 +293,135 @@ public class LevelOneActivity extends AppCompatActivity {
     }
 
     private void endGame(WordGame.Feedback feedback) {
-        // Disable further input
         enableLetters(false);
-
-        // Show the message container and message
         RelativeLayout messageContainer = findViewById(R.id.message_container);
         TextView tvMessage = findViewById(R.id.tv_message);
 
         if (feedback.message.contains("Congratulations")) {
             int coinsEarned = rewardManager.awardLevelCompletionReward(1);
             int pointsEarned = rewardManager.getPointsEarned(1);
-            rewardManager.getWordCount(1);
             tvMessage.setText(feedback.message + "\n\nYou earned:\n" + coinsEarned + " Silver Coins\n" + pointsEarned + " Points");
+            playSoundEffect(R.raw.victory_sound);
         } else {
             tvMessage.setText(feedback.message);
+            playSoundEffect(R.raw.sad_sound);
         }
 
-        //allow end message to display
         messageContainer.setVisibility(View.VISIBLE);
-
-        // Hide game UI when displaying the end message
         findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
         findViewById(R.id.keyboard).setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);
+    }
+
+    private void initializeUserData() {
+        userDatabaseReference.child("metaData").child("l1WordGuess").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                currentWordGuess = task.getResult().getValue(Integer.class);
+
+                // If the word has already been guessed, block the game
+                if (currentWordGuess == 1) {
+                    checkDateAndRestrict();
+                }
+            }
+        });
+
+        userDatabaseReference.child("metaData").child("l1AttemptsLeft").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                currentAttemptsLeft = task.getResult().getValue(Integer.class);
+            }
+        });
+
+        userDatabaseReference.child("metaData").child("l1DateTried").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                long savedDate = task.getResult().getValue(Long.class);
+                if (isNewDay(savedDate)) {
+                    resetAttempts();
+                }
+            }
+        });
+    }
+
+    private void checkDateAndRestrict() {
+        userDatabaseReference.child("metaData").child("l1DateTried").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                long savedDate = task.getResult().getValue(Long.class);
+                if (!isNewDay(savedDate)) {
+                    // If it's the same day, block the user from attempting again
+                    blockUserFromGame();
+                }
+            }
+        });
+    }
+
+    private void blockUserFromGame() {
+        // Disable all input fields
+        enableLetters(false);
+
+        // Show the restriction message
+        RelativeLayout messageContainer = findViewById(R.id.message_container);
+        TextView tvMessage = findViewById(R.id.tv_message);
+        tvMessage.setText("You have already attempted the word for today. Try again tomorrow.");
+
+        // Display the message and hide the game UI
+        playSoundEffect(R.raw.error_sound);
+        messageContainer.setVisibility(View.VISIBLE);
+        findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
+        findViewById(R.id.keyboard).setVisibility(View.GONE);
+        submitButton.setVisibility(View.GONE);
+    }
+
+    private boolean isNewDay(long savedDate) {
+        long currentTime = System.currentTimeMillis() / 1000;
+        long oneDayInSeconds = 24 * 60 * 60;
+        return (currentTime - savedDate) >= oneDayInSeconds;
+    }
+
+    private void resetAttempts() {
+        currentAttemptsLeft = 5;
+        currentWordGuess = 0;
+
+        userDatabaseReference.child("metaData").child("l1AttemptsLeft").setValue(currentAttemptsLeft);
+        userDatabaseReference.child("metaData").child("l1WordGuess").setValue(currentWordGuess);
+    }
+
+    private void showLoginRequiredMessage() {
+        // Disable all input fields
+        enableLetters(false);
+
+        // Show the login required message
+        RelativeLayout messageContainer = findViewById(R.id.message_container);
+        TextView tvMessage = findViewById(R.id.tv_message);
+        tvMessage.setText("You need to log in to play this level.");
+
+        // Display the message and hide the game UI
+        playSoundEffect(R.raw.error_sound);
+        messageContainer.setVisibility(View.VISIBLE);
+        findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
+        findViewById(R.id.keyboard).setVisibility(View.GONE);
+        submitButton.setVisibility(View.GONE);
+    }
+
+
+    private void playSoundEffect(int soundResourceId) {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+        }
+        mediaPlayer = MediaPlayer.create(this, soundResourceId);
+        mediaPlayer.start();
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 }
