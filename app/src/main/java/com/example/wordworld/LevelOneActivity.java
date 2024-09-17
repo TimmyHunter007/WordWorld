@@ -9,14 +9,15 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
 
 public class LevelOneActivity extends AppCompatActivity {
     private EditText[][] letterBoxes;
@@ -300,8 +301,16 @@ public class LevelOneActivity extends AppCompatActivity {
         if (feedback.message.contains("Congratulations")) {
             int coinsEarned = rewardManager.awardLevelCompletionReward(1);
             int pointsEarned = rewardManager.getPointsEarned(1);
-            tvMessage.setText(feedback.message + "\n\nYou earned:\n" + coinsEarned + " Silver Coins\n" + pointsEarned + " Points");
-            playSoundEffect(R.raw.victory_sound);
+
+            // Update the total score in Firebase
+            updateScore(pointsEarned, newScore -> {
+                // Update the word count when the word is guessed correctly
+                updateWordCount(wordCount -> {
+                    tvMessage.setText(feedback.message + "\n\nYou earned:\n" + coinsEarned + " Silver Coins\n" + pointsEarned + " Points\n\n New Total Points: " + newScore + "\nWords Correct: " + wordCount);
+                    playSoundEffect(R.raw.victory_sound);
+                });
+            });
+
         } else {
             tvMessage.setText(feedback.message);
             playSoundEffect(R.raw.sad_sound);
@@ -311,6 +320,73 @@ public class LevelOneActivity extends AppCompatActivity {
         findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
         findViewById(R.id.keyboard).setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);
+    }
+
+    // Method to update the word count in Firebase
+    private void updateWordCount(final OnWordCountUpdatedListener listener) {
+        DatabaseReference wordCountRef = userDatabaseReference.child("wordsCorrect");
+
+        wordCountRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer currentWordCount = dataSnapshot.getValue(Integer.class);
+
+                if (currentWordCount != null) {
+                    int newWordCount = currentWordCount + 1;
+
+                    // Store the updated word count back into Firebase
+                    wordCountRef.setValue(newWordCount).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            // Notify the caller with the updated word count
+                            listener.onWordCountUpdated(newWordCount);
+                        } else {
+                            Log.e("RewardManager", "Error updating word count");
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("RewardManager", "Error fetching word count: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    // Callback interface for word count update
+    interface OnWordCountUpdatedListener {
+        void onWordCountUpdated(int newWordCount);
+    }
+
+    private void updateScore(int pointsEarned, final OnScoreUpdatedListener listener) {
+        // Get the current score from Firebase
+        DatabaseReference scoreRef = userDatabaseReference.child("points");
+
+        scoreRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                int currentScore = task.getResult().getValue(Integer.class);
+
+                // Calculate new score
+                int newScore = currentScore + pointsEarned;
+
+                // Update the score in Firebase
+                scoreRef.setValue(newScore).addOnCompleteListener(updateTask -> {
+                    if (updateTask.isSuccessful()) {
+                        // Notify listener that the score has been updated
+                        listener.onScoreUpdated(newScore);
+                    } else {
+                        Log.e("updateScore", "Failed to update score in Firebase", updateTask.getException());
+                    }
+                });
+            } else {
+                Log.e("updateScore", "Failed to get current score from Firebase", task.getException());
+            }
+        });
+    }
+
+    // Create an interface to handle the callback after score is updated
+    interface OnScoreUpdatedListener {
+        void onScoreUpdated(int newScore);
     }
 
     private void initializeUserData() {

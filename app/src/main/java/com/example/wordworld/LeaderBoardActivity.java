@@ -230,7 +230,7 @@ public class LeaderBoardActivity extends AppCompatActivity {
                         rankView.setTextColor(ContextCompat.getColor(this, android.R.color.black));
                         rankView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         rankView.setTypeface(null, Typeface.BOLD);
-                        rankView.setTextSize(25); // Set text size
+                        rankView.setTextSize(22); // Set text size
 
                         // Add the trophy icon and rank view to the FrameLayout
                         frameLayout.addView(trophyIcon);
@@ -247,7 +247,7 @@ public class LeaderBoardActivity extends AppCompatActivity {
                         rankView.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                         rankView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         rankView.setTypeface(null, Typeface.BOLD);
-                        rankView.setTextSize(25); // Set text size
+                        rankView.setTextSize(22); // Set text size
 
                         // Add the rank TextView to the TableRow
                         userRow.addView(rankView);
