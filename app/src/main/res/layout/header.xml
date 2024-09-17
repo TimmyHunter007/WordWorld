@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:text="WordWorld"
             android:textColor="@color/primary_text"
-            android:textSize="20sp"
+            android:textSize="30sp"
             android:textStyle="bold"
             android:layout_centerInParent="true" />
 
