@@ -11,9 +11,13 @@
     <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            app:menu="@menu/menu"/>
+            android:translationX="90dp"
+            android:translationY="50dp"
+            android:layout_height="440dp"
+            android:layout_gravity="end"
+            android:background="@color/headerBar"
+            app:menu="@menu/menu"
+            tools:ignore="MissingConstraints"/>
 
     <!-- Main Content -->
     <RelativeLayout

@@ -24,6 +24,7 @@ public class BadgesActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
+        CompleteWord();
 
         // Initialize the back button and set the click listener
         ImageButton backButton = findViewById(R.id.back_button);
@@ -50,11 +51,15 @@ public class BadgesActivity extends AppCompatActivity {
                     intent = new Intent(BadgesActivity.this, LevelThreeActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.badges) {
-                    // Navigate to Badges activity
+                    intent = new Intent(BadgesActivity.this, BadgesActivity.class);
+                    startActivity(intent);
+
                 } else if (id == R.id.profile) {
-                    // Navigate to Profile activity
+                    intent = new Intent(BadgesActivity.this, ProfileActivity.class);
+                    startActivity(intent);
                 } else if (id == R.id.leader_board) {
-                    // Navigate to Leaderboard activity
+                    intent = new Intent(BadgesActivity.this, LeaderBoardActivity.class);
+                    startActivity(intent);
                 }
 
                 drawerLayout.closeDrawers(); // Close the drawer after an item is clicked
@@ -75,4 +80,15 @@ public class BadgesActivity extends AppCompatActivity {
         });
 
     }
+
+    private void CompleteWord()
+    {
+
+    }
+
+    private void checkForbadge()
+    {
+
+    }
+
 }

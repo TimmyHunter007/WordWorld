@@ -110,11 +110,15 @@ public class LevelTwoActivity extends AppCompatActivity {
                     intent = new Intent(LevelTwoActivity.this, LevelThreeActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.badges) {
-                    // Navigate to Badges activity
+                    intent = new Intent(LevelTwoActivity.this, BadgesActivity.class);
+                    startActivity(intent);
+
                 } else if (id == R.id.profile) {
-                    // Navigate to Profile activity
+                    intent = new Intent(LevelTwoActivity.this, ProfileActivity.class);
+                    startActivity(intent);
                 } else if (id == R.id.leader_board) {
-                    // Navigate to Leaderboard activity
+                    intent = new Intent(LevelTwoActivity.this, LeaderBoardActivity.class);
+                    startActivity(intent);
                 }
 
                 drawerLayout.closeDrawers(); // Close the drawer after an item is clicked

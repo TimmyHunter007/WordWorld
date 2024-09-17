@@ -63,11 +63,15 @@ public class LevelThreeActivity extends AppCompatActivity {
                     intent = new Intent(LevelThreeActivity.this, LevelThreeActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.badges) {
-                    // Navigate to Badges activity
+                    intent = new Intent(LevelThreeActivity.this, BadgesActivity.class);
+                    startActivity(intent);
+
                 } else if (id == R.id.profile) {
-                    // Navigate to Profile activity
+                    intent = new Intent(LevelThreeActivity.this, ProfileActivity.class);
+                    startActivity(intent);
                 } else if (id == R.id.leader_board) {
-                    // Navigate to Leaderboard activity
+                    intent = new Intent(LevelThreeActivity.this, LeaderBoardActivity.class);
+                    startActivity(intent);
                 }
 
                 drawerLayout.closeDrawers(); // Close the drawer after an item is clicked
