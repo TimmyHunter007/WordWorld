@@ -1,0 +1,119 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".LeaderBoardActivity">
+
+    <ImageView
+            android:id="@+id/background_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header"
+            android:scaleType="centerCrop"
+            android:background="@drawable/main_bg_transparency" />
+
+    <!-- Header Layout -->
+    <include
+            layout="@layout/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    <TextView
+            android:id="@+id/leader_board_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LeaderBoard"
+            android:textColor="@color/white"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:layout_below="@id/header"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp" />
+
+    <!-- Leaderboard Table -->
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="16dp"
+            android:layout_below="@id/leader_board_title"
+            android:layout_above="@id/user_table_container"
+            android:layout_weight="1">
+
+        <TableLayout
+                android:id="@+id/leaderboard_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1">
+
+            <!-- Table Header for Leaderboard -->
+            <TableRow>
+                <TextView
+                        android:layout_width="169dp"
+                        android:layout_height="wrap_content"
+                        android:text="Name"
+                        android:padding="8dp"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:background="#CCCCCC"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Points"
+                        android:padding="8dp"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:background="#CCCCCC" />
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Word Count"
+                        android:padding="8dp"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:background="#CCCCCC" />
+            </TableRow>
+
+            <!-- Data rows will be added dynamically in the code -->
+
+        </TableLayout>
+    </ScrollView>
+
+    <!-- User Info Table at the Bottom -->
+    <LinearLayout
+            android:id="@+id/user_table_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+        <!-- User Table Header -->
+        <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1">
+            <TableRow
+                    android:gravity="center"> <!-- Center the content of this TableRow -->
+                <TextView
+                        android:layout_width="379dp"
+                        android:layout_height="wrap_content"
+                        android:text="Your Rank"
+                        android:padding="8dp"
+                        android:textSize="25dp"
+                        android:textStyle="bold"
+                        android:background="#CCCCCC"
+                        android:gravity="center" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- User Data Table -->
+        <TableLayout
+                android:id="@+id/user_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="1">
+        </TableLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

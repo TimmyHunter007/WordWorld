@@ -18,6 +18,9 @@
     <color name="profile_leaderBoard_button">#E0E0E0</color> <!-- Light gray for alternative backgrounds -->
     <color name="button_text">#3E2723</color> <!-- Dark brown for button text -->
 
+    <color name="gold">#FFD700</color>
+    <color name="silver">#C0C0C0</color>
+
     <color name="color_1">#A1887F</color> <!-- Muted brown for accents -->
     <color name="color_2">#8D6E63</color> <!-- Warm taupe for accents -->
     <color name="color_3">#FFE0B2</color> <!-- Soft peach for highlights -->
