@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.*;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +24,7 @@ public class LevelOneActivity extends AppCompatActivity {
     private EditText activeEditText;
     private WordGame wordGame;
     private Button submitButton;
+    private Button hintButton;
     private WordManagement wordManagement;
     private  int currentRow = 0;
     private FirebaseUser user;
@@ -45,6 +47,7 @@ public class LevelOneActivity extends AppCompatActivity {
 
         // Initialize UI components
         submitButton = findViewById(R.id.submit_level_one);
+        hintButton = findViewById(R.id.hint_level_one);
 
         wordManagement = new WordManagement(this);
         wordGame = new WordGame(wordManagement);
@@ -74,6 +77,12 @@ public class LevelOneActivity extends AppCompatActivity {
         // Automatically focus the first text box
         letterBoxes[0][0].requestFocus();
 
+        //Set up hint button listener
+        hintButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {showHintDialog();}
+        });
+
         // Set up the submit button listener
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +101,67 @@ public class LevelOneActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void showHintDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LevelOneActivity.this);
+        builder.setTitle("Buy a Hint");
+
+        builder.setMessage("Would you like to buy a hint?");
+
+        builder.setPositiveButton("Buy Hint", (dialog, which) -> {
+            final int hintCost = 5;  // Define the cost of a hint (e.g., 5 silver coins)
+
+            // Deduct coins for a hint
+            rewardManager.deductCoins(hintCost, new RewardManager.RewardCallback() {
+                @Override
+                public void onSuccess() {
+                    // If coins were successfully deducted, provide the hint
+                    WordGame.Hint hint = wordGame.giveHint();
+
+                    if (hint != null) {
+                        Log.d("HintDebug", "Hint message: " + hint.message);
+                        Log.d("HintDebug", "Revealed letter: " + hint.revealedLetter);
+                        Log.d("HintDebug", "Position: " + hint.position);
+
+                        // Ensure valid hint data
+                        if (hint.revealedLetter != null && hint.position >= 0 && hint.position < letterBoxes[currentRow].length) {
+                            // Loop through the current row and all rows below it
+                            for (int row = currentRow; row < letterBoxes.length; row++) {
+                                // Set the revealed letter in the correct position of each row
+                                letterBoxes[row][hint.position].setText(String.valueOf(hint.revealedLetter));
+                            }
+
+                            // Provide feedback to the user
+                            Toast.makeText(LevelOneActivity.this, hint.message + " Letter: " + hint.revealedLetter, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LevelOneActivity.this, "Error: Invalid hint data.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(LevelOneActivity.this, "Error: No hint available.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure() {
+                    // Handle case when there was an error deducting coins
+                    Toast.makeText(LevelOneActivity.this, "Error deducting coins. Try again.", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onInsufficientFunds() {
+                    // Inform the user they don't have enough coins
+                    Toast.makeText(LevelOneActivity.this, "Insufficient funds for a hint!", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 
     @SuppressLint("ClickableViewAccessibility")
     private void setUpLetterBoxListeners(int row) {
@@ -360,5 +430,6 @@ public class LevelOneActivity extends AppCompatActivity {
         findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
         findViewById(R.id.keyboard).setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);
+        hintButton.setVisibility(View.GONE);
     }
 }

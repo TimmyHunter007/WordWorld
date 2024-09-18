@@ -46,7 +46,7 @@ public class LevelTwoActivity extends AppCompatActivity {
 
         // Initialize UI components
         submitButton = findViewById(R.id.submit_level_two);
-        hintButton = findViewById(R.id.hint_level_two);
+        //hintButton = findViewById(R.id.hint_level_two);
 
         wordManagement = new WordManagement(this);
         wordGame = new WordGame(wordManagement);
@@ -96,8 +96,8 @@ public class LevelTwoActivity extends AppCompatActivity {
 
                     if (hint.revealedLetter != null && hint.position >= 0 && hint.position < 5) {
                         // Reveal the letter in the correct EditText
-                        EditText[] letterBoxes = {letter1, letter2, letter3, letter4, letter5};
-                        letterBoxes[hint.position].setText(String.valueOf(hint.revealedLetter));
+                        //EditText[] letterBoxes = {letter1, letter2, letter3, letter4, letter5};
+                        //letterBoxes[hint.position].setText(String.valueOf(hint.revealedLetter));
 
                         // Provide feedback to the user
                         Toast.makeText(LevelTwoActivity.this, hint.message + " Letter: " + hint.revealedLetter, Toast.LENGTH_SHORT).show();
