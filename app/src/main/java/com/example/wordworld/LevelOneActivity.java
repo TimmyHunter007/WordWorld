@@ -19,6 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class LevelOneActivity extends AppCompatActivity {
     private EditText[][] letterBoxes;
     private EditText activeEditText;
@@ -246,7 +249,11 @@ public class LevelOneActivity extends AppCompatActivity {
     }
 
     private void saveAttemptDate() {
-        long currentDate = System.currentTimeMillis() / 1000;
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(new Date());
+
+        // Save the current date in the 'l1DateTried' field
         userDatabaseReference.child("metaData").child("l1DateTried").setValue(currentDate);
     }
 
@@ -409,8 +416,8 @@ public class LevelOneActivity extends AppCompatActivity {
 
         userDatabaseReference.child("metaData").child("l1DateTried").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                long savedDate = task.getResult().getValue(Long.class);
-                if (isNewDay(savedDate)) {
+                String savedDate = task.getResult().getValue(String.class);  // Expect the date as a String
+                if (isNewDay(savedDate)) {  // Pass the savedDate as a string
                     resetAttempts();
                 }
             }
@@ -420,10 +427,20 @@ public class LevelOneActivity extends AppCompatActivity {
     private void checkDateAndRestrict() {
         userDatabaseReference.child("metaData").child("l1DateTried").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                long savedDate = task.getResult().getValue(Long.class);
+                String savedDate = task.getResult().getValue(String.class);
+
                 if (!isNewDay(savedDate)) {
-                    // If it's the same day, block the user from attempting again
-                    blockUserFromGame();
+                    // If it's the same day, check if the word has already been guessed
+                    userDatabaseReference.child("metaData").child("l1WordGuess").get().addOnCompleteListener(guessTask -> {
+                        if (guessTask.isSuccessful()) {
+                            int wordGuess = guessTask.getResult().getValue(Integer.class);
+
+                            // If the word is guessed (l1WordGuess == 1), block the game
+                            if (wordGuess == 1) {
+                                blockUserFromGame();
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -446,16 +463,20 @@ public class LevelOneActivity extends AppCompatActivity {
         submitButton.setVisibility(View.GONE);
     }
 
-    private boolean isNewDay(long savedDate) {
-        long currentTime = System.currentTimeMillis() / 1000;
-        long oneDayInSeconds = 24 * 60 * 60;
-        return (currentTime - savedDate) >= oneDayInSeconds;
+    private boolean isNewDay(String savedDate) {
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(new Date());
+
+        // Compare the saved date with the current date
+        return !savedDate.equals(currentDate);
     }
 
     private void resetAttempts() {
-        currentAttemptsLeft = 5;
-        currentWordGuess = 0;
+        currentAttemptsLeft = 5;  // Reset attempts
+        currentWordGuess = 0;     // Reset the word guess
 
+        // Update Firebase with the reset values
         userDatabaseReference.child("metaData").child("l1AttemptsLeft").setValue(currentAttemptsLeft);
         userDatabaseReference.child("metaData").child("l1WordGuess").setValue(currentWordGuess);
     }

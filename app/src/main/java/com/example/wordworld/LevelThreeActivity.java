@@ -19,6 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class LevelThreeActivity extends AppCompatActivity {
     private EditText[][] letterBoxes;
     private EditText activeEditText;
@@ -238,9 +241,14 @@ public class LevelThreeActivity extends AppCompatActivity {
     }
 
     private void saveAttemptDate() {
-        long currentDate = System.currentTimeMillis() / 1000;
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(new Date());
+
+        // Save the current date in the 'l1DateTried' field
         userDatabaseReference.child("metaData").child("l3DateTried").setValue(currentDate);
     }
+
 
     private String getUserInput() {
         StringBuilder guess = new StringBuilder();
@@ -315,7 +323,7 @@ public class LevelThreeActivity extends AppCompatActivity {
     }
 
     // Method to update the word count in Firebase
-    private void updateWordCount(final LevelOneActivity.OnWordCountUpdatedListener listener) {
+    private void updateWordCount(final LevelThreeActivity.OnWordCountUpdatedListener listener) {
         DatabaseReference wordCountRef = userDatabaseReference.child("wordsCorrect");
 
         wordCountRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -399,24 +407,38 @@ public class LevelThreeActivity extends AppCompatActivity {
 
         userDatabaseReference.child("metaData").child("l3DateTried").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                long savedDate = task.getResult().getValue(Long.class);
-                if (isNewDay(savedDate)) {
+                String savedDate = task.getResult().getValue(String.class);  // Expect the date as a String
+
+                if (isNewDay(savedDate)) {  // Pass the savedDate as a string
                     resetAttempts();
                 }
             }
         });
+
     }
 
     private void checkDateAndRestrict() {
         userDatabaseReference.child("metaData").child("l3DateTried").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                long savedDate = task.getResult().getValue(Long.class);
+                String savedDate = task.getResult().getValue(String.class);
+
                 if (!isNewDay(savedDate)) {
-                    blockUserFromGame();
+                    // If it's the same day, check if the word has already been guessed
+                    userDatabaseReference.child("metaData").child("l3WordGuess").get().addOnCompleteListener(guessTask -> {
+                        if (guessTask.isSuccessful()) {
+                            int wordGuess = guessTask.getResult().getValue(Integer.class);
+
+                            // If the word is guessed (l1WordGuess == 1), block the game
+                            if (wordGuess == 1) {
+                                blockUserFromGame();
+                            }
+                        }
+                    });
                 }
             }
         });
     }
+
 
     private void blockUserFromGame() {
         enableLetters(false);
@@ -430,10 +452,13 @@ public class LevelThreeActivity extends AppCompatActivity {
         submitButton.setVisibility(View.GONE);
     }
 
-    private boolean isNewDay(long savedDate) {
-        long currentTime = System.currentTimeMillis() / 1000;
-        long oneDayInSeconds = 24 * 60 * 60;
-        return (currentTime - savedDate) >= oneDayInSeconds;
+    private boolean isNewDay(String savedDate) {
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDate = sdf.format(new Date());
+
+        // Compare the saved date with the current date
+        return !savedDate.equals(currentDate);
     }
 
     private void resetAttempts() {
