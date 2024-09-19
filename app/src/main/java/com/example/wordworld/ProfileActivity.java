@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +35,8 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView emailDisplay, silverCoinsTextView, nameDisplay, badgeCountDisplay, pointsDisplay, wordCorrectDisplay;
     // Buttons for updating password, signing out, and adding coins
     private Button updatePasswordButton, signOutButton, addCoinsButton;
+
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +64,58 @@ public class ProfileActivity extends AppCompatActivity {
         updatePasswordButton = findViewById(R.id.update_password_button);
         wordCorrectDisplay = findViewById(R.id.word_correct_display);
 
+        drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
         // Display the user's email if the user is logged in
         if (user != null) {
             emailDisplay.setText(user.getEmail());
         }
+
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                Intent intent;
+
+                if (id == R.id.level_one) {
+                    intent = new Intent(ProfileActivity.this, LevelOneActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.level_two) {
+                    intent = new Intent(ProfileActivity.this, LevelTwoActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.level_three) {
+                    intent = new Intent(ProfileActivity.this, LevelThreeActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.badges) {
+                    intent = new Intent(ProfileActivity.this, BadgesActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.profile) {
+                    intent = new Intent(ProfileActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.leader_board) {
+                    intent = new Intent(ProfileActivity.this, LeaderBoardActivity.class);
+                    startActivity(intent);
+                }
+
+                drawerLayout.closeDrawers(); // Close the drawer after an item is clicked
+                return true;
+            }
+        });
+
+        ImageButton navButton = findViewById(R.id.nav_button);
+        navButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (drawerLayout.isDrawerOpen(navigationView)) {
+                    drawerLayout.closeDrawer(navigationView);
+                } else {
+                    drawerLayout.openDrawer(navigationView);
+                }
+            }
+        });
+
 
         // Retrieve and display the user's points from the database
         databaseReference.child("points").addValueEventListener(new ValueEventListener() {

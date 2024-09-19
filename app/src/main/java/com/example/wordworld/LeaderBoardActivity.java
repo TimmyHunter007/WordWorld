@@ -1,14 +1,18 @@
 package com.example.wordworld;
 
 // Import statements for Android components and Firebase libraries
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,6 +37,9 @@ public class LeaderBoardActivity extends AppCompatActivity {
     // List to store UserData objects for sorting and displaying leaderboard entries
     private List<UserData> leaderboardData = new ArrayList<>();
 
+    private Button submitButton;
+    private DrawerLayout drawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +57,9 @@ public class LeaderBoardActivity extends AppCompatActivity {
         // Fetch the leaderboard data from Firebase and populate the leaderboard
         fetchLeaderboardData();
 
+        drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
         // Set up the back button to navigate to the previous activity when clicked
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -59,15 +69,54 @@ public class LeaderBoardActivity extends AppCompatActivity {
             }
         });
 
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                Intent intent;
+
+                if (id == R.id.level_one) {
+                    intent = new Intent(LeaderBoardActivity.this, LevelOneActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.level_two) {
+                    intent = new Intent(LeaderBoardActivity.this, LevelTwoActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.level_three) {
+                    intent = new Intent(LeaderBoardActivity.this, LevelThreeActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.badges) {
+                    intent = new Intent(LeaderBoardActivity.this, BadgesActivity.class);
+                    startActivity(intent);
+
+                } else if (id == R.id.profile) {
+                    intent = new Intent(LeaderBoardActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                } else if (id == R.id.leader_board) {
+                    intent = new Intent(LeaderBoardActivity.this, LeaderBoardActivity.class);
+                    startActivity(intent);
+                }
+
+                drawerLayout.closeDrawers(); // Close the drawer after an item is clicked
+                return true;
+            }
+        });
         // Set up the navigation button (currently a placeholder for future actions)
         ImageButton navButton = findViewById(R.id.nav_button);
         navButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Handle navigation button action (e.g., open navigation drawer or another action)
+                if (drawerLayout.isDrawerOpen(navigationView)) {
+                    drawerLayout.closeDrawer(navigationView);
+                } else {
+                    drawerLayout.openDrawer(navigationView);
+                }
             }
+
         });
     }
+
+
 
     // Method to fetch leaderboard data from the Firebase Realtime Database
     private void fetchLeaderboardData() {

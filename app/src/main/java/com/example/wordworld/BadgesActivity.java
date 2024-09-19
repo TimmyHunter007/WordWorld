@@ -12,7 +12,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 
 public class BadgesActivity extends AppCompatActivity {
-    private Button submitButton;
+
     private DrawerLayout drawerLayout;
 
     @Override
