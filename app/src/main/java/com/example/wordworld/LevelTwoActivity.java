@@ -11,12 +11,16 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.TextAppearanceInfo;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LevelTwoActivity extends AppCompatActivity {
     private EditText[][] letterBoxes;
@@ -28,6 +32,7 @@ public class LevelTwoActivity extends AppCompatActivity {
     private FirebaseUser user;
     private RewardManager rewardManager;
     private DatabaseReference userDatabaseReference;
+    private Map<Character, Button> keyButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,37 @@ public class LevelTwoActivity extends AppCompatActivity {
                 {findViewById(R.id.letter1_row4), findViewById(R.id.letter2_row4), findViewById(R.id.letter3_row4), findViewById(R.id.letter4_row4), findViewById(R.id.letter5_row4)},
                 {findViewById(R.id.letter1_row5), findViewById(R.id.letter2_row5), findViewById(R.id.letter3_row5), findViewById(R.id.letter4_row5), findViewById(R.id.letter5_row5)}
         };
+
+        // Initialize keyButtons map
+        keyButtons = new HashMap<>();
+        keyButtons.put('Q', (Button) findViewById(R.id.key_q));
+        keyButtons.put('W', (Button) findViewById(R.id.key_w));
+        keyButtons.put('E', (Button) findViewById(R.id.key_e));
+        keyButtons.put('R', (Button) findViewById(R.id.key_r));
+        keyButtons.put('T', (Button) findViewById(R.id.key_t));
+        keyButtons.put('Y', (Button) findViewById(R.id.key_y));
+        keyButtons.put('U', (Button) findViewById(R.id.key_u));
+        keyButtons.put('I', (Button) findViewById(R.id.key_i));
+        keyButtons.put('O', (Button) findViewById(R.id.key_o));
+        keyButtons.put('P', (Button) findViewById(R.id.key_p));
+
+        keyButtons.put('A', (Button) findViewById(R.id.key_a));
+        keyButtons.put('S', (Button) findViewById(R.id.key_s));
+        keyButtons.put('D', (Button) findViewById(R.id.key_d));
+        keyButtons.put('F', (Button) findViewById(R.id.key_f));
+        keyButtons.put('G', (Button) findViewById(R.id.key_g));
+        keyButtons.put('H', (Button) findViewById(R.id.key_h));
+        keyButtons.put('J', (Button) findViewById(R.id.key_j));
+        keyButtons.put('K', (Button) findViewById(R.id.key_k));
+        keyButtons.put('L', (Button) findViewById(R.id.key_l));
+
+        keyButtons.put('Z', (Button) findViewById(R.id.key_z));
+        keyButtons.put('X', (Button) findViewById(R.id.key_x));
+        keyButtons.put('C', (Button) findViewById(R.id.key_c));
+        keyButtons.put('V', (Button) findViewById(R.id.key_v));
+        keyButtons.put('B', (Button) findViewById(R.id.key_b));
+        keyButtons.put('N', (Button) findViewById(R.id.key_n));
+        keyButtons.put('M', (Button) findViewById(R.id.key_m));
 
         // Initialize UI components
         submitButton = findViewById(R.id.submit_level_two);
@@ -258,6 +294,9 @@ public class LevelTwoActivity extends AppCompatActivity {
         //text box color feedback
         displayFeedback(feedback);
 
+        // Update the keyboard key colors based on feedback
+        updateKeyColors(feedback.feedbackChars, feedback.feedbackStatus);
+
         //disable the previous row once submit button has been clicked
         disableRow(currentRow);
 
@@ -287,6 +326,30 @@ public class LevelTwoActivity extends AppCompatActivity {
         }
     }
 
+    private void updateKeyColors(char[] feedbackChars, int[] feedbackStatus) {
+        for (int i = 0; i < feedbackChars.length; i++) {
+            char letter = feedbackChars[i];
+            Button keyButton = keyButtons.get(Character.toUpperCase(letter));
+
+            if (keyButton != null) {
+                // Green: Correct letter and correct position
+                if (feedbackStatus[i] == 2) {
+                    keyButton.setBackgroundColor(Color.parseColor("#556B2F"));
+                }
+                // Yellow: Correct letter, wrong position
+                else if (feedbackStatus[i] == 1) {
+                    keyButton.setBackgroundColor(Color.parseColor("#DAA520"));
+                }
+                // Gray: Incorrect letter
+                else {
+                    keyButton.setBackgroundColor(Color.parseColor("#696969"));
+                }
+                keyButton.setTextColor(Color.WHITE);
+                keyButton.setShadowLayer(15f, 0f, 0f, Color.BLACK);
+            }
+        }
+    }
+
     private void setColoredFeedback(int row, char[] feedbackChars, int[] feedbackStatus) {
         for (int i = 0; i < feedbackChars.length; i++) {
             EditText letterBox = letterBoxes[row][i];
@@ -300,7 +363,7 @@ public class LevelTwoActivity extends AppCompatActivity {
                 letterBox.setBackground(createColoredBackground(Color.parseColor("#DAA520")));
             } else {
                 // Default
-                letterBox.setBackground(createColoredBackground(Color.parseColor("#4D000000")));
+                letterBox.setBackground(createColoredBackground(Color.parseColor("#80000000")));
             }
             letterBox.setText(String.valueOf(feedbackChars[i]));
             // Add a black outline around the text using setShadowLayer
