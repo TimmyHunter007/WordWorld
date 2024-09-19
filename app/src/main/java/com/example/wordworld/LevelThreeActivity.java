@@ -327,15 +327,6 @@ public class LevelThreeActivity extends AppCompatActivity {
         userDatabaseReference.child("metaData").child("l3DateTried").setValue(currentDate);
     }
 
-
-    private String getUserInput() {
-        StringBuilder guess = new StringBuilder();
-        for (EditText box : letterBoxes[currentRow]) {
-            guess.append(box.getText().toString());
-        }
-        return guess.toString();
-    }
-
     private void displayFeedback(WordGame.Feedback feedback) {
         setColoredFeedback(currentRow, feedback.feedbackChars, feedback.feedbackStatus);
     }
@@ -401,10 +392,6 @@ public class LevelThreeActivity extends AppCompatActivity {
         return guess.toString();
     }
 
-    private void displayFeedback(WordGame.Feedback feedback) {
-        // Color feedback for the current row
-        setColoredFeedback(currentRow, feedback.feedbackChars, feedback.feedbackStatus);
-    }
 
     private void enableLetters(boolean enabled) {
         for (EditText[] row : letterBoxes) {

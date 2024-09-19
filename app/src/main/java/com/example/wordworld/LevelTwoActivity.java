@@ -328,12 +328,12 @@ public class LevelTwoActivity extends AppCompatActivity {
         userDatabaseReference.child("metaData").child("l2DateTried").setValue(currentDate);
     }
 
-
     private String getUserInput() {
         StringBuilder guess = new StringBuilder();
         for (EditText box : letterBoxes[currentRow]) {
             guess.append(box.getText().toString());
         }
+        return guess.toString();
     }
 
     private void displayFeedback(WordGame.Feedback feedback) {
@@ -391,19 +391,6 @@ public class LevelTwoActivity extends AppCompatActivity {
         drawable.setCornerRadius(32f);
 
         return drawable;
-    }
-
-    private String getUserInput() {
-        StringBuilder guess = new StringBuilder();
-        for (EditText box : letterBoxes[currentRow]) {
-            guess.append(box.getText().toString());
-        }
-        return guess.toString();
-    }
-
-    private void displayFeedback(WordGame.Feedback feedback) {
-        // Color feedback for the current row
-        setColoredFeedback(currentRow, feedback.feedbackChars, feedback.feedbackStatus);
     }
 
     private void enableLetters(boolean enabled) {
