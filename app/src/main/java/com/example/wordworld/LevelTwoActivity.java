@@ -6,12 +6,15 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.view.inputmethod.TextAppearanceInfo;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +24,9 @@ import com.google.firebase.database.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LevelTwoActivity extends AppCompatActivity {
     private EditText[][] letterBoxes;
@@ -35,6 +41,7 @@ public class LevelTwoActivity extends AppCompatActivity {
     private int currentAttemptsLeft = 5;
     private int currentWordGuess = 0;
     private MediaPlayer mediaPlayer;
+    private Map<Character, Button> keyButtons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,37 @@ public class LevelTwoActivity extends AppCompatActivity {
                 {findViewById(R.id.letter1_row4), findViewById(R.id.letter2_row4), findViewById(R.id.letter3_row4), findViewById(R.id.letter4_row4), findViewById(R.id.letter5_row4)},
                 {findViewById(R.id.letter1_row5), findViewById(R.id.letter2_row5), findViewById(R.id.letter3_row5), findViewById(R.id.letter4_row5), findViewById(R.id.letter5_row5)}
         };
+
+        // Initialize keyButtons map
+        keyButtons = new HashMap<>();
+        keyButtons.put('Q', (Button) findViewById(R.id.key_q));
+        keyButtons.put('W', (Button) findViewById(R.id.key_w));
+        keyButtons.put('E', (Button) findViewById(R.id.key_e));
+        keyButtons.put('R', (Button) findViewById(R.id.key_r));
+        keyButtons.put('T', (Button) findViewById(R.id.key_t));
+        keyButtons.put('Y', (Button) findViewById(R.id.key_y));
+        keyButtons.put('U', (Button) findViewById(R.id.key_u));
+        keyButtons.put('I', (Button) findViewById(R.id.key_i));
+        keyButtons.put('O', (Button) findViewById(R.id.key_o));
+        keyButtons.put('P', (Button) findViewById(R.id.key_p));
+
+        keyButtons.put('A', (Button) findViewById(R.id.key_a));
+        keyButtons.put('S', (Button) findViewById(R.id.key_s));
+        keyButtons.put('D', (Button) findViewById(R.id.key_d));
+        keyButtons.put('F', (Button) findViewById(R.id.key_f));
+        keyButtons.put('G', (Button) findViewById(R.id.key_g));
+        keyButtons.put('H', (Button) findViewById(R.id.key_h));
+        keyButtons.put('J', (Button) findViewById(R.id.key_j));
+        keyButtons.put('K', (Button) findViewById(R.id.key_k));
+        keyButtons.put('L', (Button) findViewById(R.id.key_l));
+
+        keyButtons.put('Z', (Button) findViewById(R.id.key_z));
+        keyButtons.put('X', (Button) findViewById(R.id.key_x));
+        keyButtons.put('C', (Button) findViewById(R.id.key_c));
+        keyButtons.put('V', (Button) findViewById(R.id.key_v));
+        keyButtons.put('B', (Button) findViewById(R.id.key_b));
+        keyButtons.put('N', (Button) findViewById(R.id.key_n));
+        keyButtons.put('M', (Button) findViewById(R.id.key_m));
 
         // Initialize UI components
         submitButton = findViewById(R.id.submit_level_two);
@@ -95,23 +133,29 @@ public class LevelTwoActivity extends AppCompatActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void setUpLetterBoxListeners(int row) {
+        // Only add listeners to the current row (no need for other rows)
         for (int i = 0; i < letterBoxes[row].length; i++) {
             final EditText currentBox = letterBoxes[row][i];
             final int index = i;
 
+            // Prevent the system keyboard from appearing
             currentBox.setOnTouchListener((v, event) -> {
                 v.onTouchEvent(event);
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                // Consume the touch event so the system keyboard doesn't appear
                 return true;
             });
 
+            // Set focus change listener to track active EditText
             currentBox.setOnFocusChangeListener((v, hasFocus) -> {
                 if (hasFocus) {
+                    // Track active EditText
                     activeEditText = currentBox;
                 }
             });
 
+            // TextWatcher to move focus to the next box in the same row
             currentBox.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -175,6 +219,7 @@ public class LevelTwoActivity extends AppCompatActivity {
 
             if (currentRowIndex == currentRow) {
                 if (activeEditText.getText().length() > 0) {
+                    // Erase the current letter
                     activeEditText.setText("");
                 } else if (currentColIndex > 0) {
                     letterBoxes[currentRow][currentColIndex - 1].requestFocus();
@@ -185,6 +230,7 @@ public class LevelTwoActivity extends AppCompatActivity {
         }
     }
 
+    // Helper method to get the row index of the active EditText
     private int getActiveEditTextRowIndex() {
         for (int row = 0; row < letterBoxes.length; row++) {
             for (int col = 0; col < letterBoxes[row].length; col++) {
@@ -193,6 +239,7 @@ public class LevelTwoActivity extends AppCompatActivity {
                 }
             }
         }
+        // Return -1 if no active row is found (this shouldn't happen)
         return -1;
     }
 
@@ -204,8 +251,30 @@ public class LevelTwoActivity extends AppCompatActivity {
                 }
             }
         }
+        // Return -1 if not found
         return -1;
     }
+
+    private void moveToPreviousEditText() {
+        for (int row = 0; row < letterBoxes.length; row++) {
+            for (int col = 0; col < letterBoxes[row].length; col++) {
+                if (letterBoxes[row][col].equals(activeEditText)) {
+                    if (col > 0) {
+                        // Move to the previous box
+                        letterBoxes[row][col - 1].requestFocus();
+                        activeEditText = letterBoxes[row][col - 1];
+                    } else if (row > 0) {
+                        // Move to the last box in the previous row
+                        letterBoxes[row - 1][letterBoxes[row - 1].length - 1].requestFocus();
+                        activeEditText = letterBoxes[row - 1][letterBoxes[row - 1].length - 1];
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
+
 
     private void handleGuess() {
         String userGuess = getUserInput();
@@ -220,7 +289,10 @@ public class LevelTwoActivity extends AppCompatActivity {
             return;
         }
 
+        // Get feedback from the WordGame class
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
+
+        //text box color feedback
         displayFeedback(feedback);
 
         currentAttemptsLeft--;
@@ -229,11 +301,16 @@ public class LevelTwoActivity extends AppCompatActivity {
             userDatabaseReference.child("metaData").child("l2WordGuess").setValue(1);
             endGame(feedback);
         } else {
+            // Move to the next row for another attempt
             if (currentRow < letterBoxes.length - 1) {
+                // Increment the row
                 currentRow++;
+                // Set up listeners for the new row
                 setUpLetterBoxListeners(currentRow);
+                // Move the cursor to the first box in the new row
                 letterBoxes[currentRow][0].requestFocus();
             } else {
+                // If there are no more rows, disable input and show message
                 endGame(feedback);
             }
         }
@@ -257,24 +334,52 @@ public class LevelTwoActivity extends AppCompatActivity {
         for (EditText box : letterBoxes[currentRow]) {
             guess.append(box.getText().toString());
         }
-        return guess.toString();
     }
 
     private void displayFeedback(WordGame.Feedback feedback) {
         setColoredFeedback(currentRow, feedback.feedbackChars, feedback.feedbackStatus);
     }
 
+    private void updateKeyColors(char[] feedbackChars, int[] feedbackStatus) {
+        for (int i = 0; i < feedbackChars.length; i++) {
+            char letter = feedbackChars[i];
+            Button keyButton = keyButtons.get(Character.toUpperCase(letter));
+
+            if (keyButton != null) {
+                // Green: Correct letter and correct position
+                if (feedbackStatus[i] == 2) {
+                    keyButton.setBackgroundColor(Color.parseColor("#556B2F"));
+                }
+                // Yellow: Correct letter, wrong position
+                else if (feedbackStatus[i] == 1) {
+                    keyButton.setBackgroundColor(Color.parseColor("#DAA520"));
+                }
+                // Gray: Incorrect letter
+                else {
+                    keyButton.setBackgroundColor(Color.parseColor("#696969"));
+                }
+                keyButton.setTextColor(Color.WHITE);
+                keyButton.setShadowLayer(15f, 0f, 0f, Color.BLACK);
+            }
+        }
+    }
+
     private void setColoredFeedback(int row, char[] feedbackChars, int[] feedbackStatus) {
         for (int i = 0; i < feedbackChars.length; i++) {
             EditText letterBox = letterBoxes[row][i];
             if (feedbackStatus[i] == 2) {
+                // Green
+                //letterBox.setBackground(createColoredBackground(Color.parseColor("#3CB371")));
                 letterBox.setBackground(createColoredBackground(Color.parseColor("#556B2F")));
             } else if (feedbackStatus[i] == 1) {
+                // Yellow
+                //letterBox.setBackground(createColoredBackground(Color.parseColor("#FFBF00")));
                 letterBox.setBackground(createColoredBackground(Color.parseColor("#DAA520")));
             } else {
-                letterBox.setBackground(createColoredBackground(Color.parseColor("#4D000000")));
+                letterBox.setBackground(createColoredBackground(Color.parseColor("#80000000")));
             }
             letterBox.setText(String.valueOf(feedbackChars[i]));
+            // Add a black outline around the text using setShadowLayer
             letterBox.setShadowLayer(15f, 0f, 0f, Color.BLACK);
         }
     }
@@ -284,7 +389,21 @@ public class LevelTwoActivity extends AppCompatActivity {
         drawable.setShape(GradientDrawable.RECTANGLE);
         drawable.setColor(color);
         drawable.setCornerRadius(32f);
+
         return drawable;
+    }
+
+    private String getUserInput() {
+        StringBuilder guess = new StringBuilder();
+        for (EditText box : letterBoxes[currentRow]) {
+            guess.append(box.getText().toString());
+        }
+        return guess.toString();
+    }
+
+    private void displayFeedback(WordGame.Feedback feedback) {
+        // Color feedback for the current row
+        setColoredFeedback(currentRow, feedback.feedbackChars, feedback.feedbackStatus);
     }
 
     private void enableLetters(boolean enabled) {
@@ -296,7 +415,10 @@ public class LevelTwoActivity extends AppCompatActivity {
     }
 
     private void endGame(WordGame.Feedback feedback) {
+        // Disable further input
         enableLetters(false);
+
+        // Show the message container and message
         RelativeLayout messageContainer = findViewById(R.id.message_container);
         TextView tvMessage = findViewById(R.id.tv_message);
 
@@ -318,7 +440,10 @@ public class LevelTwoActivity extends AppCompatActivity {
             playSoundEffect(R.raw.sad_sound);
         }
 
+        //allow end message to display
         messageContainer.setVisibility(View.VISIBLE);
+
+        // Hide game UI when displaying the end message
         findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
         findViewById(R.id.keyboard).setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);

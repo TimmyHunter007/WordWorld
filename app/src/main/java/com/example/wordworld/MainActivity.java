@@ -1,5 +1,6 @@
 package com.example.wordworld;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
@@ -31,6 +31,36 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference databaseReference; // Database reference for user's data
     private Button profileButton; // Button for navigating to the profile or login screen
     private TextView silverCoins, points; // UI Element
+
+    private void showInstructionPopup(int level) {
+        Dialog instructionDialog = new Dialog(MainActivity.this);
+        instructionDialog.setContentView(R.layout.instruction_popup);
+
+        Button continueButton = instructionDialog.findViewById(R.id.continue_button);
+
+        // Set an OnClickListener for the "Continue" button
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Dismiss the dialog
+                instructionDialog.dismiss();
+
+                // Navigate to the selected level based on the level parameter
+                Intent intent;
+                if (level == 1) {
+                    intent = new Intent(MainActivity.this, LevelOneActivity.class);
+                } else if (level == 2) {
+                    intent = new Intent(MainActivity.this, LevelTwoActivity.class);
+                } else {
+                    intent = new Intent(MainActivity.this, LevelThreeActivity.class);
+                }
+                startActivity(intent);
+            }
+        });
+
+        // Show the popup dialog
+        instructionDialog.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,8 +209,10 @@ public class MainActivity extends AppCompatActivity {
         levelOneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LevelOneActivity.class);
-                startActivity(intent);
+                // Show the instruction popup for Level 1
+                showInstructionPopup(1);
+                //Intent intent = new Intent(MainActivity.this, LevelOneActivity.class);
+                //startActivity(intent);
             }
         });
 
@@ -189,8 +221,10 @@ public class MainActivity extends AppCompatActivity {
         levelTwoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LevelTwoActivity.class);
-                startActivity(intent);
+                // Show the instruction popup for Level 2
+                showInstructionPopup(2);
+                //Intent intent = new Intent(MainActivity.this, LevelTwoActivity.class);
+                //startActivity(intent);
             }
         });
 
@@ -199,8 +233,10 @@ public class MainActivity extends AppCompatActivity {
         levelThreeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LevelThreeActivity.class);
-                startActivity(intent);
+                // Show the instruction popup for Level 3
+                showInstructionPopup(3);
+                //Intent intent = new Intent(MainActivity.this, LevelThreeActivity.class);
+                //startActivity(intent);
             }
         });
 
