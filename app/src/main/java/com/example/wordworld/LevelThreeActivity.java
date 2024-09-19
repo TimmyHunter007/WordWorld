@@ -65,6 +65,8 @@ public class LevelThreeActivity extends AppCompatActivity {
             initializeUserData();  // Fetch and initialize user data for attempts and guesses
         } else {
             // User is not logged in
+            ImageButton backButton = findViewById(R.id.back_button);
+            backButton.setOnClickListener(v -> onBackPressed());
             showLoginRequiredMessage();
             return;
         }

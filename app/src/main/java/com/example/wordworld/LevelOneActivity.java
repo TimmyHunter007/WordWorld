@@ -101,6 +101,8 @@ public class LevelOneActivity extends AppCompatActivity {
             initializeUserData();  // Fetch and initialize user data for attempts and guesses
         } else {
             // User is not logged in
+            ImageButton backButton = findViewById(R.id.back_button);
+            backButton.setOnClickListener(v -> onBackPressed());
             showLoginRequiredMessage();
             return;
         }
@@ -337,7 +339,6 @@ public class LevelOneActivity extends AppCompatActivity {
         for (EditText editText : letterBoxes[row]) {
             editText.setEnabled(false);
         }
-        return guess.toString();
     }
 
     private void displayFeedback(WordGame.Feedback feedback) {
@@ -406,10 +407,6 @@ public class LevelOneActivity extends AppCompatActivity {
         return guess.toString();
     }
 
-    private void displayFeedback(WordGame.Feedback feedback) {
-        // Color feedback for the current row
-        setColoredFeedback(currentRow, feedback.feedbackChars, feedback.feedbackStatus);
-    }
 
     private void enableLetters(boolean enabled) {
         for (EditText[] row : letterBoxes) {
