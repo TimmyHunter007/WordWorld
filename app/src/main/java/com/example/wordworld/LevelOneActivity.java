@@ -301,6 +301,7 @@ public class LevelOneActivity extends AppCompatActivity {
         // Decrease attempts left
         currentAttemptsLeft--;
 
+
         // If the user guesses correctly or if attempts are exhausted, mark the word as guessed
         if (feedback.message.contains("Congratulations") || currentAttemptsLeft == 0) {
             userDatabaseReference.child("metaData").child("l1WordGuess").setValue(1);
