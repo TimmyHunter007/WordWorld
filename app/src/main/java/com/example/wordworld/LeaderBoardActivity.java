@@ -259,7 +259,6 @@ public class LeaderBoardActivity extends AppCompatActivity {
                     if (rank == 1) {
                         userRow.setBackgroundResource(R.drawable.rounded_background_gold); // Gold for 1st place
                         setRowTextColor(userRow, ContextCompat.getColor(this, android.R.color.black));
-                        playSoundEffect(R.raw.rank_1);
                     } else if (rank == 2) {
                         userRow.setBackgroundResource(R.drawable.rounded_background_silver); // Silver for 2nd place
                         setRowTextColor(userRow, ContextCompat.getColor(this, android.R.color.black));
