@@ -122,12 +122,20 @@ public class LevelThreeActivity extends AppCompatActivity {
                         Log.d("HintDebug", "Revealed letter: " + hint.revealedLetter);
                         Log.d("HintDebug", "Position: " + hint.position);
 
+
                         // Ensure valid hint data
                         if (hint.revealedLetter != null && hint.position >= 0 && hint.position < letterBoxes[currentRow].length) {
                             // Loop through the current row and all rows below it
                             for (int row = currentRow; row < letterBoxes.length; row++) {
+                                EditText letterBox = letterBoxes[row][hint.position];
+
                                 // Set the revealed letter in the correct position of each row
-                                letterBoxes[row][hint.position].setText(String.valueOf(hint.revealedLetter));
+                                letterBox.setText(String.valueOf(hint.revealedLetter));
+
+                                // Lock the letter by disabling the EditText
+                                letterBox.setEnabled(false);  // Disable interaction
+                                letterBox.setFocusable(false);  // Prevent further focus on it
+                                letterBox.setFocusableInTouchMode(false);  // Prevent touch focus
                             }
 
                             // Provide feedback to the user
@@ -413,8 +421,8 @@ public class LevelThreeActivity extends AppCompatActivity {
         TextView tvMessage = findViewById(R.id.tv_message);
 
         if (feedback.message.contains("Congratulations")) {
-            int coinsEarned = rewardManager.awardLevelCompletionReward(1);
-            int pointsEarned = rewardManager.getPointsEarned(1);
+            int coinsEarned = rewardManager.awardLevelCompletionReward(3);
+            int pointsEarned = rewardManager.getPointsEarned(3);
             rewardManager.getWordCount(1);
             tvMessage.setText(feedback.message + "\n\nYou earned:\n" + coinsEarned + " Silver Coins\n" + pointsEarned + " Points");
         } else {
@@ -428,5 +436,6 @@ public class LevelThreeActivity extends AppCompatActivity {
         findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
         findViewById(R.id.keyboard).setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);
+        hintButton.setVisibility(View.GONE);
     }
 }

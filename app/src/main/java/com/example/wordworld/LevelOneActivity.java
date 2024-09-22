@@ -127,9 +127,17 @@ public class LevelOneActivity extends AppCompatActivity {
                         if (hint.revealedLetter != null && hint.position >= 0 && hint.position < letterBoxes[currentRow].length) {
                             // Loop through the current row and all rows below it
                             for (int row = currentRow; row < letterBoxes.length; row++) {
+                                EditText letterBox = letterBoxes[row][hint.position];
+
                                 // Set the revealed letter in the correct position of each row
-                                letterBoxes[row][hint.position].setText(String.valueOf(hint.revealedLetter));
+                                letterBox.setText(String.valueOf(hint.revealedLetter));
+
+                                // Lock the letter by disabling the EditText
+                                letterBox.setEnabled(false);  // Disable interaction
+                                letterBox.setFocusable(false);  // Prevent further focus on it
+                                letterBox.setFocusableInTouchMode(false);  // Prevent touch focus
                             }
+
 
                             // Provide feedback to the user
                             Toast.makeText(LevelOneActivity.this, hint.message + " Letter: " + hint.revealedLetter, Toast.LENGTH_SHORT).show();
