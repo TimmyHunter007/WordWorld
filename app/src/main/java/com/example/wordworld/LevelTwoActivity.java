@@ -297,6 +297,11 @@ public class LevelTwoActivity extends AppCompatActivity {
 
         currentAttemptsLeft--;
 
+        // Update the attempts left in Firebase and the TextView
+        userDatabaseReference.child("metaData").child("l2AttemptsLeft").setValue(currentAttemptsLeft);
+        TextView tvAttempts = findViewById(R.id.tvAttempts);
+        tvAttempts.setText("Attempts left: " + currentAttemptsLeft);
+
         if (feedback.message.contains("Congratulations") || currentAttemptsLeft == 0) {
             userDatabaseReference.child("metaData").child("l2WordGuess").setValue(1);
             endGame(feedback);
@@ -410,8 +415,8 @@ public class LevelTwoActivity extends AppCompatActivity {
         TextView tvMessage = findViewById(R.id.tv_message);
 
         if (feedback.message.contains("Congratulations")) {
-            int coinsEarned = rewardManager.awardLevelCompletionReward(1);
-            int pointsEarned = rewardManager.getPointsEarned(1);
+            int coinsEarned = rewardManager.awardLevelCompletionReward(2);
+            int pointsEarned = rewardManager.getPointsEarned(2);
 
             // Update the total score in Firebase
             updateScore(pointsEarned, newScore -> {
@@ -516,6 +521,9 @@ public class LevelTwoActivity extends AppCompatActivity {
         userDatabaseReference.child("metaData").child("l2AttemptsLeft").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 currentAttemptsLeft = task.getResult().getValue(Integer.class);
+
+                TextView tvAttempts = findViewById(R.id.tvAttempts);
+                tvAttempts.setText("Attempts: " + currentAttemptsLeft);
             }
         });
 

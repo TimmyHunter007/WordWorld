@@ -301,6 +301,10 @@ public class LevelOneActivity extends AppCompatActivity {
         // Decrease attempts left
         currentAttemptsLeft--;
 
+        // Update the attempts left in Firebase and the TextView
+        userDatabaseReference.child("metaData").child("l1AttemptsLeft").setValue(currentAttemptsLeft);
+        TextView tvAttempts = findViewById(R.id.tvAttempts);
+        tvAttempts.setText("Attempts left: " + currentAttemptsLeft);
 
         // If the user guesses correctly or if attempts are exhausted, mark the word as guessed
         if (feedback.message.contains("Congratulations") || currentAttemptsLeft == 0) {
