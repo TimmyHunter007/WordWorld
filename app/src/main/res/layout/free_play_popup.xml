@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="50dp"
+              android:background="@drawable/instruction_screen">
+
+    <TextView
+            android:id="@+id/level_one_free"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Level One Free Play"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="10dp"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center_horizontal"/>
+
+    <Button
+            android:id="@+id/level_one_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continue"
+            android:textColor="@color/button_text"
+            android:backgroundTint="@color/profile_leaderBoard_button"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="100dp"/>
+
+    <TextView
+            android:id="@+id/level_two_free"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Level Two Free Play"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="10dp"
+            android:layout_gravity="center_horizontal"/>
+
+    <Button
+            android:id="@+id/level_two_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continue"
+            android:textColor="@color/button_text"
+            android:backgroundTint="@color/profile_leaderBoard_button"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="100dp"/>
+
+    <TextView
+            android:id="@+id/level_three_free"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Level Three Free Play"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="10dp"
+            android:layout_gravity="center_horizontal"/>
+
+    <Button
+            android:id="@+id/level_three_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continue"
+            android:textColor="@color/button_text"
+            android:backgroundTint="@color/profile_leaderBoard_button"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"/>
+</LinearLayout>

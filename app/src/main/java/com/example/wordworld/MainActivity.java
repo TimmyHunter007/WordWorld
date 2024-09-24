@@ -1,11 +1,14 @@
 package com.example.wordworld;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -26,14 +29,12 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-    private FirebaseAuth auth; // Firebase Authentication instance
-    private FirebaseUser user; // Current authenticated user
-    private DatabaseReference databaseReference; // Database reference for user's data
-    private Button profileButton; // Button for navigating to the profile or login screen
     private TextView silverCoins, points; // UI Element
 
-    private void showInstructionPopup(int level) {
-        Dialog instructionDialog = new Dialog(MainActivity.this);
+    private void showInstructionPopup() {
+        findViewById(R.id.profile).setVisibility(View.INVISIBLE);
+
+        Dialog instructionDialog = new Dialog(MainActivity.this, R.style.TransparentDialogTheme);
         instructionDialog.setContentView(R.layout.instruction_popup);
 
         Button continueButton = instructionDialog.findViewById(R.id.continue_button);
@@ -44,22 +45,60 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Dismiss the dialog
                 instructionDialog.dismiss();
-
-                // Navigate to the selected level based on the level parameter
-                Intent intent;
-                if (level == 1) {
-                    intent = new Intent(MainActivity.this, LevelOneActivity.class);
-                } else if (level == 2) {
-                    intent = new Intent(MainActivity.this, LevelTwoActivity.class);
-                } else {
-                    intent = new Intent(MainActivity.this, LevelThreeActivity.class);
-                }
-                startActivity(intent);
+                findViewById(R.id.profile).setVisibility(View.VISIBLE);
             }
         });
 
         // Show the popup dialog
         instructionDialog.show();
+    }
+
+    private void showFreePlayPopup() {
+        Dialog freePlayDialog = new Dialog(MainActivity.this, R.style.TransparentDialogTheme);
+        freePlayDialog.setContentView(R.layout.free_play_popup);
+
+        Button levelOneFreePlay = freePlayDialog.findViewById(R.id.level_one_continue);
+        Button levelTwoFreePlay = freePlayDialog.findViewById(R.id.level_two_continue);
+        Button levelThreeFreePlay = freePlayDialog.findViewById(R.id.level_three_continue);
+
+        // Set an OnClickListener for the "Continue" button
+        levelOneFreePlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to LevelOneActivity in free play mode
+                Intent intent = new Intent(MainActivity.this, LevelOneActivity.class);
+                intent.putExtra("mode", "free_play");
+                startActivity(intent);
+                freePlayDialog.dismiss();
+            }
+        });
+
+        // Set OnClickListener for Level Two Free Play
+        levelTwoFreePlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to LevelTwoActivity in free play mode
+                Intent intent = new Intent(MainActivity.this, LevelTwoActivity.class);
+                intent.putExtra("mode", "free_play");
+                startActivity(intent);
+                freePlayDialog.dismiss();
+            }
+        });
+
+        // Set OnClickListener for Level Three Free Play
+        levelThreeFreePlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navigate to LevelThreeActivity in free play mode
+                Intent intent = new Intent(MainActivity.this, LevelThreeActivity.class);
+                intent.putExtra("mode", "free_play");
+                startActivity(intent);
+                freePlayDialog.dismiss();
+            }
+        });
+
+        // Show the popup dialog
+        freePlayDialog.show();
     }
 
     @Override
@@ -69,13 +108,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main); // Set the layout for this activity
 
         // Initialize Firebase Auth and get the current user
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
+        // Firebase Authentication instance
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        // Current authenticated user
+        FirebaseUser user = auth.getCurrentUser();
 
         // Check if the user is signed in
         if (user != null) {
             // Set up the database reference to the current user's data
-            databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
+            // Database reference for user's data
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(user.getUid());
 
             // Gets user silver coin count and shows it on main screen
             databaseReference.child("silverCoins").addValueEventListener(new ValueEventListener() {
@@ -178,8 +220,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //listener for instruction screen button
+        ImageButton instructionButton = findViewById(R.id.instruction_button);
+        @SuppressLint("ResourceType") Animation pulseAnimation = AnimationUtils.loadAnimation(this, R.drawable.pulse_animation);
+        instructionButton.startAnimation(pulseAnimation);
+
+        // Set onClickListener to show the instruction popup
+        instructionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showInstructionPopup(); // Assuming you have a method to show the instructions
+            }
+        });
+
+        // listener for free play button
+        Button freePlayButton = findViewById(R.id.free_play);
+        freePlayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFreePlayPopup();
+            }
+        });
+
         // Initialize the profile button and set its click listener
-        profileButton = findViewById(R.id.profile);
+        // Button for navigating to the profile or login screen
+        Button profileButton = findViewById(R.id.profile);
         if (user != null) {
             // If the user is signed in, set the button text to "PROFILE"
             profileButton.setText("PROFILE");
@@ -210,9 +275,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Show the instruction popup for Level 1
-                showInstructionPopup(1);
-                //Intent intent = new Intent(MainActivity.this, LevelOneActivity.class);
-                //startActivity(intent);
+                //showInstructionPopup(1);
+                Intent intent = new Intent(MainActivity.this, LevelOneActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -222,9 +287,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Show the instruction popup for Level 2
-                showInstructionPopup(2);
-                //Intent intent = new Intent(MainActivity.this, LevelTwoActivity.class);
-                //startActivity(intent);
+                //showInstructionPopup(2);
+                Intent intent = new Intent(MainActivity.this, LevelTwoActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -234,9 +299,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Show the instruction popup for Level 3
-                showInstructionPopup(3);
-                //Intent intent = new Intent(MainActivity.this, LevelThreeActivity.class);
-                //startActivity(intent);
+                //showInstructionPopup(3);
+                Intent intent = new Intent(MainActivity.this, LevelThreeActivity.class);
+                startActivity(intent);
             }
         });
 

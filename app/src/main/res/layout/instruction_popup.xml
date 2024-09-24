@@ -1,19 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
               android:orientation="vertical"
               android:padding="20dp"
-              android:background="@drawable/letter_box_background">
-
+              android:background="@drawable/instruction_screen">
 
     <TextView
             android:id="@+id/instruction_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="How to play..."
+            android:text="About the game..."
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="15dp"/>
+
+    <TextView
+            android:id="@+id/overview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="* Win coins, leaderboard points, hints and various badges by guessing correct words."
+            android:textStyle="bold"
             android:textSize="16sp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/white"
+            android:paddingBottom="15dp"/>
+
+    <TextView
+            android:id="@+id/step_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="* 5 attemps to guess the correct word."
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="15dp"/>
+
+    <TextView
+            android:id="@+id/step_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="* Your word will vary depending on the difficulty level you select, with options of 4, 5 and 6 letter words."
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="15dp"/>
+
+    <TextView
+            android:id="@+id/free_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="* Not feeling competative? Jump into Free Play mode for UNLIMITED practice."
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="15dp"/>
+
+    <TextView
+            android:id="@+id/guess_logic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submitting logic"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="15dp"/>
+
+    <!-- Step Three: Green Box -->
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="15dp">
+
+        <!-- Small Green Box -->
+        <TextView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="#556B2F"
+                android:layout_marginRight="10dp"/>
+
+        <!-- Instruction Text -->
+        <TextView
+                android:id="@+id/step_three"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="* Correct letter in the correct spot, box will turn green."
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+
+    <!-- Step Four: Yellow Box -->
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="15dp">
+
+        <!-- Small Yellow Box -->
+        <TextView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="#DAA520"
+                android:layout_marginRight="10dp"/>
+
+        <!-- Instruction Text -->
+        <TextView
+                android:id="@+id/step_four"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="* Correct letter in the wrong spot, box will turn yellow."
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/step_five"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="* If your guess has no correct letters, the box will remain grey."
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="15dp"/>
+
+    <TextView
+            android:id="@+id/step_six"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="* Your keyboard will remember previous keys you've used and provide matching color feeback."
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:paddingBottom="15dp"/>
 
     <Button
             android:id="@+id/continue_button"
@@ -21,7 +145,7 @@
             android:layout_height="wrap_content"
             android:text="Continue"
             android:textColor="@color/button_text"
-            android:backgroundTint="@color/color_1"
+            android:backgroundTint="@color/profile_leaderBoard_button"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"/>
 </LinearLayout>
