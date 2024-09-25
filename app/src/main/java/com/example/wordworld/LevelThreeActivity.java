@@ -256,25 +256,6 @@ public class LevelThreeActivity extends AppCompatActivity {
         return -1;
     }
 
-    private void moveToPreviousEditText() {
-        for (int row = 0; row < letterBoxes.length; row++) {
-            for (int col = 0; col < letterBoxes[row].length; col++) {
-                if (letterBoxes[row][col].equals(activeEditText)) {
-                    if (col > 0) {
-                        // Move to the previous box
-                        letterBoxes[row][col - 1].requestFocus();
-                        activeEditText = letterBoxes[row][col - 1];
-                    } else if (row > 0) {
-                        // Move to the last box in the previous row
-                        letterBoxes[row - 1][letterBoxes[row - 1].length - 1].requestFocus();
-                        activeEditText = letterBoxes[row - 1][letterBoxes[row - 1].length - 1];
-                    }
-                    return;
-                }
-            }
-        }
-    }
-
     private void handleGuess() {
         String userGuess = getUserInput();
 
@@ -294,6 +275,12 @@ public class LevelThreeActivity extends AppCompatActivity {
         //text box color feedback
         displayFeedback(feedback);
 
+        // Update the keyboard key colors based on feedback
+        updateKeyColors(feedback.feedbackChars, feedback.feedbackStatus);
+
+        //disable the previous row once submit button has been clicked
+        disableRow(currentRow);
+        // Decrease attempts left
         currentAttemptsLeft--;
 
         // Update the attempts left in Firebase and the TextView
@@ -330,6 +317,13 @@ public class LevelThreeActivity extends AppCompatActivity {
 
         // Save the current date in the 'l1DateTried' field
         userDatabaseReference.child("metaData").child("l3DateTried").setValue(currentDate);
+    }
+
+    //disables all EditText boxes in a given row
+    private void disableRow(int row) {
+        for (EditText editText : letterBoxes[row]) {
+            editText.setEnabled(false);
+        }
     }
 
     private void displayFeedback(WordGame.Feedback feedback) {
