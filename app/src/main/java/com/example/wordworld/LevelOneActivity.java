@@ -98,7 +98,7 @@ public class LevelOneActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
-            initializeUserData();  // Fetch and initialize user data for attempts and guesses
+            //==========================initializeUserData();  // Fetch and initialize user data for attempts and guesses
         } else {
             // User is not logged in
             ImageButton backButton = findViewById(R.id.back_button);
@@ -251,25 +251,6 @@ public class LevelOneActivity extends AppCompatActivity {
         }
         // Return -1 if not found
         return -1;
-    }
-
-    private void moveToPreviousEditText() {
-        for (int row = 0; row < letterBoxes.length; row++) {
-            for (int col = 0; col < letterBoxes[row].length; col++) {
-                if (letterBoxes[row][col].equals(activeEditText)) {
-                    if (col > 0) {
-                        // Move to the previous box
-                        letterBoxes[row][col - 1].requestFocus();
-                        activeEditText = letterBoxes[row][col - 1];
-                    } else if (row > 0) {
-                        // Move to the last box in the previous row
-                        letterBoxes[row - 1][letterBoxes[row - 1].length - 1].requestFocus();
-                        activeEditText = letterBoxes[row - 1][letterBoxes[row - 1].length - 1];
-                    }
-                    return;
-                }
-            }
-        }
     }
 
     private void handleGuess() {
@@ -515,7 +496,7 @@ public class LevelOneActivity extends AppCompatActivity {
         void onScoreUpdated(int newScore);
     }
 
-    private void initializeUserData() {
+    /*private void initializeUserData() {
         userDatabaseReference.child("metaData").child("l1WordGuess").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 currentWordGuess = task.getResult().getValue(Integer.class);
@@ -541,7 +522,7 @@ public class LevelOneActivity extends AppCompatActivity {
                 }
             }
         });
-    }
+    }*/
 
     private void checkDateAndRestrict() {
         userDatabaseReference.child("metaData").child("l1DateTried").get().addOnCompleteListener(task -> {

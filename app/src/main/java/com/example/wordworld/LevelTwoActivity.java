@@ -11,22 +11,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.view.inputmethod.TextAppearanceInfo;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LevelTwoActivity extends AppCompatActivity {
     private EditText[][] letterBoxes;
@@ -100,7 +96,7 @@ public class LevelTwoActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
-            initializeUserData();  // Fetch and initialize user data for attempts and guesses
+            //==========================initializeUserData();  // Fetch and initialize user data for attempts and guesses
         } else {
             // User is not logged in
             ImageButton backButton = findViewById(R.id.back_button);
@@ -255,27 +251,6 @@ public class LevelTwoActivity extends AppCompatActivity {
         return -1;
     }
 
-    private void moveToPreviousEditText() {
-        for (int row = 0; row < letterBoxes.length; row++) {
-            for (int col = 0; col < letterBoxes[row].length; col++) {
-                if (letterBoxes[row][col].equals(activeEditText)) {
-                    if (col > 0) {
-                        // Move to the previous box
-                        letterBoxes[row][col - 1].requestFocus();
-                        activeEditText = letterBoxes[row][col - 1];
-                    } else if (row > 0) {
-                        // Move to the last box in the previous row
-                        letterBoxes[row - 1][letterBoxes[row - 1].length - 1].requestFocus();
-                        activeEditText = letterBoxes[row - 1][letterBoxes[row - 1].length - 1];
-                    }
-                    return;
-                }
-            }
-        }
-    }
-
-
-
     private void handleGuess() {
         String userGuess = getUserInput();
 
@@ -295,10 +270,17 @@ public class LevelTwoActivity extends AppCompatActivity {
         //text box color feedback
         displayFeedback(feedback);
 
+        // Update the keyboard key colors based on feedback
+        updateKeyColors(feedback.feedbackChars, feedback.feedbackStatus);
+
+        //disable the previous row once submit button has been clicked
+        disableRow(currentRow);
+        // Decrease attempts left
         currentAttemptsLeft--;
 
+        // If the user guesses correctly or if attempts are exhausted, mark the word as guessed
         if (feedback.message.contains("Congratulations") || currentAttemptsLeft == 0) {
-            userDatabaseReference.child("metaData").child("l2WordGuess").setValue(1);
+            userDatabaseReference.child("metaData").child("l1WordGuess").setValue(1);
             endGame(feedback);
         } else {
             // Move to the next row for another attempt
@@ -315,8 +297,9 @@ public class LevelTwoActivity extends AppCompatActivity {
             }
         }
 
+        // Update attempts left and save the current date of the attempt
         saveAttemptDate();
-        userDatabaseReference.child("metaData").child("l2AttemptsLeft").setValue(currentAttemptsLeft);
+        userDatabaseReference.child("metaData").child("l1AttemptsLeft").setValue(currentAttemptsLeft);
     }
 
     private void saveAttemptDate() {
@@ -328,12 +311,11 @@ public class LevelTwoActivity extends AppCompatActivity {
         userDatabaseReference.child("metaData").child("l2DateTried").setValue(currentDate);
     }
 
-    private String getUserInput() {
-        StringBuilder guess = new StringBuilder();
-        for (EditText box : letterBoxes[currentRow]) {
-            guess.append(box.getText().toString());
+    //disables all EditText boxes in a given row
+    private void disableRow(int row) {
+        for (EditText editText : letterBoxes[row]) {
+            editText.setEnabled(false);
         }
-        return guess.toString();
     }
 
     private void displayFeedback(WordGame.Feedback feedback) {
@@ -391,6 +373,14 @@ public class LevelTwoActivity extends AppCompatActivity {
         drawable.setCornerRadius(32f);
 
         return drawable;
+    }
+
+    private String getUserInput() {
+        StringBuilder guess = new StringBuilder();
+        for (EditText box : letterBoxes[currentRow]) {
+            guess.append(box.getText().toString());
+        }
+        return guess.toString();
     }
 
     private void enableLetters(boolean enabled) {
@@ -503,7 +493,7 @@ public class LevelTwoActivity extends AppCompatActivity {
         void onScoreUpdated(int newScore);
     }
 
-    private void initializeUserData() {
+    /*private void initializeUserData() {
         userDatabaseReference.child("metaData").child("l2WordGuess").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 currentWordGuess = task.getResult().getValue(Integer.class);
@@ -529,7 +519,7 @@ public class LevelTwoActivity extends AppCompatActivity {
             }
         });
 
-    }
+    }*/
 
     private void checkDateAndRestrict() {
         userDatabaseReference.child("metaData").child("l2DateTried").get().addOnCompleteListener(task -> {
