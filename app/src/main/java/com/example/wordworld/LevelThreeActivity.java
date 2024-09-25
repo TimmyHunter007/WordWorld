@@ -136,7 +136,18 @@ public class LevelThreeActivity extends AppCompatActivity {
                                 letterBox.setEnabled(false);  // Disable interaction
                                 letterBox.setFocusable(false);  // Prevent further focus on it
                                 letterBox.setFocusableInTouchMode(false);  // Prevent touch focus
+                                letterBox.setClickable(false);  // Prevent clicking on it
+
+
+                                // Skip to the next letter box (if it exists)
+                                if (hint.position < letterBoxes[currentRow].length - 1) {
+                                    letterBoxes[currentRow][hint.position + 1].requestFocus();
+                                }
                             }
+                            // Reset the current row to start from the beginning
+                            currentRow = 0;
+                            letterBoxes[currentRow][0].requestFocus();
+
 
                             // Provide feedback to the user
                             Toast.makeText(LevelThreeActivity.this, hint.message + " Letter: " + hint.revealedLetter, Toast.LENGTH_SHORT).show();
@@ -247,6 +258,30 @@ public class LevelThreeActivity extends AppCompatActivity {
     private void insertLetter(String letter) {
         if (activeEditText != null && activeEditText.isEnabled()) {
             activeEditText.setText(letter);
+
+            // Check if the next letter box is disabled (locked)
+            int currentRowIndex = getActiveEditTextRowIndex();
+            int currentColIndex = getActiveEditTextColIndex();
+
+            if (currentColIndex < letterBoxes[currentRowIndex].length - 1) {
+                EditText nextLetterBox = letterBoxes[currentRowIndex][currentColIndex + 1];
+                if (!nextLetterBox.isEnabled()) {
+                    // If locked, keep moving forward until an enabled box is found
+                    while (currentColIndex < letterBoxes[currentRowIndex].length - 1) {
+                        currentColIndex++;
+                        nextLetterBox = letterBoxes[currentRowIndex][currentColIndex + 1];
+                        if (nextLetterBox.isEnabled()) {
+                            break; // Exit the loop if an enabled box is found
+                        }
+                    }
+
+                    // Set the active EditText to the first enabled box
+                    if (currentColIndex < letterBoxes[currentRowIndex].length - 1) {
+                        activeEditText = nextLetterBox;
+                        activeEditText.requestFocus();
+                    }
+                }
+            }
         }
     }
 
@@ -257,7 +292,13 @@ public class LevelThreeActivity extends AppCompatActivity {
 
             if (currentRowIndex == currentRow) {
                 if (activeEditText.getText().length() > 0) {
-                    // Erase the current letter
+                    // Check if the previous EditText is disabled (locked)
+                    if (currentColIndex > 0 && !letterBoxes[currentRowIndex][currentColIndex - 1].isEnabled()) {
+                        // If the previous EditText is locked, do nothing
+                        return;
+                    }
+
+                    // Otherwise, delete the last letter of the current EditText
                     activeEditText.setText("");
                 } else {
                     // If we are not at the first EditText in the row, move to the previous EditText
