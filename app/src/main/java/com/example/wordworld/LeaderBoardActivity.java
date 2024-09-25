@@ -2,6 +2,7 @@ package com.example.wordworld;
 
 // Import statements for Android components and Firebase libraries
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -32,6 +33,7 @@ public class LeaderBoardActivity extends AppCompatActivity {
     private TableLayout userTable;
     // List to store UserData objects for sorting and displaying leaderboard entries
     private List<UserData> leaderboardData = new ArrayList<>();
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,7 +232,7 @@ public class LeaderBoardActivity extends AppCompatActivity {
                         rankView.setTextColor(ContextCompat.getColor(this, android.R.color.black));
                         rankView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         rankView.setTypeface(null, Typeface.BOLD);
-                        rankView.setTextSize(25); // Set text size
+                        rankView.setTextSize(22); // Set text size
 
                         // Add the trophy icon and rank view to the FrameLayout
                         frameLayout.addView(trophyIcon);
@@ -247,7 +249,7 @@ public class LeaderBoardActivity extends AppCompatActivity {
                         rankView.setTextColor(ContextCompat.getColor(this, android.R.color.white));
                         rankView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         rankView.setTypeface(null, Typeface.BOLD);
-                        rankView.setTextSize(25); // Set text size
+                        rankView.setTextSize(22); // Set text size
 
                         // Add the rank TextView to the TableRow
                         userRow.addView(rankView);
@@ -318,6 +320,29 @@ public class LeaderBoardActivity extends AppCompatActivity {
         // Getter for the user's unique ID
         public String getUid() {
             return uid;
+        }
+    }
+
+    private void playSoundEffect(int soundResourceId) {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+        }
+        mediaPlayer = MediaPlayer.create(this, soundResourceId);
+        mediaPlayer.start();
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
     }
 }

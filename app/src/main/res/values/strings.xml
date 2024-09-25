@@ -11,6 +11,8 @@
     <string name="submit">Submit</string>
     <string name="placeholder_text">Place Holder</string>
     <string name="hint">Buy a Hint</string>
+    <string name="instruction_button"/>
+    <string name="free_play">Free Play</string>
 
 
 </resources>
