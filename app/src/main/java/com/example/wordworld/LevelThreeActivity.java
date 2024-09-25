@@ -502,32 +502,37 @@ public class LevelThreeActivity extends AppCompatActivity {
     private void initializeUserData() {
         userDatabaseReference.child("metaData").child("l3WordGuess").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                currentWordGuess = task.getResult().getValue(Integer.class);
-                if (currentWordGuess == 1) {
-                    checkDateAndRestrict();
+                Integer currentWordGuess = task.getResult().getValue(Integer.class);
+
+                // If the word has already been guessed, block the game
+                if (currentWordGuess != null) {
+                    if (currentWordGuess == 1) {
+                        checkDateAndRestrict();
+                    }
                 }
             }
         });
 
         userDatabaseReference.child("metaData").child("l3AttemptsLeft").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                currentAttemptsLeft = task.getResult().getValue(Integer.class);
+                Integer currentAttemptsLeft = task.getResult().getValue(Integer.class);
 
-                TextView tvAttempts = findViewById(R.id.tvAttempts);
-                tvAttempts.setText("Attempts: " + currentAttemptsLeft);
+                if (currentAttemptsLeft != null) {
+                    TextView tvAttempts = findViewById(R.id.tvAttempts);
+                    tvAttempts.setText("Attempts: " + currentAttemptsLeft);
+                }
             }
         });
 
         userDatabaseReference.child("metaData").child("l3DateTried").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 String savedDate = task.getResult().getValue(String.class);  // Expect the date as a String
-
+                assert savedDate != null;
                 if (isNewDay(savedDate)) {  // Pass the savedDate as a string
                     resetAttempts();
                 }
             }
         });
-
     }
 
     private void checkDateAndRestrict() {
