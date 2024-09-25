@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +17,7 @@ import android.view.inputmethod.TextAppearanceInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +34,7 @@ public class LevelOneActivity extends AppCompatActivity {
     private EditText activeEditText;
     private WordGame wordGame;
     private Button submitButton;
+    private Button hintButton;
     private WordManagement wordManagement;
     private int currentRow = 0;
     private FirebaseUser user;
@@ -88,6 +92,7 @@ public class LevelOneActivity extends AppCompatActivity {
 
         // Initialize UI components
         submitButton = findViewById(R.id.submit_level_one);
+        hintButton = findViewById(R.id.hint_level_one);
 
         wordManagement = new WordManagement(this);
         wordGame = new WordGame(wordManagement);
@@ -121,6 +126,12 @@ public class LevelOneActivity extends AppCompatActivity {
         // Automatically focus the first text box
         letterBoxes[0][0].requestFocus();
 
+        //Set up hint button listener
+        hintButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {showHintDialog();}
+        });
+
         // Set up the submit button listener
         submitButton.setOnClickListener(v -> handleGuess());
 
@@ -128,6 +139,85 @@ public class LevelOneActivity extends AppCompatActivity {
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> onBackPressed());
     }
+
+    private void showHintDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LevelOneActivity.this);
+        builder.setTitle("Buy a Hint");
+
+        builder.setMessage("Would you like to buy a hint?");
+
+        builder.setPositiveButton("Buy Hint", (dialog, which) -> {
+            final int hintCost = 5;  // Define the cost of a hint (e.g., 5 silver coins)
+
+            // Deduct coins for a hint
+            rewardManager.deductCoins(hintCost, new RewardManager.RewardCallback() {
+                @Override
+                public void onSuccess() {
+                    // If coins were successfully deducted, provide the hint
+                    WordGame.Hint hint = wordGame.giveHint();
+
+                    if (hint != null) {
+                        Log.d("HintDebug", "Hint message: " + hint.message);
+                        Log.d("HintDebug", "Revealed letter: " + hint.revealedLetter);
+                        Log.d("HintDebug", "Position: " + hint.position);
+
+                        // Ensure valid hint data
+                        if (hint.revealedLetter != null && hint.position >= 0 && hint.position < letterBoxes[currentRow].length) {
+                            // Loop through the current row and all rows below it
+                            for (int row = currentRow; row < letterBoxes.length; row++) {
+                                EditText letterBox = letterBoxes[row][hint.position];
+
+                                // Set the revealed letter in the correct position of each row
+                                letterBox.setText(String.valueOf(hint.revealedLetter));
+
+                                // Lock the letter by disabling the EditText
+                                letterBox.setEnabled(false);  // Disable interaction
+                                letterBox.setFocusable(false);  // Prevent further focus on it
+                                letterBox.setFocusableInTouchMode(false);  // Prevent touch focus
+
+
+
+                                // Skip to the next letter box (if it exists)
+                                if (hint.position < letterBoxes[currentRow].length - 1) {
+                                    letterBoxes[currentRow][hint.position + 1].requestFocus();
+                                }
+                            }
+                            // Reset the current row to start from the beginning
+                            currentRow = 0;
+                            letterBoxes[currentRow][0].requestFocus();
+
+
+                            // Provide feedback to the user
+                            Toast.makeText(LevelOneActivity.this, hint.message + " Letter: " + hint.revealedLetter, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LevelOneActivity.this, "Error: Invalid hint data.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(LevelOneActivity.this, "Error: No hint available.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure() {
+                    // Handle case when there was an error deducting coins
+                    Toast.makeText(LevelOneActivity.this, "Error deducting coins. Try again.", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onInsufficientFunds() {
+                    // Inform the user they don't have enough coins
+                    Toast.makeText(LevelOneActivity.this, "Insufficient funds for a hint!", Toast.LENGTH_SHORT).show();
+                }
+
+            });
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 
     @SuppressLint("ClickableViewAccessibility")
     private void setUpLetterBoxListeners(int row) {
@@ -207,6 +297,30 @@ public class LevelOneActivity extends AppCompatActivity {
     private void insertLetter(String letter) {
         if (activeEditText != null && activeEditText.isEnabled()) {
             activeEditText.setText(letter);
+
+            // Check if the next letter box is disabled (locked)
+            int currentRowIndex = getActiveEditTextRowIndex();
+            int currentColIndex = getActiveEditTextColIndex();
+
+            if (currentColIndex < letterBoxes[currentRowIndex].length - 1) {
+                EditText nextLetterBox = letterBoxes[currentRowIndex][currentColIndex + 1];
+                if (!nextLetterBox.isEnabled()) {
+                    // If locked, keep moving forward until an enabled box is found
+                    while (currentColIndex < letterBoxes[currentRowIndex].length - 1) {
+                        currentColIndex++;
+                        nextLetterBox = letterBoxes[currentRowIndex][currentColIndex + 1];
+                        if (nextLetterBox.isEnabled()) {
+                            break; // Exit the loop if an enabled box is found
+                        }
+                    }
+
+                    // Set the active EditText to the first enabled box
+                    if (currentColIndex < letterBoxes[currentRowIndex].length - 1) {
+                        activeEditText = nextLetterBox;
+                        activeEditText.requestFocus();
+                    }
+                }
+            }
         }
     }
 
@@ -217,7 +331,13 @@ public class LevelOneActivity extends AppCompatActivity {
 
             if (currentRowIndex == currentRow) {
                 if (activeEditText.getText().length() > 0) {
-                    // Erase the current letter
+                    // Check if the previous EditText is disabled (locked)
+                    if (currentColIndex > 0 && !letterBoxes[currentRowIndex][currentColIndex - 1].isEnabled()) {
+                        // If the previous EditText is locked, do nothing
+                        return;
+                    }
+
+                    // Otherwise, delete the last letter of the current EditText
                     activeEditText.setText("");
                 } else if (currentColIndex > 0) {
                     letterBoxes[currentRow][currentColIndex - 1].requestFocus();
@@ -251,6 +371,25 @@ public class LevelOneActivity extends AppCompatActivity {
         }
         // Return -1 if not found
         return -1;
+    }
+
+    private void moveToPreviousEditText() {
+        for (int row = 0; row < letterBoxes.length; row++) {
+            for (int col = 0; col < letterBoxes[row].length; col++) {
+                if (letterBoxes[row][col].equals(activeEditText)) {
+                    if (col > 0) {
+                        // Move to the previous box
+                        letterBoxes[row][col - 1].requestFocus();
+                        activeEditText = letterBoxes[row][col - 1];
+                    } else if (row > 0) {
+                        // Move to the last box in the previous row
+                        letterBoxes[row - 1][letterBoxes[row - 1].length - 1].requestFocus();
+                        activeEditText = letterBoxes[row - 1][letterBoxes[row - 1].length - 1];
+                    }
+                    return;
+                }
+            }
+        }
     }
 
     private void handleGuess() {
@@ -598,6 +737,7 @@ public class LevelOneActivity extends AppCompatActivity {
         findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
         findViewById(R.id.keyboard).setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);
+        hintButton.setVisibility(View.GONE);
     }
 
 

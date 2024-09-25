@@ -5,9 +5,12 @@ import com.example.wordworld.WordManagement;
 
 
 public class WordGame {
+
     String chosenWord;
     private int attempts;
     private final WordManagement wordManagement; // Injected dependency
+    private boolean[] revealedPositions; //To track which positions have been revealed
+    private boolean[] correctlyGuessed;  // To track which letters have been correctly guessed
     //private String feedback;
 
     public WordGame(WordManagement wordManagement) {
@@ -20,13 +23,27 @@ public class WordGame {
         String[] wordList = wordManagement.getRandomWord(level);
         Random random = new Random();
         int randomIndex = random.nextInt(wordList.length);
-        this.chosenWord = wordList[randomIndex];
         this.attempts = 5;
+        this.chosenWord = wordList[randomIndex];
+        //this.feedback = "";
+
+        // Initialize arrays for tracking revealed and correctly guessed letters
+        this.revealedPositions = new boolean[chosenWord.length()];
+        this.correctlyGuessed = new boolean[chosenWord.length()];
+        Arrays.fill(this.revealedPositions, false); // All positions are initially unrevealed
+        Arrays.fill(this.correctlyGuessed, false);  // No letters are guessed at the start
     }
 
     // Method to handle the user's guess
     public Feedback handleGuess(String userInput) {
         int[] feedbackStatus = getFeedbackStatus(chosenWord, userInput);
+
+        // Update correctlyGuessed array based on feedback
+        for (int i = 0; i < feedbackStatus.length; i++) {
+            if (feedbackStatus[i] == 2) {
+                correctlyGuessed[i] = true;  // Mark position as correctly guessed
+            }
+        }
 
         if (allCorrect(feedbackStatus)) {
             return new Feedback("Congratulations! You've guessed the word: \n" +
@@ -87,6 +104,56 @@ public class WordGame {
         }
         //ALL letters are in correct position
         return true;
+    }
+
+    // Hint method to reveal a correct letter in a random unrevealed position
+    public Hint giveHint() {
+        Random random = new Random();
+
+        // Check if any unrevealed positions are left
+        if (revealedPositions == null || revealedPositions.length == 0) {
+            return new Hint("Hint system not initialized", null, -1);
+        }
+
+        int unrevealedCount = 0;
+        for (int i = 0; i < revealedPositions.length; i++) {
+            if (!revealedPositions[i] && !correctlyGuessed[i]) {
+                unrevealedCount++;
+            }
+        }
+
+        if (unrevealedCount == 0) {
+            // All positions have been revealed or correctly guessed
+            return new Hint("All letters are revealed or correctly guessed", null, -1);
+        }
+
+        // Find an unrevealed and unguessed position to provide a hint
+        int hintPosition = -1;
+        while (hintPosition == -1) {
+            int randomIndex = random.nextInt(chosenWord.length());
+            if (!revealedPositions[randomIndex] && !correctlyGuessed[randomIndex]) {
+                hintPosition = randomIndex;
+                revealedPositions[randomIndex] = true; // Mark this position as revealed
+            }
+        }
+
+        // Return a hint with the revealed letter and its position
+        return new Hint("Here's a hint!", chosenWord.charAt(hintPosition), hintPosition);
+    }
+
+
+    // **Hint Class**
+    // A class to encapsulate the hint result
+    public static class Hint {
+        public final String message;
+        public final Character revealedLetter;
+        public final int position;
+
+        public Hint(String message, Character revealedLetter, int position) {
+            this.message = message;
+            this.revealedLetter = revealedLetter;
+            this.position = position;
+        }
     }
 
     // Feedback class to hold feedback message, attempts left, and status of each letter

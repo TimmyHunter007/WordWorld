@@ -183,4 +183,40 @@ public class RewardManager {
         });
         return wordCount;
     }
+
+
+    // Method to deduct coins
+    public void deductCoins(int amount, RewardCallback callback) {
+        databaseReference.child("silverCoins").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Integer currentCoins = snapshot.getValue(Integer.class);
+                if (currentCoins != null && currentCoins >= amount) {
+                    databaseReference.child("silverCoins").setValue(currentCoins - amount)
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    callback.onSuccess();
+                                } else {
+                                    callback.onFailure();
+                                }
+                            });
+                } else {
+                    callback.onInsufficientFunds();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onFailure();
+            }
+        });
+    }
+
+    public interface RewardCallback {
+        void onSuccess();
+        void onFailure();
+        void onInsufficientFunds();
+    }
 }
+
+
