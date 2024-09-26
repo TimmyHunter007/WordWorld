@@ -253,25 +253,6 @@ public class LevelOneActivity extends AppCompatActivity {
         return -1;
     }
 
-    private void moveToPreviousEditText() {
-        for (int row = 0; row < letterBoxes.length; row++) {
-            for (int col = 0; col < letterBoxes[row].length; col++) {
-                if (letterBoxes[row][col].equals(activeEditText)) {
-                    if (col > 0) {
-                        // Move to the previous box
-                        letterBoxes[row][col - 1].requestFocus();
-                        activeEditText = letterBoxes[row][col - 1];
-                    } else if (row > 0) {
-                        // Move to the last box in the previous row
-                        letterBoxes[row - 1][letterBoxes[row - 1].length - 1].requestFocus();
-                        activeEditText = letterBoxes[row - 1][letterBoxes[row - 1].length - 1];
-                    }
-                    return;
-                }
-            }
-        }
-    }
-
     private void handleGuess() {
         String userGuess = getUserInput();
 
@@ -523,24 +504,32 @@ public class LevelOneActivity extends AppCompatActivity {
     private void initializeUserData() {
         userDatabaseReference.child("metaData").child("l1WordGuess").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                currentWordGuess = task.getResult().getValue(Integer.class);
+                Integer currentWordGuess = task.getResult().getValue(Integer.class);
 
                 // If the word has already been guessed, block the game
-                if (currentWordGuess == 1) {
-                    checkDateAndRestrict();
+                if (currentWordGuess != null) {
+                    if (currentWordGuess == 1) {
+                        checkDateAndRestrict();
+                    }
                 }
             }
         });
 
         userDatabaseReference.child("metaData").child("l1AttemptsLeft").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                currentAttemptsLeft = task.getResult().getValue(Integer.class);
+                Integer currentAttemptsLeft = task.getResult().getValue(Integer.class);
+
+                if (currentAttemptsLeft != null) {
+                    TextView tvAttempts = findViewById(R.id.tvAttempts);
+                    tvAttempts.setText("Attempts: " + currentAttemptsLeft);
+                }
             }
         });
 
         userDatabaseReference.child("metaData").child("l1DateTried").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 String savedDate = task.getResult().getValue(String.class);  // Expect the date as a String
+                assert savedDate != null;
                 if (isNewDay(savedDate)) {  // Pass the savedDate as a string
                     resetAttempts();
                 }

@@ -256,25 +256,6 @@ public class LevelThreeActivity extends AppCompatActivity {
         return -1;
     }
 
-    private void moveToPreviousEditText() {
-        for (int row = 0; row < letterBoxes.length; row++) {
-            for (int col = 0; col < letterBoxes[row].length; col++) {
-                if (letterBoxes[row][col].equals(activeEditText)) {
-                    if (col > 0) {
-                        // Move to the previous box
-                        letterBoxes[row][col - 1].requestFocus();
-                        activeEditText = letterBoxes[row][col - 1];
-                    } else if (row > 0) {
-                        // Move to the last box in the previous row
-                        letterBoxes[row - 1][letterBoxes[row - 1].length - 1].requestFocus();
-                        activeEditText = letterBoxes[row - 1][letterBoxes[row - 1].length - 1];
-                    }
-                    return;
-                }
-            }
-        }
-    }
-
     private void handleGuess() {
         String userGuess = getUserInput();
 
@@ -294,6 +275,12 @@ public class LevelThreeActivity extends AppCompatActivity {
         //text box color feedback
         displayFeedback(feedback);
 
+        // Update the keyboard key colors based on feedback
+        updateKeyColors(feedback.feedbackChars, feedback.feedbackStatus);
+
+        //disable the previous row once submit button has been clicked
+        disableRow(currentRow);
+        // Decrease attempts left
         currentAttemptsLeft--;
 
         // Update the attempts left in Firebase and the TextView
@@ -330,6 +317,13 @@ public class LevelThreeActivity extends AppCompatActivity {
 
         // Save the current date in the 'l1DateTried' field
         userDatabaseReference.child("metaData").child("l3DateTried").setValue(currentDate);
+    }
+
+    //disables all EditText boxes in a given row
+    private void disableRow(int row) {
+        for (EditText editText : letterBoxes[row]) {
+            editText.setEnabled(false);
+        }
     }
 
     private void displayFeedback(WordGame.Feedback feedback) {
@@ -508,32 +502,37 @@ public class LevelThreeActivity extends AppCompatActivity {
     private void initializeUserData() {
         userDatabaseReference.child("metaData").child("l3WordGuess").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                currentWordGuess = task.getResult().getValue(Integer.class);
-                if (currentWordGuess == 1) {
-                    checkDateAndRestrict();
+                Integer currentWordGuess = task.getResult().getValue(Integer.class);
+
+                // If the word has already been guessed, block the game
+                if (currentWordGuess != null) {
+                    if (currentWordGuess == 1) {
+                        checkDateAndRestrict();
+                    }
                 }
             }
         });
 
         userDatabaseReference.child("metaData").child("l3AttemptsLeft").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                currentAttemptsLeft = task.getResult().getValue(Integer.class);
+                Integer currentAttemptsLeft = task.getResult().getValue(Integer.class);
 
-                TextView tvAttempts = findViewById(R.id.tvAttempts);
-                tvAttempts.setText("Attempts: " + currentAttemptsLeft);
+                if (currentAttemptsLeft != null) {
+                    TextView tvAttempts = findViewById(R.id.tvAttempts);
+                    tvAttempts.setText("Attempts: " + currentAttemptsLeft);
+                }
             }
         });
 
         userDatabaseReference.child("metaData").child("l3DateTried").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 String savedDate = task.getResult().getValue(String.class);  // Expect the date as a String
-
+                assert savedDate != null;
                 if (isNewDay(savedDate)) {  // Pass the savedDate as a string
                     resetAttempts();
                 }
             }
         });
-
     }
 
     private void checkDateAndRestrict() {
