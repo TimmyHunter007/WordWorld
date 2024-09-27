@@ -26,6 +26,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Objects;
+
 public class LevelThreeActivity extends AppCompatActivity {
     private EditText[][] letterBoxes;
     private EditText activeEditText;
@@ -41,7 +43,7 @@ public class LevelThreeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_level_three);
 
         drawerLayout = findViewById(R.id.drawer_layout);

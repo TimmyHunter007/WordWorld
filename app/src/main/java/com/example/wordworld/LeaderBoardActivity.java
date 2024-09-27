@@ -19,10 +19,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+
+import java.util.*;
 
 public class LeaderBoardActivity extends AppCompatActivity {
 
@@ -43,7 +41,7 @@ public class LeaderBoardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide(); // Hide the action bar to create a full-screen experience
+        Objects.requireNonNull(getSupportActionBar()).hide(); // Hide the action bar to create a full-screen experience
         setContentView(R.layout.activity_leader_board); // Set the layout for the activity
 
         // Initialize Firebase authentication and database reference

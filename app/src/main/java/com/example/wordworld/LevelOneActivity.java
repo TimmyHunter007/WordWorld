@@ -30,6 +30,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class LevelOneActivity extends AppCompatActivity {
     private EditText[][] letterBoxes;
@@ -48,7 +49,7 @@ public class LevelOneActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_level_one);
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -61,7 +62,7 @@ public class LevelOneActivity extends AppCompatActivity {
                 Intent intent;
 
                 if (id == R.id.level_one) {
-                    intent = new Intent(LevelOneActivity.this, LevelOneActivity.class);
+                   intent = new Intent(LevelOneActivity.this, LevelOneActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.level_two) {
                     intent = new Intent(LevelOneActivity.this, LevelTwoActivity.class);

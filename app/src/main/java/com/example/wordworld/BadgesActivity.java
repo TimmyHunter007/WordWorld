@@ -2,17 +2,18 @@ package com.example.wordworld;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
+
 
 public class BadgesActivity extends AppCompatActivity {
 
@@ -60,40 +61,17 @@ public class BadgesActivity extends AppCompatActivity {
 
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        /*
+
+        //initalized Each progress bar and max and progress
         progressBar1 = findViewById(R.id.progressBar);
-        progressBar1.setMax(MaxProgressBar1);
-        progressBar1.setProgress(progress1);
-
         progressBar2 = findViewById(R.id.ProgressBar2);
-        progressBar2.setMax(MaxProgressBar2);
-        progressBar2.setProgress(progress2);
-
         progressBar3 = findViewById(R.id.ProgressBar3);
-        progressBar3.setMax(MaxProgressBar3);
-        progressBar3.setProgress(progress3);
-
         progressBar4 = findViewById(R.id.ProgressBar4);
-        progressBar4.setMax(MaxProgressBar4);
-        progressBar4.setProgress(progress4);
-
         progressBar5 = findViewById(R.id.ProgressBar5);
-        progressBar5.setMax(MaxProgressBar5);
-        progressBar5.setProgress(progress5);
-
         progressBar6 = findViewById(R.id.ProgressBar6);
-        progressBar6.setMax(MaxProgressBar6);
-        progressBar6.setProgress(progress6);
-
         progressBar7 = findViewById(R.id.ProgressBar7);
-        progressBar7.setMax(MaxProgressBar7);
-        progressBar7.setProgress(progress7);
-
         progressBar8 = findViewById(R.id.ProgressBar8);
-        progressBar8.setMax(MaxProgressBar8);
-        progressBar8.setProgress(progress8);
 
-         */
         // Initialize the back button and set the click listener
         ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -120,9 +98,9 @@ public class BadgesActivity extends AppCompatActivity {
                     intent = new Intent(BadgesActivity.this, LevelThreeActivity.class);
                     startActivity(intent);
                 } else if (id == R.id.badges) {
+
                     intent = new Intent(BadgesActivity.this, BadgesActivity.class);
                     startActivity(intent);
-
                 } else if (id == R.id.profile) {
                     intent = new Intent(BadgesActivity.this, ProfileActivity.class);
                     startActivity(intent);
@@ -148,35 +126,81 @@ public class BadgesActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void initializeProgressBars()
+    {
+        if(progressBar1 != null)
+        {
+            progressBar1.setMax(MaxProgressBar1);
+            progressBar1.setProgress(progress1);
+        }
+        if(progressBar2 != null)
+        {
+            progressBar2.setMax(MaxProgressBar2);
+            progressBar2.setProgress(progress2);
+        }
+        if(progressBar3 != null)
+        {
+            progressBar3.setMax(MaxProgressBar3);
+            progressBar3.setProgress(progress3);
+
+        }
+        if(progressBar4 != null)
+        {
+            progressBar4.setMax(MaxProgressBar4);
+            progressBar4.setProgress(progress4);
+        }
+        if(progressBar5 != null)
+        {
+            progressBar5.setMax(MaxProgressBar5);
+            progressBar5.setProgress(progress5);
+        }
+        if(progressBar6 != null)
+        {
+            progressBar6.setMax(MaxProgressBar6);
+            progressBar6.setProgress(progress6);
+        }
+        if(progressBar7 != null)
+        {
+            progressBar7.setMax(MaxProgressBar7);
+            progressBar7.setProgress(progress7);
+        }
+        if(progressBar8 != null)
+        {
+            progressBar8.setMax(MaxProgressBar8);
+            progressBar8.setProgress(progress8);
+        }
+    }
+
     private void CompleteWord()
     {
         if(progress1 < MaxProgressBar1)
         {
-            progress1 +=1;
+            progress1++;
             progressBar1.setProgress(progress1);
             showBadgeEarned("First word Level 1!!");
         }
         if(progress2 < MaxProgressBar2 && progress1 >= MaxProgressBar1)
         {
-            progress2 +=1;
+            progress2++;
             progressBar2.setProgress(progress2);
             showBadgeEarned("First word Level 2!!");
         }
         if(progress3 < MaxProgressBar3 && progress2 >= MaxProgressBar2)
         {
-            progress3 +=1;
+            progress3++;
             progressBar3.setProgress(progress3);
             showBadgeEarned("First word Level 3!!");
         }
         if(progress4 < MaxProgressBar4)
         {
-            progress4 +=1;
+            progress4++;
             progressBar4.setProgress(progress4);
             showBadgeEarned("Daily Streak!!");
         }
         if(progress5 < MaxProgressBar5)
         {
-            progress5 +=1;
+            progress5++;
             progressBar5.setProgress(progress5);
             if(progress5 == MaxProgressBar5)
             {
@@ -185,7 +209,7 @@ public class BadgesActivity extends AppCompatActivity {
         }
         if(progress6 < MaxProgressBar6)
         {
-            progress6 +=1;
+            progress6++;
             progressBar6.setProgress(progress6);
             if(progress6 == MaxProgressBar6)
             {
@@ -194,7 +218,7 @@ public class BadgesActivity extends AppCompatActivity {
         }
         if(progress7 < MaxProgressBar7)
         {
-            progress7 +=1;
+            progress7++;
             progressBar7.setProgress(progress7);
             if(progress7 == MaxProgressBar7)
             {
@@ -203,7 +227,7 @@ public class BadgesActivity extends AppCompatActivity {
         }
         if(progress8 < MaxProgressBar8)
         {
-            progress8 +=1;
+            progress8++;
             progressBar8.setProgress(progress8);
             if(progress8 == MaxProgressBar8)
             {
@@ -216,19 +240,16 @@ public class BadgesActivity extends AppCompatActivity {
     {
         Toast.makeText(this,"you Have earned "+s,Toast.LENGTH_SHORT).show();
     }
-    private void Loadbadge()
+    //This wil show the Badge Once Earned On the screen and for a Duration of time
+    private void Badge(ImageView BadgeView)
     {
-        /*
-        progress1 =
-                progress2 =
-        progress3 =
-                progress4 =
-        progress5 =
-                progress6 =
-        progress7 =
-                progress8 =
-
-         */
+        Animation Animate = new AlphaAnimation(0.0f , 1.0f);
+        Animate.setDuration(500);
+        Animate.setRepeatCount(1);
+        Animate.setRepeatMode(Animation.REVERSE);
+        BadgeView.startAnimation(Animate);
     }
+
+
 
 }

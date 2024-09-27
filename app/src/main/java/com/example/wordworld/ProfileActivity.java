@@ -23,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 public class ProfileActivity extends AppCompatActivity {
 
     // Firebase Authentication instance for handling user authentication
@@ -41,7 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide(); // Hide the action bar for a full-screen experience
+        Objects.requireNonNull(getSupportActionBar()).hide(); // Hide the action bar for a full-screen experience
         setContentView(R.layout.activity_profile); // Set the layout for this activity
 
         // Initialize Firebase Authentication instance
