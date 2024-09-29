@@ -687,6 +687,7 @@ public class LevelTwoActivity extends AppCompatActivity {
         findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
         findViewById(R.id.keyboard).setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);
+        hintButton.setVisibility(View.GONE);
     }
 
     private boolean isNewDay(String savedDate) {
@@ -715,6 +716,7 @@ public class LevelTwoActivity extends AppCompatActivity {
         findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
         findViewById(R.id.keyboard).setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);
+        hintButton.setVisibility(View.GONE);
     }
 
     private void playSoundEffect(int soundResourceId) {
