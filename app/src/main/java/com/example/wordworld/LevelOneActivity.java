@@ -571,6 +571,7 @@ public class LevelOneActivity extends AppCompatActivity {
         findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
         findViewById(R.id.keyboard).setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);
+        hintButton.setVisibility(View.GONE);
     }
 
     // Method to update the word count in Firebase
