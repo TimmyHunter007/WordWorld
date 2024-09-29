@@ -11,7 +11,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.TextAppearanceInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -101,7 +104,7 @@ public class LevelThreeActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
-            //==============================initializeUserData();  // Fetch and initialize user data for attempts and guesses
+            initializeUserData();  // Fetch and initialize user data for attempts and guesses
         } else {
             // User is not logged in
             ImageButton backButton = findViewById(R.id.back_button);
@@ -398,9 +401,13 @@ public class LevelThreeActivity extends AppCompatActivity {
         // Decrease attempts left
         currentAttemptsLeft--;
 
-        // If the user guesses correctly or if attempts are exhausted, mark the word as guessed
+        // Update the attempts left in Firebase and the TextView
+        userDatabaseReference.child("metaData").child("l3AttemptsLeft").setValue(currentAttemptsLeft);
+        TextView tvAttempts = findViewById(R.id.tvAttempts);
+        tvAttempts.setText("Attempts left: " + currentAttemptsLeft);
+
         if (feedback.message.contains("Congratulations") || currentAttemptsLeft == 0) {
-            userDatabaseReference.child("metaData").child("l1WordGuess").setValue(1);
+            userDatabaseReference.child("metaData").child("l3WordGuess").setValue(1);
             endGame(feedback);
         } else {
             // Move to the next row for another attempt
@@ -417,9 +424,8 @@ public class LevelThreeActivity extends AppCompatActivity {
             }
         }
 
-        // Update attempts left and save the current date of the attempt
         saveAttemptDate();
-        userDatabaseReference.child("metaData").child("l1AttemptsLeft").setValue(currentAttemptsLeft);
+        userDatabaseReference.child("metaData").child("l3AttemptsLeft").setValue(currentAttemptsLeft);
     }
 
     private void saveAttemptDate() {
@@ -520,8 +526,8 @@ public class LevelThreeActivity extends AppCompatActivity {
         TextView tvMessage = findViewById(R.id.tv_message);
 
         if (feedback.message.contains("Congratulations")) {
-            int coinsEarned = rewardManager.awardLevelCompletionReward(1);
-            int pointsEarned = rewardManager.getPointsEarned(1);
+            int coinsEarned = rewardManager.awardLevelCompletionReward(3);
+            int pointsEarned = rewardManager.getPointsEarned(3);
 
             // Update the total score in Firebase
             updateScore(pointsEarned, newScore -> {
@@ -615,33 +621,41 @@ public class LevelThreeActivity extends AppCompatActivity {
         void onScoreUpdated(int newScore);
     }
 
-    /*private void initializeUserData() {
+    private void initializeUserData() {
         userDatabaseReference.child("metaData").child("l3WordGuess").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                currentWordGuess = task.getResult().getValue(Integer.class);
-                if (currentWordGuess == 1) {
-                    checkDateAndRestrict();
+                Integer currentWordGuess = task.getResult().getValue(Integer.class);
+
+                // If the word has already been guessed, block the game
+                if (currentWordGuess != null) {
+                    if (currentWordGuess == 1) {
+                        checkDateAndRestrict();
+                    }
                 }
             }
         });
 
         userDatabaseReference.child("metaData").child("l3AttemptsLeft").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                currentAttemptsLeft = task.getResult().getValue(Integer.class);
+                Integer currentAttemptsLeft = task.getResult().getValue(Integer.class);
+
+                if (currentAttemptsLeft != null) {
+                    TextView tvAttempts = findViewById(R.id.tvAttempts);
+                    tvAttempts.setText("Attempts: " + currentAttemptsLeft);
+                }
             }
         });
 
         userDatabaseReference.child("metaData").child("l3DateTried").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 String savedDate = task.getResult().getValue(String.class);  // Expect the date as a String
-
+                assert savedDate != null;
                 if (isNewDay(savedDate)) {  // Pass the savedDate as a string
                     resetAttempts();
                 }
             }
         });
-
-    }*/
+    }
 
     private void checkDateAndRestrict() {
         userDatabaseReference.child("metaData").child("l3DateTried").get().addOnCompleteListener(task -> {

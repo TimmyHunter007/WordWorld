@@ -815,6 +815,18 @@
                         android:layout_marginStart="2.5dp"/>
             </LinearLayout>
 
+            <TextView
+                    android:id="@+id/tvAttempts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_background"
+                    android:text="Attempts left: 5"
+                    android:textSize="24sp"
+                    android:textColor="@color/white"
+                    android:layout_below="@id/keyboard"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp" />
+
         </LinearLayout>
 
     </RelativeLayout>
