@@ -583,7 +583,7 @@
                 android:textSize="29sp"
                 android:backgroundTint="@color/level_1"
                 android:layout_below="@+id/letterBoxesContainer"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:layout_centerHorizontal="true"/>
 
         <!-- Submit button -->
@@ -596,7 +596,7 @@
                 android:textSize="29sp"
                 android:backgroundTint="@color/level_1"
                 android:layout_below="@+id/hint_level_two"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:layout_centerHorizontal="true"/>
 
         <!-- Keyboard UI -->
