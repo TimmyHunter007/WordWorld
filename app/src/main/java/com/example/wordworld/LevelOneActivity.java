@@ -258,7 +258,7 @@ public class LevelOneActivity extends AppCompatActivity {
 
         // Check if the user has no attempts left
         if (currentAttemptsLeft <= 0) {
-            Toast.makeText(this, "No more attempts left for today.", Toast.LENGTH_SHORT).show();
+            showSorryScreen("No more attempts left for today.");
             return;
         }
 
@@ -271,14 +271,12 @@ public class LevelOneActivity extends AppCompatActivity {
         // Get feedback from the WordGame class
         WordGame.Feedback feedback = wordGame.handleGuess(userGuess);
 
-        //text box color feedback
+        // text box color feedback
         displayFeedback(feedback);
 
         // Update the keyboard key colors based on feedback
         updateKeyColors(feedback.feedbackChars, feedback.feedbackStatus);
 
-        //disable the previous row once submit button has been clicked
-        disableRow(currentRow);
         // Decrease attempts left
         currentAttemptsLeft--;
 
@@ -287,12 +285,16 @@ public class LevelOneActivity extends AppCompatActivity {
         TextView tvAttempts = findViewById(R.id.tvAttempts);
         tvAttempts.setText("Attempts left: " + currentAttemptsLeft);
 
-        // If the user guesses correctly or if attempts are exhausted, mark the word as guessed
-        if (feedback.message.contains("Congratulations") || currentAttemptsLeft == 0) {
+        // If the user guesses correctly, end the game with congratulations
+        if (feedback.message.contains("Congratulations")) {
             userDatabaseReference.child("metaData").child("l1WordGuess").setValue(1);
             endGame(feedback);
+        } else if (currentAttemptsLeft == 0) {
+            // If all attempts are used up, show the sorry screen
+            showSorryScreen("Sorry! You've used all your attempts. The correct word was: " + wordGame.chosenWord);
+            userDatabaseReference.child("metaData").child("l1WordGuess").setValue(1);
         } else {
-            // Move to the next row for another attempt
+            // Move to the next row for another attempt if there are attempts left
             if (currentRow < letterBoxes.length - 1) {
                 // Increment the row
                 currentRow++;
@@ -300,15 +302,30 @@ public class LevelOneActivity extends AppCompatActivity {
                 setUpLetterBoxListeners(currentRow);
                 // Move the cursor to the first box in the new row
                 letterBoxes[currentRow][0].requestFocus();
-            } else {
-                // If there are no more rows, disable input and show message
-                endGame(feedback);
             }
         }
 
         // Update attempts left and save the current date of the attempt
         saveAttemptDate();
-        userDatabaseReference.child("metaData").child("l1AttemptsLeft").setValue(currentAttemptsLeft);
+    }
+
+    private void showSorryScreen(String message) {
+        // Disable further input
+        enableLetters(false);
+
+        // Show the message container and display the sorry message
+        RelativeLayout messageContainer = findViewById(R.id.message_container);
+        TextView tvMessage = findViewById(R.id.tv_message);
+        tvMessage.setText(message);
+
+        // Play a sad sound effect
+        playSoundEffect(R.raw.sad_sound);
+
+        // Hide game UI when displaying the end message
+        messageContainer.setVisibility(View.VISIBLE);
+        findViewById(R.id.letterBoxesContainer).setVisibility(View.GONE);
+        findViewById(R.id.keyboard).setVisibility(View.GONE);
+        submitButton.setVisibility(View.GONE);
     }
 
     private void saveAttemptDate() {
@@ -502,12 +519,27 @@ public class LevelOneActivity extends AppCompatActivity {
     }
 
     private void initializeUserData() {
+        // Fetch attempts left from Firebase
+        userDatabaseReference.child("metaData").child("l1AttemptsLeft").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Integer savedAttempts = task.getResult().getValue(Integer.class);
+
+                if (savedAttempts != null) {
+                    currentAttemptsLeft = savedAttempts;  // Set to saved value
+                    updateAttemptsTextView();
+                }
+            }
+        });
+
+        // Fetch word guess state
         userDatabaseReference.child("metaData").child("l1WordGuess").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Integer currentWordGuess = task.getResult().getValue(Integer.class);
+                Integer savedWordGuess = task.getResult().getValue(Integer.class);
 
-                // If the word has already been guessed, block the game
-                if (currentWordGuess != null) {
+                if (savedWordGuess != null) {
+                    currentWordGuess = savedWordGuess;  // Set to saved value
+
+                    // Check if the word has already been guessed
                     if (currentWordGuess == 1) {
                         checkDateAndRestrict();
                     }
@@ -515,22 +547,13 @@ public class LevelOneActivity extends AppCompatActivity {
             }
         });
 
-        userDatabaseReference.child("metaData").child("l1AttemptsLeft").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Integer currentAttemptsLeft = task.getResult().getValue(Integer.class);
-
-                if (currentAttemptsLeft != null) {
-                    TextView tvAttempts = findViewById(R.id.tvAttempts);
-                    tvAttempts.setText("Attempts: " + currentAttemptsLeft);
-                }
-            }
-        });
-
+        // Fetch the last attempted date
         userDatabaseReference.child("metaData").child("l1DateTried").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                String savedDate = task.getResult().getValue(String.class);  // Expect the date as a String
-                assert savedDate != null;
-                if (isNewDay(savedDate)) {  // Pass the savedDate as a string
+                String savedDate = task.getResult().getValue(String.class);
+
+                if (savedDate != null && isNewDay(savedDate)) {
+                    // It's a new day, reset attempts and word guess
                     resetAttempts();
                 }
             }
@@ -592,6 +615,14 @@ public class LevelOneActivity extends AppCompatActivity {
         // Update Firebase with the reset values
         userDatabaseReference.child("metaData").child("l1AttemptsLeft").setValue(currentAttemptsLeft);
         userDatabaseReference.child("metaData").child("l1WordGuess").setValue(currentWordGuess);
+
+        // Update UI
+        updateAttemptsTextView();
+    }
+
+    private void updateAttemptsTextView() {
+        TextView tvAttempts = findViewById(R.id.tvAttempts);
+        tvAttempts.setText("Attempts left: " + currentAttemptsLeft);
     }
 
     private void showLoginRequiredMessage() {
