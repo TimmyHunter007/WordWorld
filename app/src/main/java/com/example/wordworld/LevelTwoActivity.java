@@ -185,8 +185,6 @@ public class LevelTwoActivity extends AppCompatActivity {
 
                             // Provide feedback to the user
                             Toast.makeText(LevelTwoActivity.this, hint.message + " Letter: " + hint.revealedLetter, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(LevelTwoActivity.this, "Error: Invalid hint data.", Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(LevelTwoActivity.this, "Error: No hint available.", Toast.LENGTH_SHORT).show();
