@@ -168,17 +168,14 @@ public class LevelOneActivity extends AppCompatActivity {
                                 // Set the revealed letter in the correct position of each row
                                 letterBox.setText(String.valueOf(hint.revealedLetter));
 
-                                // Lock the letter by disabling the EditText
+                                // Lock the letter by disabling the EditText and making it non-focusable, non-clickable, and non-editable
                                 letterBox.setEnabled(false);  // Disable interaction
                                 letterBox.setFocusable(false);  // Prevent further focus on it
                                 letterBox.setFocusableInTouchMode(false);  // Prevent touch focus
+                                letterBox.setClickable(false);  // Prevent clicking on it
+                                letterBox.setKeyListener(null);  // Prevent editing
 
 
-
-                                // Skip to the next letter box (if it exists)
-                                if (hint.position < letterBoxes[currentRow].length - 1) {
-                                    letterBoxes[currentRow][hint.position + 1].requestFocus();
-                                }
                             }
                             // Reset the current row to start from the beginning
                             currentRow = 0;
